@@ -1,1 +1,6 @@
-Link to website: https://noahmousseau.github.io/Stress-and-Burnout-Reduction-Website/
+Group Members:
+Deboshree Chowdhury
+Ali Mehaidli
+Jesse Naser
+Carlos Nunez
+Noah Mousseau
