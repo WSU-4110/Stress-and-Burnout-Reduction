@@ -24,6 +24,9 @@
     <!-- Images can also be placed as h2, h3, p... etc. elements -->
     <h1><img src="MeditationLogo.PNG" alt="logo"></h1>
 
+    <!-- Login button -->
+    <li id="loginButton" class="user-button" onclick="toggleLogin()">Login</li>
+
     <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
     <header>
         <!-- nav and ul elements used for formatting organization -->
@@ -34,6 +37,8 @@
                 <!-- target="_blank" indicates open in a new tab -->
                 <!-- "Home" is the words that show for the link in the header -->
                 <li><a href="index.html" target="_blank">Home</a></li>
+                <li><a href="forum.html" target="_blank">Forum</a></li>
+                <li><a href="register.html">Create Account</a></li>
             </ul>
         </nav>
     </header>
@@ -135,6 +140,14 @@
     <footer>
         <p><small>This page and all properties owned by Meditation+&copy;</small></p>
     </footer>
+
+    <script src="login.js" defer></script>
+    <script>
+        // Call the checkLoginStatus function when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            checkLoginStatus();
+        });
+    </script>
 </body>
 
 </html>

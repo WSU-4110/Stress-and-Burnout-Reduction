@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Register Account Webpage</title>
+    
+    <style>
+        @import url(menuStyles.css);
+    </style>
+    <script src="register.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html" target="_blank">Home</a></li>
+                <li><a href="forum.html" target="_blank">Forum</a></li>
+                <li><a href="register.html" target="_blank">Create Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <h1>Create Account</h1>
+
+    <form id="registrationForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required><br>
+
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" required><br>
+
+        <input type="submit" value="Create Account">
+    </form>
+
+    <footer>
+        <p><small>This page and all properties owned by Meditation+&copy;</small></p>
+    </footer>
+</body>
+
+</html>
