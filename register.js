@@ -1,3 +1,5 @@
+// register.js
+
 document.addEventListener('DOMContentLoaded', function () {
     const registrationForm = document.getElementById('registrationForm');
 
@@ -21,24 +23,24 @@ document.addEventListener('DOMContentLoaded', function () {
             username: username,
             name: name,
             email: email,
-            password: password,
+            password: password, // Note: Not recommended for real-world scenarios
         };
 
-        // Store user object in sessionStorage
-        storeUser(user);
+        // Save user information to Local Storage
+        saveUserToLocalStorage(user);
 
         // Redirect to a confirmation page or your home page
         window.location.href = 'index.html';
     });
 
-    function storeUser(user) {
-        // Retrieve existing users from sessionStorage
-        const existingUsers = JSON.parse(sessionStorage.getItem('users')) || [];
+    function saveUserToLocalStorage(user) {
+        // Retrieve existing users from Local Storage
+        const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
 
         // Add the new user to the array
         existingUsers.push(user);
 
-        // Store the updated array back in sessionStorage
-        sessionStorage.setItem('users', JSON.stringify(existingUsers));
+        // Store the updated array back in Local Storage
+        localStorage.setItem('users', JSON.stringify(existingUsers));
     }
 });

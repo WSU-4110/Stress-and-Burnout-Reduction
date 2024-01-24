@@ -11,7 +11,7 @@ let username = '';
 
 // Function to check login status when the page loads
 function checkLoginStatus() {
-    // Retrieve login status and username from local storage
+    // Retrieve login status and username from Local Storage
     isLoggedIn = getLoginStatus();
     username = getLoggedInUsername();
 
@@ -19,7 +19,7 @@ function checkLoginStatus() {
     if (isLoggedIn) {
         // User is logged in, update the page for a logged-in user
         updateLoginButton();
-    }Om
+    }
 }
 
 // Function to handle user login/logout
@@ -51,12 +51,13 @@ function toggleLogin() {
 
 // Function to validate user credentials
 function validateCredentials(inputUsername, inputPassword) {
-    // Retrieve existing users from local storage
+    // Retrieve existing users from Local Storage
     const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
 
     // Check if the input credentials match any existing user
     const matchingUser = existingUsers.find(user => user.username === inputUsername && user.password === inputPassword);
 
+    // Check if a matching user was found
     return !!matchingUser;
 }
 
@@ -70,29 +71,29 @@ function updateLoginButton() {
     }
 }
 
-// Function to save login status to local storage
+// Function to save login status to Local Storage
 function saveLoginStatus() {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('loggedInUsername', username);
 }
 
-// Function to clear login status from local storage
+// Function to clear login status from Local Storage
 function clearLoginStatus() {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('loggedInUsername');
 }
 
-// Function to retrieve login status from local storage
+// Function to retrieve login status from Local Storage
 function getLoginStatus() {
     return localStorage.getItem('isLoggedIn') === 'true';
 }
 
-// Function to retrieve logged-in username from local storage
+// Function to retrieve logged-in username from Local Storage
 function getLoggedInUsername() {
     return localStorage.getItem('loggedInUsername') || '';
 }
 
 // Function to update page content for a logged-in user
 function updatePageForLoggedInUser() {
-    
+    // Add your logic for updating the page content when the user is logged in
 }
