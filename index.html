@@ -22,10 +22,12 @@
 <body>
     <!-- Places an image, MeditationLogo.PNG, as a header element, with alt text logo -->
     <!-- Images can also be placed as h2, h3, p... etc. elements -->
-    <h1><img src="MeditationLogo.PNG" alt="logo"></h1>
+    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
 
     <!-- Login button -->
-    <li id="loginButton" class="user-button" onclick="toggleLogin()">Login</li>
+    <div class="login-container">
+        <li id="loginButton" class="user-button" onclick="toggleLogin()">Login</li>
+    </div>
 
     <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
     <header>

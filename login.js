@@ -19,7 +19,7 @@ function checkLoginStatus() {
     if (isLoggedIn) {
         // User is logged in, update the page for a logged-in user
         updateLoginButton();
-    }
+    }Om
 }
 
 // Function to handle user login/logout
