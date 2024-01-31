@@ -65,9 +65,18 @@ function validateCredentials(inputUsername, inputPassword) {
 function updateLoginButton() {
     const loginButton = document.getElementById('loginButton');
     if (isLoggedIn) {
-        loginButton.textContent = `Logout - Logged in as ${username}`;
+        // Switch text of login button
+        loginButton.textContent = `Logout`;
+        // Show the profile button
+        if (profileButton) {
+            profileButton.style.display = 'inline-block';
+        }
     } else {
         loginButton.textContent = 'Login';
+        // Hide the profile button
+        if (profileButton) {
+            profileButton.style.display = 'none';
+        }
     }
 }
 
@@ -96,4 +105,9 @@ function getLoggedInUsername() {
 // Function to update page content for a logged-in user
 function updatePageForLoggedInUser() {
     // Add your logic for updating the page content when the user is logged in
+}
+
+function goToProfile() {
+    // Redirect to the user's profile page
+    window.location.href = 'profile.html';
 }
