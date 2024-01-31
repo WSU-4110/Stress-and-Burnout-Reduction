@@ -1,41 +1,40 @@
 document.addEventListener('DOMContentLoaded', function () {
-    function changeInfo(field) {
-        const newValue = prompt(`Enter new ${field}:`);
-        
-        if (newValue !== null) {
-            // Update the value in Local Storage and on the page
-            updateProfile(field, newValue);
+    // Call the function to load and display the user profile
+    loadUserProfile();
+
+    // Function to load and display the user profile
+    function loadUserProfile() {
+        // Retrieve logged-in username from Local Storage
+        const loggedInUsername = getLoggedInUsername();
+
+        // If a username is found, load the corresponding user profile
+        if (loggedInUsername) {
+            // Retrieve existing users from Local Storage
+            const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Find the user with the logged-in username
+            const loggedInUser = existingUsers.find(user => user.username === loggedInUsername);
+
+            if (loggedInUser) {
+                // Display user information on the page
+                displayUserProfile(loggedInUser);
+            }
         }
     }
 
-    function updateProfile(field, newValue) {
-        // Retrieve existing user from Local Storage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    // Function to display user information on the page
+    function displayUserProfile(user) {
+        // Display the username
+        document.getElementById('username').textContent = user.username;
 
-        // Update the user's information
-        currentUser[field] = newValue;
-
-        // Store the updated user back in Local Storage
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-        // Update the value on the page
-        document.getElementById(field).textContent = newValue;
+        // Display other user information (name, email, password) as needed
+        document.getElementById('name').textContent = user.name;
+        document.getElementById('email').textContent = user.email;
+        document.getElementById('password').textContent = user.password;
     }
 
-    // Optional: Add event listeners for each title if you want to change information on click
-    document.querySelector('.profile-title[data-field="username"]').addEventListener('click', function () {
-        changeInfo('username');
-    });
-
-    document.querySelector('.profile-title[data-field="name"]').addEventListener('click', function () {
-        changeInfo('name');
-    });
-
-    document.querySelector('.profile-title[data-field="email"]').addEventListener('click', function () {
-        changeInfo('email');
-    });
-
-    document.querySelector('.profile-title[data-field="password"]').addEventListener('click', function () {
-        changeInfo('password');
-    });
+    // Function to retrieve logged-in username from Local Storage
+    function getLoggedInUsername() {
+        return localStorage.getItem('loggedInUsername') || '';
+    }
 });
