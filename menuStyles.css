@@ -116,4 +116,22 @@ nav ul li a {
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+}
+
+/* styling for profile buttons */
+.profile-title {
+    padding: 15px 50px; 
+    cursor: pointer;
+    background-color: #d3950e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    list-style-type: none;
+}
+
+.profile-section {
+    padding: 15px 20px; 
+    position: absolute;
 }
