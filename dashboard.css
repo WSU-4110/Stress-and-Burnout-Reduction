@@ -31,6 +31,7 @@ nav ul {
 		nav ul li a {
 			color: #fff;
 			text-decoration: none;
+            font-weight: bold; /* Enhance readability and make links stand out */
 		}
 
 main {
@@ -39,10 +40,13 @@ main {
 
 section {
 	margin-bottom: 30px;
+    border-bottom: 1px solid #ccc; /* Add a separator between sections */
+    padding-bottom: 20px; /* Improve spacing between sections */
 }
 
 h2 {
 	margin-bottom: 10px;
+    color: #333; /* Darken header text color for better contrast */
 }
 
 ul {
@@ -53,6 +57,8 @@ form input[type="text"] {
 	width: 200px;
 	padding: 5px;
 	margin-right: 10px;
+    border: 1px solid #ccc; /* Add border to input fields for better visibility */
+    border-radius: 5px; /* Add rounded corners to input fields */
 }
 
 form button {
@@ -61,6 +67,7 @@ form button {
 	color: #fff;
 	border: none;
 	cursor: pointer;
+    border-radius: 5px; /* Add rounded corners to buttons */
 }
 
 	form button:hover {
@@ -72,4 +79,5 @@ footer {
 	color: #fff;
 	text-align: center;
 	padding: 20px;
+    margin-top: 30px; /* Add space between content and footer */
 }

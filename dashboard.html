@@ -3,71 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meditation+ - Your Wellness Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css"> <!-- Link to your CSS file -->
+    <title>Progress Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <!-- Header Section -->
     <header>
-        <h1>Welcome to Meditation+ - Your Wellness Dashboard</h1>
-        <!-- Navigation Menu -->
-        <nav class="navigation">
-            <ul class="navigation-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="forum.html">Forum</a></li>
-                <li><a href="create-account.html">Create Account</a></li>
-                <li><a href="video-library.html">Video Library</a></li>
-                <li><a href="#overview">Dashboard</a></li> <!-- Added dashboard link -->
+        <h1>Welcome to Your Progress Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#goals">Goal Tracking</a></li>
+                <li><a href="#progress">Progress Charts</a></li>
+                <!-- Add more links for other sections -->
             </ul>
         </nav>
     </header>
 
-    <!-- Main Content Section -->
-    <main class="content">
+    <main>
         <!-- Overview Section -->
-        <section id="overview" class="homepage-section">
+        <section id="overview">
             <h2>Overview</h2>
             <!-- Summary of user's progress and achievements -->
-            <p>Here, you can view a summary of your overall progress and achievements.</p>
-            <!-- Add more content specific to the progress dashboard feature -->
+            <div class="summary">
+                <p>Total Goals Achieved: <span id="totalGoals">0</span></p>
+                <p>Average Relaxation Time: <span id="averageRelaxationTime">0 minutes</span></p>
+                <p>Login Streak: <span id="loginStreak">0 days</span></p>
+                <!-- Add more summary metrics as needed -->
+            </div>
         </section>
 
         <!-- Goal Tracking Section -->
-        <section id="goals" class="homepage-section">
+        <section id="goals">
             <h2>Goal Tracking</h2>
             <!-- List of user's goals and their status -->
-            <ul>
-                <li>Goal 1: <span>Status</span></li>
-                <li>Goal 2: <span>Status</span></li>
-                <!-- Add more goals dynamically -->
+            <ul id="goalList">
+                <!-- Goal cards will be dynamically added here -->
             </ul>
             <!-- Form to add/edit goals -->
-            <form>
-                <input type="text" placeholder="Enter new goal">
+            <form id="goalForm">
+                <input type="text" id="goalInput" placeholder="Enter new goal">
                 <button type="submit">Add Goal</button>
             </form>
         </section>
 
         <!-- Progress Charts Section -->
-        <section id="progress" class="homepage-section">
+        <section id="progress">
             <h2>Progress Charts</h2>
             <!-- Display charts/graphs to visualize user's progress -->
             <div id="chartContainer">
-                <!-- Chart elements will be dynamically added here -->
+                <!-- Charts will be dynamically added here -->
             </div>
         </section>
 
-        <!-- Other Sections (Wellness Insights, Achievements, Community Engagement, etc.) -->
+        <!-- Other Sections (Achievement Badges, Wellness Insights, etc.) -->
         <!-- Add more sections as needed -->
 
     </main>
 
-    <!-- Footer Section -->
     <footer>
-        <p>&copy; 2024 Meditation+ - Your Wellness App</p>
+        <p>&copy; 2024 Your Wellness App</p>
     </footer>
 
-    <!-- JavaScript (if needed) -->
-    <script src="dashboard.js"></script> <!-- Link to your JavaScript file -->
+    <script src="dashboard.js"></script>
 </body>
 </html>
