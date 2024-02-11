@@ -3,35 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Meditation+ - Your Wellness Dashboard</title>
     <link rel="stylesheet" href="dashboard.css"> <!-- Link to your CSS file -->
 </head>
 <body>
     <!-- Header Section -->
     <header>
-        <h1>Welcome to Your Wellness Dashboard</h1>
-        <!-- Navigation Menu (if applicable) -->
-        <nav>
-            <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#goals">Goal Tracking</a></li>
-                <li><a href="#progress">Progress Charts</a></li>
-                <!-- Add more links for other sections -->
+        <h1>Welcome to Meditation+ - Your Wellness Dashboard</h1>
+        <!-- Navigation Menu -->
+        <nav class="navigation">
+            <ul class="navigation-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="forum.html">Forum</a></li>
+                <li><a href="create-account.html">Create Account</a></li>
+                <li><a href="video-library.html">Video Library</a></li>
+                <li><a href="#overview">Dashboard</a></li> <!-- Added dashboard link -->
             </ul>
         </nav>
     </header>
 
     <!-- Main Content Section -->
-    <main>
+    <main class="content">
         <!-- Overview Section -->
-        <section id="overview">
+        <section id="overview" class="homepage-section">
             <h2>Overview</h2>
             <!-- Summary of user's progress and achievements -->
             <p>Here, you can view a summary of your overall progress and achievements.</p>
+            <!-- Add more content specific to the progress dashboard feature -->
         </section>
 
         <!-- Goal Tracking Section -->
-        <section id="goals">
+        <section id="goals" class="homepage-section">
             <h2>Goal Tracking</h2>
             <!-- List of user's goals and their status -->
             <ul>
@@ -47,7 +49,7 @@
         </section>
 
         <!-- Progress Charts Section -->
-        <section id="progress">
+        <section id="progress" class="homepage-section">
             <h2>Progress Charts</h2>
             <!-- Display charts/graphs to visualize user's progress -->
             <div id="chartContainer">
@@ -62,7 +64,7 @@
 
     <!-- Footer Section -->
     <footer>
-        <p>&copy; 2024 Your Wellness App</p>
+        <p>&copy; 2024 Meditation+ - Your Wellness App</p>
     </footer>
 
     <!-- JavaScript (if needed) -->
