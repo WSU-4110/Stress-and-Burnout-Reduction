@@ -9,6 +9,28 @@ body {
 	background-color: #f0f0f0;
 }
 
+/* Add border around the image */
+#mindfulnessImage {
+    display: block; /* Ensure the image takes up the full width available */
+    margin: 0 auto; /* Center the image horizontally */
+    border: 2px solid #333; /* Add a solid border around the image */
+    border-radius: 10px; /* Add rounded corners to the border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
+    max-width: 100%; /* Ensure the image doesn't exceed its container's width */
+}
+
+.image-container {
+    text-align: center; /* Center align the image and quote */
+}
+
+.quote {
+    font-size: 16px; /* Adjust font size as needed */
+    margin-top: 10px; /* Add some space between the image and quote */
+	font-weight: bold;
+	font-style: italic;
+}
+
+
 header {
 	background-color: #333;
 	color: #fff;
