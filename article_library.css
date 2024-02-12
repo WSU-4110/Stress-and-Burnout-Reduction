@@ -1,0 +1,69 @@
+
+body {
+    background-color: #f0f0f0; /* Set the background color of the body */
+    color: #333; /* Set the text color */
+    font-family: Arial, sans-serif; /* Set the font family */
+    padding: 20px; /* Add some padding for better readability */
+}
+
+header {
+    background-color: #333; /* Set the background color of the header */
+    color: #fff; /* Set the text color of the header */
+    padding: 20px; /* Add some padding for better readability */
+}
+
+main {
+    padding: 20px; 
+
+footer {
+    background-color: #333; /* Set the background color of the footer */
+    color: #fff; /* Set the text color of the footer */
+    padding: 20px; /* Add some padding for better readability */
+    text-align: center; /* Center align the text */
+}
+/* Styles for the article container */
+.article {
+    border: 1px solid #ccc; /* Add border to create a box */
+    border-radius: 8px; /* Add rounded corners */
+    padding: 20px;
+    margin-bottom: 20px; /* Add spacing between articles */
+}
+
+/* Styles for article titles */
+.article h2 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* Styles for article summaries */
+.article p {
+    color: #666;
+}
+
+/* Styles for read more links */
+.article a {
+    display: inline-block;
+    background-color: #007bff; /* Add a background color for the link */
+    color: #fff;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px; /* Add rounded corners */
+    margin-top: 10px;
+}
+
+.article a:hover {
+    background-color: #0056b3; /* Change background color on hover */
+}
+}
+/* Styles for the image */
+.image-container {
+    float: right; /* Float the image to the right */
+    margin-left: 20px; /* Add some space between the image and the text */
+}
+
+/* Set max-width for the image to ensure it doesn't overflow */
+.image-container img {
+    max-width: 100%; /* Make sure the image doesn't exceed its container */
+    height: auto; /* Maintain aspect ratio */
+}
