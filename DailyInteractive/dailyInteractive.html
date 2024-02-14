@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Interactive</title>
+    <link rel="stylesheet" href="dailyInteractive.css">
+</head>
+<body>
+
+    <header id="home">
+        <div class="hero">
+            <div class="overlay"></div>
+            <h1>Daily Interactive</h1>
+        </div>
+    </header>
+
+    <div class="sticky-wrapper">
+        <nav>
+            <ul>
+                <li><a href="">Home</a></li>
+                <li><a href="">about</a></li>
+                <li><a href="">terms</a></li>
+                <li><a href="">services</a></li>
+                <li><a href="">project</a></li>
+                <li><a href="">faq</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <section id="item1">
+        <h1>Monday</h1>
+    </section>
+
+    <section id="item2">
+        <h1>interactive here</h1>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="dailyInteractive.js"></script>
+    <script>
+        $(window).scroll(function(){
+            var heroHeight = $('header').height();
+            var yPosition = $(document).scrollTop();
+
+            if (yPosition <= heroHeight){
+                var effectFactor = yPosition / heroHeight;
+                var rotation = effectFactor * (Math.PI / 2 - Math.asin (
+                (heroHeight - yPosition) / heroHeight));
+                $('.hero').css({
+                    '-webkit-transform': 'rotateX('+rotation+'rad)',
+                    'transform': 'rotateX('+rotation+'rad)',
+                })
+                .find('.overlay').css('opacity',effectFactor);
+            }
+
+            if (yPosition <= heroHeight){
+                $('nav').removeClass('fixed');
+            } else{
+                $('nav').addClass('fixed');
+            }
+        });
+    </script>
+
+</body>
+</html>

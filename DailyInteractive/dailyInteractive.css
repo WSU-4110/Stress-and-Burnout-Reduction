@@ -1,0 +1,160 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+    color: white;
+}
+
+h1 {
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center !important;
+    letter-spacing: 2px;
+    font-size: 80px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+h1::before,
+h1::after {
+    width: 220px;
+    height: 1px;
+    border: 4px double white;
+    content: "";
+    display: block;
+    margin: 20px auto;
+}
+
+#item2 h1::before, #item2 h1::after {
+    content: none; /* This effectively removes the pseudo-elements for this section */
+}
+
+header {
+    height: calc(100% - 65px);
+    -webkit-appearance: 1500px;
+    perspective: 1500px;
+    perspective-origin: center bottom;
+}
+
+.hero {
+    position: relative;
+    background:#333 url(test4.jpg) no-repeat center center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+}
+
+.hero .overlay {
+    content: "";
+    display:block;
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+}
+
+nav {
+    background:#000a1d;
+    height: 65px;
+}
+
+nav.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.sticky-wrapper {
+    height: 65px;
+}
+
+nav ul {
+    list-style:none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul a {
+    height: 65px;
+    line-height: 65px;
+    padding: 10px 15px;
+    color:#a1a1a1;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+section {
+    height: 100%;
+    width: 100%;
+    display: table;
+}
+
+section#item1 {
+    background: #F8D39D;
+    font-family: sans-serif;
+}
+
+section#item2 {
+    background-image: url(test1.jpg);
+    background-size: cover;
+    font-family: sans-serif;
+}
+
+:root {
+    --button_radius: 0.75em;
+    --button_color: #e8e8e8;
+    --button_outline_color: #000000;
+}
+  
+.sound-button {
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--button_radius);
+    background: var(--button_outline_color);
+    color: var(--button_color); /* Adjust if you want a different text color */
+    cursor: pointer;
+    display: inline-block; /* Adjust display to inline-block for better control */
+    box-sizing: border-box;
+    border: 2px solid var(--button_outline_color);
+    border-radius: var(--button_radius);
+    padding: 0.75em 1.5em;
+    background: var(--button_color);
+    color: var(--button_outline_color);
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease, background-color 0.3s, color 0.3s; /* Added transition for color and background-color */
+}
+  
+.sound-button:hover {
+    /* Pull the button upwards when hovered */
+    transform: translateY(-0.33em);
+}
+  
+.sound-button:active {
+    /* Push the button downwards when pressed */
+    transform: translateY(0);
+}
+
+.cat-gif {
+    /* Style for the cat GIF */
+    display: block;
+    margin: 10px auto;
+    width: auto; /* Adjust as needed */
+    height: auto; /* Adjust as needed */
+}
