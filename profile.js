@@ -37,4 +37,25 @@ document.addEventListener('DOMContentLoaded', function () {
     function getLoggedInUsername() {
         return localStorage.getItem('loggedInUsername') || '';
     }
+
+    // Function to change username
+    function changeUsername() {
+        // Get user input for new username
+        
+    }
+
+    // Function to change name
+    function changeName() {
+        
+    }
+
+    // Function to change email
+    function changeEmail() {
+        
+    }
+
+    // Function to change password
+    function changePassword() {
+        
+    }
 });
