@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container my-5">
+    <h2>Sign Up</h2>
+    <form class="row g-3 needs-validation" id="registerForm" method="POST" novalidate>
+
+        <div class="col-md-6 mb-3">
+            <label for="username" class="form-label">Username (@handle)</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="Required" required pattern="^(?!.*__.*)(?!.*\W.*)(?!^\d*$)[a-zA-Z0-9_]+$" title="Username must contain letters, numbers or underscores, with no more than one underscore in a row.">
+            <div class="invalid-feedback">Invalid Username. No special characters or consecutive underscores allowed.</div>
+        </div>
+		
+        <div class="col-md-6 mb-3">
+            <label for="pronouns" class="form-label">Pronouns (he/him, she/her)</label>
+            <input type="text" class="form-control" name="pronouns" id="pronouns" placeholder="Optional">
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="givenNames" class="form-label">Given Names (First Middle...)</label>
+            <input type="text" class="form-control" name="givenNames" id="givenNames" autocomplete="given-name" placeholder="Required" required>
+            <div class="invalid-feedback">You must enter your Given Names.</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="lastName" id="lastName" autocomplete="family-name" placeholder="Required" required>
+            <div class="invalid-feedback">You must enter your Last Name.</div>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" autocomplete="email" placeholder="Required" required>
+            <div class="invalid-feedback">Please enter a valid Email. Example: abc@xyz.com</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" autocomplete="new-password" placeholder="Required" required>
+            <div class="invalid-feedback">You must enter a Password.</div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" autocomplete="new-password" placeholder="Required" required>
+            <div class="invalid-feedback">Your Password does not match.</div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
+                <label class="form-check-label" for="terms">
+                    I accept the <a href="#" class="link-primary">Terms of Service</a>.
+                </label>
+                <div class="invalid-feedback">You must accept the Terms of Service before registering.</div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <button class="btn btn-primary" type="submit">Sign Up</button>
+        </div>
+        
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var form = document.getElementById('registerForm');
+    var password = document.getElementById('password');
+    var confirmPassword = document.getElementById('confirmPassword');
+    
+    var checkPasswordsMatch = function() {
+      if(password.value !== confirmPassword.value) {
+        confirmPassword.setCustomValidity("Passwords do not match!");
+      } else {
+        confirmPassword.setCustomValidity("");
+      }
+    };
+
+    confirmPassword.addEventListener('input', checkPasswordsMatch);
+    password.addEventListener('input', checkPasswordsMatch);
+
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      checkPasswordsMatch();
+
+      form.classList.add('was-validated');
+    }, false);
+  }, false);
+})();
+</script>
+
+</body>
+</html>
