@@ -151,25 +151,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const leftButton = document.getElementById('leftButton');
-            const rightButton = document.getElementById('rightButton');
-            
-            // Assuming checkLoginStatus is your function to detect session-id cookie
-            if (document.cookie.split(';').some((item) => item.trim().startsWith('session-id='))) {
-                // User is signed in
-                leftButton.textContent = 'Account';
-				leftButton.onclick = function() { window.location.href = '/account'; };
-                rightButton.textContent = 'Sign Out';
-                rightButton.onclick = function() { window.location.href = '/signout'; };
-            } else {
-                // User is signed out
-                leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function() { window.location.href = '/signup'; };
-                rightButton.textContent = 'Login';
-                rightButton.onclick = function() { window.location.href = '/login'; };
-            }
-        });
+document.addEventListener('DOMContentLoaded', function () {
+    const leftButton = document.getElementById('leftButton');
+    const rightButton = document.getElementById('rightButton');
+    
+    // Checking for the existence of the "session-id" cookie
+    const isLoggedIn = document.cookie.split('; ').find(row => row.startsWith('session-id')) !== undefined;
+
+    if (isLoggedIn) {
+        // User is signed in
+        setupSignedInButtons(leftButton, rightButton);
+    } else {
+        // User is signed out
+        setupSignedOutButtons(leftButton, rightButton);
+    }
+});
+
+function setupSignedInButtons(leftButton, rightButton) {
+    leftButton.textContent = 'Account';
+    leftButton.onclick = function() { window.location.href = '/account'; };
+    rightButton.textContent = 'Sign Out';
+    rightButton.onclick = function() { window.location.href = '/signout'; };
+}
+
+function setupSignedOutButtons(leftButton, rightButton) {
+    leftButton.textContent = 'Sign Up';
+    leftButton.onclick = function() { window.location.href = '/signup'; };
+    rightButton.textContent = 'Login';
+    rightButton.onclick = function() { window.location.href = '/login'; };
+}
     </script>
 </body>
 
