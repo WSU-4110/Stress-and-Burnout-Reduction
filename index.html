@@ -16,41 +16,36 @@
     <style>
         @import url(menuStyles.css);
     </style>
+    <!-- Bootstrap 4.3.1 CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <!-- Body, used to designate main content of page -->
 <body>
+    <!-- New Button Container -->
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 10px;">
+        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+    </div>
+
     <!-- Places an image, MeditationLogo.PNG, as a header element, with alt text logo -->
     <!-- Images can also be placed as h2, h3, p... etc. elements -->
     <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
-
-    <!-- Login button -->
-    <div class="login-container">
-        <li id="loginButton" class="user-button">
-			<a href="/login">Login</a>
-		</li>
-
-        <li id="profileButton" class="user-button" style="display: none;" onclick="goToProfile()">Profile</li>
-    </div>
 
     <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
     <header>
         <!-- nav and ul elements used for formatting organization -->
         <nav>
-            <ul>
-                <!-- To add links to more webpages, create more versions of the below <li></li> (list) element -->
-                <!-- href designates target webpage to link -->
-                <!-- target="_blank" indicates open in a new tab -->
-                <!-- "Home" is the words that show for the link in the header -->
-                <li><a href="index.html" target="_blank">Home</a></li>
-                <li><a href="forum.html" target="_blank">Forum</a></li>
-                <li><a href="/signup">Create Account</a></li>
-		        <li><a href="videopage.html" target="_blank">Video Library</a></li>
-                <!-- Add the progress dashboard link below -->
-                <li><a href="dashboard.html">Progress Dashboard</a></li>
-                <li><a href="article_library.html">Article Library</a></li>
-                <li><a href="DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-            </ul>
+            
+<div class="link-buttons mt-3">
+    <a href="index.html" target="_blank" class="btn btn-primary mr-2 mb-2">Home</a>
+    <a href="forum.html" target="_blank" class="btn btn-primary mr-2 mb-2">Forum</a>
+    <a href="videopage.html" target="_blank" class="btn btn-primary mr-2 mb-2">Video Library</a>
+    <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+    <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+    <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+</div>
+           
         </nav>
     </header>
 
@@ -152,11 +147,28 @@
         <p><small>This page and all properties owned by Meditation+&copy;</small></p>
     </footer>
 
-    <script src="login.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
-        // Call the checkLoginStatus function when the page loads
         document.addEventListener('DOMContentLoaded', function () {
-            checkLoginStatus();
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+            
+            // Assuming checkLoginStatus is your function to detect session-id cookie
+            if (document.cookie.split(';').some((item) => item.trim().startsWith('session-id='))) {
+                // User is signed in
+                leftButton.textContent = 'Account';
+				leftButton.onclick = function() { window.location.href = '/account'; };
+                rightButton.textContent = 'Sign Out';
+                rightButton.onclick = function() { window.location.href = '/signout'; };
+            } else {
+                // User is signed out
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function() { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function() { window.location.href = '/login'; };
+            }
         });
     </script>
 </body>
