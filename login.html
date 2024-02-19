@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container my-5">
+    <h2>Login</h2>
+    <p>If you do not have an account, you can <a href="/signup" class="link-primary">register here</a>.</p>
+    <form class="row g-3 needs-validation" id="loginForm" method="POST" novalidate>
+
+        <div class="col-md-12 mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" autocomplete="email" placeholder="Required" required>
+            <div class="invalid-feedback">Please enter a valid Email. Example: abc@xyz.com</div>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="password" autocomplete="current-password" placeholder="Required" required>
+            <div class="invalid-feedback">You must enter a Password.</div>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+        
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+(function() {
+  'use strict';
+  var form = document.getElementById('loginForm');
+  form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+  }, false);
+})();
+</script>
+
+</body>
+</html>
