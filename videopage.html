@@ -4,41 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Article Library</title>
-    <style>
-        @import url(menuStyles.css);
-    </style>
+    <link rel="stylesheet" href="videoStyles.css">
 </head>
 <body>
-    <header>
-        <!-- nav and ul elements used for formatting organization -->
-        <nav>
-            <ul>
-                <!-- To add links to more webpages, create more versions of the below <li></li> (list) element -->
-                <!-- href designates target webpage to link -->
-                <!-- target="_blank" indicates open in a new tab -->
-                <!-- "Home" is the words that show for the link in the header -->
-                <li><a href="index.html" target="_blank">Home</a></li>
-                <li><a href="forum.html" target="_blank">Forum</a></li>
-                <li><a href="register.html">Create Account</a></li>
-            </ul>
-        </nav>
-    </header>
-   <div class="main-content container">
-    <!-- Video 1 -->
-    <div class="video">
-        <a href="https://www.youtube.com/watch?v=grfXR6FAsI8&pp=ygURc3RyZXNzIG1hbmFnZW1lbnQ%3D" target="_blank">
-            <img src="stress-management.jpg" alt="3-Minute Stress Management Exercise">
-            <h3>3-Minute Stress Management</h3>
-        </a>
-        <p>A short stress management activity.</p>
+    <div class="navbar">
+        <a href="index.html" target="_blank">Home</a>
+        <a href="forum.html" target="_blank">Forum</a>
+        <a href="register.html">Create Account</a>
+	<a href="dashboard.html">Progress Dashboard</a>
+	<a href="article_library.html">Article Library</a>
+	<a href="DailyInteractive/dailyinteractive.html">Daily Interactive</a>
     </div>
-    <!-- Video 2 -->
-    </div class = "video">
-	<a href="https://www.youtube.com/watch?v=gLxDCC9qHRk&pp=ygUsaG93IHRvIGF2b2lkIGJ1cm5vdXQgYXMgYSBzb2Z0d2FyZSBlbmdpbmVlciA%3D" target="_blank">
-	    <img src="burnoutimage.jpg" alt="Avoiding Burnout as a Software Engineer">
-	    <h3>Avoiding Burnout as a Software Engineer</h3>
-	</a>
-	<p>A video on experiencing burnout as a software engineer and tips to avoid it.</p>
+
+    <h1 class="library-title">Wellness+ Video Library</h1>
+
+    <div class="main-content">
+        <div class="video-gallery">
+            <!-- Video 1 -->
+            <div class="video-card" data-video-url = "https://www.youtube.com/embed/grfXR6FAsI8">
+                <a href="https://www.youtube.com/watch?v=grfXR6FAsI8&pp=ygURc3RyZXNzIG1hbmFnZW1lbnQ%3D">
+                    <img src="https://img.youtube.com/vi/grfXR6FAsI8/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>3-Minute Stress Management</h3>
+                        <p>A short stress management activity by Therapy in a Nutshell.</p>
+                    </div>
+                </a>
+            </div>
+            <!-- Video 2 -->
+            <div class="video-card" data-video-url = "https://www.youtube.com/embed/BaHubT9AdQ4">
+                <a href="https://youtu.be/BaHubT9AdQ4">
+                    <img src="https://img.youtube.com/vi/BaHubT9AdQ4/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>Avoiding Burnout as a Software Engineer</h3>
+                        <p>A video by TechLead on experiencing burnout as a software engineer and tips to avoid it.</p>
+                    </div>
+                </a>
+            </div>
+	    <!-- Video 3 -->
+	    <div class="video-card" data-video-url = "https://www.youtube.com/embed/hQX-BtFp-Rc">
+                <a href="https://youtu.be/hQX-BtFp-Rc">
+                    <img src="https://img.youtube.com/vi/hQX-BtFp-Rc/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>Why is Burnout So Common in Tech? Let's talk about it</h3>
+                        <p>This video from mayuko discusses some of the many reasons as to why many workers in the tech industry experience burnout.</p>	
+                    </div>
+                </a>
+            </div>
+            <!-- Video 4 -->
+	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=JslvBcIVtDg">
+                <a href="https://www.youtube.com/watch?v=JslvBcIVtDg">
+                    <img src="https://img.youtube.com/vi/JslvBcIVtDg/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>How To Meditate For Beginners (Animated)</h3>
+                        <p>This video from Mitch Manly shows a step-by-step guide on learning how to meditate.</p>	
+                    </div>
+                </a>
+            </div>
+            <!-- Video 5 -->
+	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=9skSLIZqKTw">
+                <a href="https://www.youtube.com/watch?v=9skSLIZqKTw">
+                    <img src="https://img.youtube.com/vi/9skSLIZqKTw/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>The Biological Benefits of Meditation</h3>
+                        <p>University of California Television, or UCTV for short, gives us a short lecture on the physical benefits of meditation!</p>	
+                    </div>
+                </a>
+            </div>
+            <!-- Video 6 -->
+	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=-RZ86OB9hw4">
+                <a href="https://www.youtube.com/watch?v=-RZ86OB9hw4">
+                    <img src="https://img.youtube.com/vi/-RZ86OB9hw4/0.jpg" alt="Video thumbnail">
+                    <div class="video-info">
+                        <h3>Conquering exam stress: lessons from our bodies</h3>
+                        <p>The Physiological Society shows how students can tackle stressful events such as exam periods, driving tests, and more!</p>	
+                    </div>
+                </a>
+            </div>
+       </div>
+  </div>
+  <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
     </div>
+    <div class="footer">
+	&copy; 2024 Meditation+
+    <div>
+    <script src="videopage.js"></script>
 </body>
 </html>
+
