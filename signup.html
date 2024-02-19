@@ -10,7 +10,7 @@
 
 <div class="container my-5">
     <h2>Sign Up</h2>
-    <form class="row g-3 needs-validation" id="signupForm" method="POST" action="/signup.js" novalidate>
+    <form class="row g-3 needs-validation" id="signupForm" method="POST" novalidate>
 
         <div class="col-md-6 mb-3">
             <label for="username" class="form-label">Username (@handle)</label>
@@ -80,7 +80,10 @@
     var form = document.getElementById('signupForm');
     var password = document.getElementById('password');
     var confirm_password = document.getElementById('confirm_password');
-    
+    var username = document.getElementById('username');
+    var errorMessage = document.createElement('div');
+    errorMessage.classList.add('text-danger', 'mt-2');
+
     var checkPasswordsMatch = function() {
       if(password.value !== confirm_password.value) {
         confirm_password.setCustomValidity("Passwords do not match!");
@@ -92,31 +95,39 @@
     confirm_password.addEventListener('input', checkPasswordsMatch);
     password.addEventListener('input', checkPasswordsMatch);
 
-    form.addEventListener('submit', async function(event) {
+    form.addEventListener('submit', function(event) {
       event.preventDefault();
-      if (!form.checkValidity() || !checkPasswordsMatch()) {
-        event.stopPropagation();
-        form.classList.add('was-validated');
-        return; // Prevent submission if validation fails
-      }
-      
-      // Form submission via fetch API
-      const formData = new FormData(form);
-      try {
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-        });
-        const result = await response.text();
+      event.stopPropagation();
 
-        // Handle response here. For example:
-        if (!response.ok) {
-          throw new Error(result); // Assume error message in plain text for simplicity
-        }
-        alert('User created successfully'); // Or display message on the page
-      } catch (error) {
-        alert(error.message); // Or display error message on page
+      checkPasswordsMatch();
+
+      if (!form.checkValidity() || !checkPasswordsMatch()) {
+        form.classList.add('was-validated');
+        return;
       }
+
+      // Asynchronously submit the form data
+      var formData = new FormData(form);
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      }).then(response => {
+        if (response.ok) {
+          window.location.href = '/account'; // Redirect on success
+        } else {
+          // Handle errors, for example, show error message if username exists
+          if (response.status == 400) {
+            username.classList.add('is-invalid');
+            errorMessage.textContent = 'Username already exists.';
+            username.parentNode.appendChild(errorMessage);
+          } else {
+            alert('An error occurred. Please try again later.');
+          }
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again later.');
+      });
     }, false);
   }, false);
 })();
