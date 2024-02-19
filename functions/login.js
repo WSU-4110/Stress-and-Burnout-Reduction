@@ -41,7 +41,7 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error('Login error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return new Response(`Internal Server Error: ${error.message}`, { status: 500 });
   }
 }
 
