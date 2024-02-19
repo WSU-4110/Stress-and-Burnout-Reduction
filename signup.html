@@ -10,14 +10,14 @@
 
 <div class="container my-5">
     <h2>Sign Up</h2>
-    <form class="row g-3 needs-validation" id="signupForm" method="POST" novalidate>
+    <form class="row g-3 needs-validation" id="signupForm" novalidate>
 
         <div class="col-md-6 mb-3">
             <label for="username" class="form-label">Username (@handle)</label>
             <input type="text" class="form-control" name="username" id="username" placeholder="Required" required pattern="^(?!.*__.*)(?!.*\W.*)(?!^\d*$)[a-zA-Z0-9_]+$" title="Username must contain letters, numbers or underscores, with no more than one underscore in a row.">
             <div class="invalid-feedback">Invalid Username. No special characters or consecutive underscores allowed.</div>
         </div>
-		
+        
         <div class="col-md-6 mb-3">
             <label for="pronouns" class="form-label">Pronouns (he/him, she/her)</label>
             <input type="text" class="form-control" name="pronouns" id="pronouns" placeholder="Optional">
@@ -63,8 +63,12 @@
             </div>
         </div>
 
+        <div id="signupMessage" class="col-md-12 mb-3" style="display: none;">
+            <div class="alert alert-danger" role="alert"></div>
+        </div>
+
         <div class="col-md-12 mb-3">
-            <button class="btn btn-primary" type="submit">Sign Up</button>
+            <button class="btn btn-primary" type="button" id="signupButton">Sign Up</button>
         </div>
         
     </form>
@@ -76,32 +80,63 @@
 <script>
 (function() {
   'use strict';
+  var form = document.getElementById('signupForm');
+  var password = document.getElementById('password');
+  var confirm_password = document.getElementById('confirm_password');
+  
+  var checkPasswordsMatch = function() {
+    if(password.value !== confirm_password.value) {
+      confirm_password.setCustomValidity("Passwords do not match!");
+    } else {
+      confirm_password.setCustomValidity("");
+    }
+  };
+
+  confirm_password.addEventListener('input', checkPasswordsMatch);
+  password.addEventListener('input', checkPasswordsMatch);
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent form submission
+    event.stopPropagation();
+  }, false);
+
+  document.getElementById('signupButton').addEventListener('click', function(e) {
+    var messageDiv = document.getElementById('signupMessage');
+    messageDiv.style.display = 'none'; // Hide previous messages
+
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return; // Exit if form is not valid
+    }
+
+    // Prepare form data
+    var formData = new FormData(form);
+
+    // Make AJAX request
+    fetch('signup', { // Adjust the URL as necessary
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if(!response.ok) {
+            return response.text().then(text => {throw new Error(text);});
+        }
+        // Display success message or redirect as desired
+        return response.text();
+    })
+    .then(data => {
+        // Handle success, maybe display a success message or redirect
+        console.log('Success:', data);
+    })
+    .catch(error => {
+        messageDiv.querySelector('.alert').textContent = error.message;
+        messageDiv.style.display = 'block';
+    });
+  });
+  
   window.addEventListener('load', function() {
-    var form = document.getElementById('signupForm');
-    var password = document.getElementById('password');
-    var confirm_password = document.getElementById('confirm_password');
-    
-    var checkPasswordsMatch = function() {
-      if(password.value !== confirm_password.value) {
-        confirm_password.setCustomValidity("Passwords do not match!");
-      } else {
-        confirm_password.setCustomValidity("");
-      }
-    };
 
-    confirm_password.addEventListener('input', checkPasswordsMatch);
-    password.addEventListener('input', checkPasswordsMatch);
-
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      
-      checkPasswordsMatch();
-
-      form.classList.add('was-validated');
-    }, false);
+    form.classList.add('was-validated');
   }, false);
 })();
 </script>

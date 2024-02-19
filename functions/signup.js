@@ -4,7 +4,7 @@ import { pbkdf2Sync } from 'node:crypto';
 export async function onRequestPost({ request, env }) {
   try {
     const formData = await request.formData();
-    const username = formData.get('username').trim();
+    const username = formData.get('username').trim().toLowerCase();
     const rawPassword = formData.get('password');
 
     // Check if username is already taken
