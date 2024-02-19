@@ -80,10 +80,7 @@
     var form = document.getElementById('signupForm');
     var password = document.getElementById('password');
     var confirm_password = document.getElementById('confirm_password');
-    var username = document.getElementById('username');
-    var errorMessage = document.createElement('div');
-    errorMessage.classList.add('text-danger', 'mt-2');
-
+    
     var checkPasswordsMatch = function() {
       if(password.value !== confirm_password.value) {
         confirm_password.setCustomValidity("Passwords do not match!");
@@ -96,38 +93,14 @@
     password.addEventListener('input', checkPasswordsMatch);
 
     form.addEventListener('submit', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
       checkPasswordsMatch();
 
-      if (!form.checkValidity() || !checkPasswordsMatch()) {
-        form.classList.add('was-validated');
-        return;
-      }
-
-      // Asynchronously submit the form data
-      var formData = new FormData(form);
-      fetch(form.action, {
-        method: 'POST',
-        body: formData
-      }).then(response => {
-        if (response.ok) {
-          window.location.href = '/account'; // Redirect on success
-        } else {
-          // Handle errors, for example, show error message if username exists
-          if (response.status == 400) {
-            username.classList.add('is-invalid');
-            errorMessage.textContent = 'Username already exists.';
-            username.parentNode.appendChild(errorMessage);
-          } else {
-            alert('An error occurred. Please try again later.');
-          }
-        }
-      }).catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again later.');
-      });
+      form.classList.add('was-validated');
     }, false);
   }, false);
 })();
