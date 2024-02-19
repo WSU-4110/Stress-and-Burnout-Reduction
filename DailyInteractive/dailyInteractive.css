@@ -92,15 +92,32 @@ section {
 }
 
 section#item1 {
-    background: #000000;
+    background-color: #000000;
+    background-size: cover;
     font-family: sans-serif;
 }
 
 section#item2 {
-    background-image: url(https://wallpapercave.com/wp/wp2757896.gif);
-    background-size: cover;
+    background-image: url(DIcontent.gif);
     background-color: #000000;
     font-family: sans-serif;
+}
+
+
+.interactive-box {
+    width: 600px; /* Adjust the size of the square box */
+    height: 300px; /* Adjust the size of the square box */
+    margin: 20px auto; /* Center the box */
+    padding: 20px; /* Padding inside the box */
+    background-color: #000000a5; /* Background color of the box */
+    border: 2px solid #272626; /* Border around the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow for depth */
+    display: flex; /* Utilize Flexbox for internal alignment */
+    flex-direction: row; /* Stack children vertically */
+    gap: 30px;
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+    border-radius: 8px; /* Optional: Rounds the corners of the box */
 }
 
 :root {
@@ -145,3 +162,4 @@ section#item2 {
     width: auto; /* Adjust as needed */
     height: auto; /* Adjust as needed */
 }
+
