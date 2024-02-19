@@ -1,7 +1,37 @@
 import { v4 as uuidv4 } from 'uuid';
 import { pbkdf2Sync } from 'node:crypto';
 
+// Simple CORS headers
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "*", // Adjust this to restrict the origin as necessary
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+};
+
+// Options handler for preflight requests
+function handleOptions(request) {
+    if (request.headers.get("Origin") !== null &&
+        request.headers.get("Access-Control-Request-Method") !== null &&
+        request.headers.get("Access-Control-Request-Headers") !== null) {
+        // Handle CORS pre-flight request.
+        return new Response(null, {
+            headers: corsHeaders
+        });
+    } else {
+        // Handle standard OPTIONS request.
+        return new Response(null, {
+            headers: {
+                "Allow": "POST, OPTIONS",
+            }
+        });
+    }
+}
+
 export async function onRequestPost({ request, env }) {
+  if (request.method === "OPTIONS") {
+    return handleOptions(request);
+  }
+  
   try {
     const formData = await request.formData();
     const username = formData.get('username').trim().toLowerCase();
@@ -10,7 +40,7 @@ export async function onRequestPost({ request, env }) {
     // Check if username is already taken
     const existingUser = await env.COOLFROG_USERS.get(username);
     if (existingUser) {
-      return new Response("Username already exists", { status: 400 });
+      return new Response("Username already exists", { status: 400, headers: corsHeaders });
     }
 
     // User data handling
@@ -21,7 +51,7 @@ export async function onRequestPost({ request, env }) {
     // Building user object
     const user = {
       uid: uuidv4(),
-      username: formData.get('username').trim(),
+      username: username,
       pronouns: formData.get('pronouns').trim(),
       given_names: formData.get('given_names').trim(),
       last_name: formData.get('last_name').trim(),
@@ -45,9 +75,9 @@ export async function onRequestPost({ request, env }) {
     await env.COOLFROG_USERS.put(username, JSON.stringify(user));
 
     // Respond to the client
-    return new Response("User created successfully", { status: 200 });
+    return new Response("User created successfully", { status: 200, headers: corsHeaders });
   } catch (error) {
     console.error("Signup error:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return new Response("Internal Server Error", { status: 500, headers: corsHeaders });
   }
 }
