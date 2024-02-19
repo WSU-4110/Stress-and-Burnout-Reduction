@@ -7,42 +7,56 @@ export async function onRequestPost({ request, env }) {
     const email = formData.get('email').trim();
     const rawPassword = formData.get('password');
 
-    const username = await env.COOLFROG_EMAILS.get(email);
-    if (!username) {
-        return responseForRetry('Incorrect email or password.');
-    }
-  
-    const userData = await env.COOLFROG_USERS.get(username);
-    if (!userData) {
+    const usernameKey = await env.COOLFROG_EMAILS.get(email);
+    if (!usernameKey) {
         return responseForRetry('Incorrect email or password.');
     }
 
-    const user = JSON.parse(userData);
+    let user = await env.COOLFROG_USERS.get(usernameKey);
+    if (!user) {
+        return responseForRetry('Incorrect email or password.');
+    }
+
+    user = JSON.parse(user);
     const hashedPassword = pbkdf2Sync(rawPassword, user.salt, 1000, 64, 'sha256').toString('hex');
     if (hashedPassword !== user.password) {
         return responseForRetry('Incorrect email or password.');
     }
 
-    // Passwords match, create a new session
+    // Passwords match, update user info for a new session
     const sessionId = uuidv4();
     const currentTime = Math.floor(Date.now() / 1000);
+
+    // Set last sign-in time
+    user.time_last_sign_in = currentTime;
+
+    // Add or update the sessions array in the user object
+    if (!user.sessions) user.sessions = [];
+    user.sessions.push({
+        sessionId: sessionId,
+        time_session_creation: currentTime,
+    });
+
+    // Update user in COOLFROG_USERS with the new session and last sign-in time
+    await env.COOLFROG_USERS.put(usernameKey, JSON.stringify(user));
+    
+    // Also store the session information in COOLFROG_SESSIONS
     const sessionData = {
         username: user.username,
         time_session_creation: currentTime,
     };
-
     await env.COOLFROG_SESSIONS.put(sessionId, JSON.stringify(sessionData));
 
-    // Set the session-id cookie and redirect to account page
+    // Set the session-id cookie and redirect to an account page
     const headers = {
-      'Set-cookie': `session-id=${sessionId}; Path=/; HttpOnly`,
+      'Set-Cookie': `session-id=${sessionId}; Path=/; HttpOnly`,
       'Content-Type': 'text/html',
     };
-    return new Response(`<html><head><title>Login Successful</title></head><body><p>Login Successful. Redirecting...</p><script>window.location.href = '/account';</script></body></html>`, { status: 200, headers: headers});
+    return new Response(`<html><head><title>Login Successful</title></head><body><p>Login Successful. Redirecting...</p><script>window.location.href = '/account';</script></body></html>`, { status: 200, headers});
 
   } catch (error) {
     console.error('Login error:', error);
-    return new Response(`Internal Server Error: ${error.message}`, { status: 500 });
+    return new Response('Internal Server Error', { status: 500 });
   }
 }
 
