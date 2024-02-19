@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-import { pbkdf2Sync } from 'crypto';
+import { v4 as uuidv4 } from 'node:uuid';
+import { pbkdf2Sync } from 'node:crypto';
 
 export async function onRequestPost({ request, env }) {
   try {
