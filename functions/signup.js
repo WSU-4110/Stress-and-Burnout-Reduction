@@ -5,20 +5,23 @@ export async function onRequestPost({ request, env }) {
   try {
     const formData = await request.formData();
     const username = formData.get('username').trim().toLowerCase();
+    const email = formData.get('email').trim();
     const rawPassword = formData.get('password');
 
+    // Checking if the user or email already exists
     const existingUser = await env.COOLFROG_USERS.get(username);
-    if (existingUser) {
+    const existingEmail = await env.COOLFROG_EMAILS.get(email);
+    if (existingUser || existingEmail) {
       const retryResponseHTML = `
         <html>
           <head>
-            <title>Username Exists</title>
+            <title>Username or Email Exists</title>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
           </head>
           <body>
             <div class="container text-center p-5">
-              <h2>Username already exists</h2>
+              <h2>Username or Email already exists</h2>
               <p>Please wait, you'll be able to retry in a few seconds.</p>
               <button id="retryButton" class="btn btn-primary mt-3" disabled>Retry</button>
               <script>
@@ -41,12 +44,12 @@ export async function onRequestPost({ request, env }) {
     const hashedPassword = pbkdf2Sync(rawPassword, salt, 1000, 64, 'sha256').toString('hex');
     const user = {
       uid: uuidv4(),
-      username: formData.get('username').trim(),
+      username: username,
       pronouns: formData.get('pronouns').trim(),
       given_names: formData.get('given_names').trim(),
       last_name: formData.get('last_name').trim(),
       emails: [{
-        email: formData.get('email').trim(),
+        email: email,
         verified: false,
       }],
       sessions: null,
@@ -61,7 +64,9 @@ export async function onRequestPost({ request, env }) {
       time_marked_for_deletion: null,
     };
 
+    // Put operations for the user in COOLFROG_USERS and email in COOLFROG_EMAILS namespace
     await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+    await env.COOLFROG_EMAILS.put(email, username);
 
     const successResponseHTML = `
       <html>
