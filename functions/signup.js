@@ -7,18 +7,38 @@ export async function onRequestPost({ request, env }) {
     const username = formData.get('username').trim().toLowerCase();
     const rawPassword = formData.get('password');
 
-    // Check if username is already taken
     const existingUser = await env.COOLFROG_USERS.get(username);
     if (existingUser) {
-      return new Response("Username already exists", { status: 400 });
+      const retryResponseHTML = `
+        <html>
+          <head>
+            <title>Username Exists</title>
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+          </head>
+          <body>
+            <div class="container text-center p-5">
+              <h2>Username already exists</h2>
+              <p>Please wait, you'll be able to retry in a few seconds.</p>
+              <button id="retryButton" class="btn btn-primary mt-3" disabled>Retry</button>
+              <script>
+                setTimeout(function() {
+                  document.getElementById('retryButton').disabled = false;
+                  document.getElementById('retryButton').innerText = 'Retry Now';
+                  document.getElementById('retryButton').onclick = function() {
+                    window.location.href = '/signup';
+                  };
+                }, 5000);
+              </script>
+            </div>
+          </body>
+        </html>`;
+      return new Response(retryResponseHTML, { status: 400, headers: { "Content-Type": "text/html" }});
     }
-
-    // User data handling
-    const currentTime = Math.floor(Date.now() / 1000);
-    const salt = uuidv4(); // Using UUID as salt
-    const hashedPassword = pbkdf2Sync(rawPassword, salt, 1000, 64, 'sha256').toString('hex');
     
-    // Building user object
+    const currentTime = Math.floor(Date.now() / 1000);
+    const salt = uuidv4();
+    const hashedPassword = pbkdf2Sync(rawPassword, salt, 1000, 64, 'sha256').toString('hex');
     const user = {
       uid: uuidv4(),
       username: formData.get('username').trim(),
@@ -41,11 +61,23 @@ export async function onRequestPost({ request, env }) {
       time_marked_for_deletion: null,
     };
 
-    // Store the data in KV
     await env.COOLFROG_USERS.put(username, JSON.stringify(user));
 
-    // Respond to the client
-    return new Response("User created successfully", { status: 200 });
+    const successResponseHTML = `
+      <html>
+        <head>
+          <title>Account Created</title>
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        </head>
+        <body>
+          <div class="container text-center p-5">
+            <h2>Account Created Successfully!</h2>
+            <button class="btn btn-success mt-3" onclick="window.location.href='/login'">Go to Login</button>
+          </div>
+        </body>
+      </html>`;
+    return new Response(successResponseHTML, { status: 200, headers: { "Content-Type": "text/html" }});
   } catch (error) {
     console.error("Signup error:", error);
     return new Response("Internal Server Error", { status: 500 });
