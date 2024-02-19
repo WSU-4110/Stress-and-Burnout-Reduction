@@ -10,7 +10,7 @@
 
 <div class="container my-5">
     <h2>Sign Up</h2>
-    <form class="row g-3 needs-validation" id="registerForm" method="POST" novalidate>
+    <form class="row g-3 needs-validation" id="signupForm" method="POST" novalidate>
 
         <div class="col-md-6 mb-3">
             <label for="username" class="form-label">Username (@handle)</label>
@@ -24,14 +24,14 @@
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="givenNames" class="form-label">Given Names (First Middle...)</label>
-            <input type="text" class="form-control" name="givenNames" id="givenNames" autocomplete="given-name" placeholder="Required" required>
+            <label for="given_names" class="form-label">Given Names (First Middle...)</label>
+            <input type="text" class="form-control" name="given_names" id="given_names" autocomplete="given-name" placeholder="Required" required>
             <div class="invalid-feedback">You must enter your Given Names.</div>
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="lastName" class="form-label">Last Name</label>
-            <input type="text" class="form-control" name="lastName" id="lastName" autocomplete="family-name" placeholder="Required" required>
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" name="last_name" id="last_name" autocomplete="family-name" placeholder="Required" required>
             <div class="invalid-feedback">You must enter your Last Name.</div>
         </div>
 
@@ -48,8 +48,8 @@
         </div>
 
         <div class="col-md-6 mb-3">
-            <label for="confirmPassword" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" autocomplete="new-password" placeholder="Required" required>
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="confirm_password" id="confirm_password" autocomplete="new-password" placeholder="Required" required>
             <div class="invalid-feedback">Your Password does not match.</div>
         </div>
 
@@ -77,19 +77,19 @@
 (function() {
   'use strict';
   window.addEventListener('load', function() {
-    var form = document.getElementById('registerForm');
+    var form = document.getElementById('signupForm');
     var password = document.getElementById('password');
-    var confirmPassword = document.getElementById('confirmPassword');
+    var confirm_password = document.getElementById('confirm_password');
     
     var checkPasswordsMatch = function() {
-      if(password.value !== confirmPassword.value) {
-        confirmPassword.setCustomValidity("Passwords do not match!");
+      if(password.value !== confirm_password.value) {
+        confirm_password.setCustomValidity("Passwords do not match!");
       } else {
-        confirmPassword.setCustomValidity("");
+        confirm_password.setCustomValidity("");
       }
     };
 
-    confirmPassword.addEventListener('input', checkPasswordsMatch);
+    confirm_password.addEventListener('input', checkPasswordsMatch);
     password.addEventListener('input', checkPasswordsMatch);
 
     form.addEventListener('submit', function(event) {
