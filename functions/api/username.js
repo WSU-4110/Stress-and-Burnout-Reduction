@@ -1,32 +1,33 @@
-addEventListener('fetch', event => {
-  event.respondWith(handleRequest(event.request))
-})
-
-async function handleRequest(request) {
-  // Check if request is for the username API
-  const url = new URL(request.url);
-  if (url.pathname === "/api/username") {
-    const cookieHeader = request.headers.get("Cookie");
-    const sessionId = getCookieValue(cookieHeader, "session-id");
-    
-    if (sessionId) {
-      // Attempt to fetch session data from KV
-      const sessionData = await COOLFROG_SESSIONS.get(sessionId);
-      if (sessionData) {
-        // Session is valid, parse the stored JSON to get the username
-        const data = JSON.parse(sessionData);
-        return new Response(JSON.stringify({ username: data.username }), { status: 200, headers: { "Content-Type": "application/json" }});
-      }
+export async function onRequestGet({ request, env }) {
+  try {
+    const sessionId = getSessionIdFromRequest(request);
+    if (!sessionId) {
+      return new Response(JSON.stringify({ error: 'Session ID missing from cookies' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
     }
-    // If sessionId not found or sessionData not available, return an error or empty user.
-    return new Response(JSON.stringify({ username: null}), { status: 200, headers: { "Content-Type": "application/json" }});
-  }
 
-  return new Response('Not found', { status: 404 });
+    const sessionValue = await env.COOLFROG_SESSIONS.get(sessionId);
+    if (!sessionValue) {
+      return new Response(JSON.stringify({ error: 'Session not found' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+    }
+
+    const sessionData = JSON.parse(sessionValue);
+    return new Response(JSON.stringify({ username: sessionData.username }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+
+  } catch (error) {
+    console.error('API username error:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+  }
 }
 
-// Utility function to parse cookies and extract a specific one
-function getCookieValue(cookieHeader, cookieName) {
-  let matches = cookieHeader?.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)');
-  return matches ? matches.pop() : null;
+function getSessionIdFromRequest(request) {
+  const cookieHeader = request.headers.get('Cookie');
+  if (!cookieHeader) return null;
+  
+  const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+  const sessionIdCookie = cookies.find(cookie => cookie.startsWith('session-id='));
+  
+  if (!sessionIdCookie) return null;
+  
+  const sessionId = sessionIdCookie.split('=')[1];
+  return sessionId;
 }
