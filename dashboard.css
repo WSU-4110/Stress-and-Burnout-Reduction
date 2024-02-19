@@ -4,35 +4,84 @@ body, h1, h2, p, ul, li, nav {
 	padding: 0;
 }
 
+.header-box {
+    background-color: #c4a8be; /* Yellow color */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.header-message {
+    color: black; 
+    font-size: 24px; /* Adjust font size as needed */
+}
+
+
 body {
 	font-family: Arial, sans-serif;
 	background-color: #f0f0f0;
 }
+.dashboard-section {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
 
-/* Add border around the image */
+.section-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-content h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+
+
 #mindfulnessImage {
     display: block; /* Ensure the image takes up the full width available */
     margin: 0 auto; /* Center the image horizontally */
-    border: 2px solid #333; /* Add a solid border around the image */
+    border: 2px solid #333; 
     border-radius: 10px; /* Add rounded corners to the border */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
-    max-width: 100%; /* Ensure the image doesn't exceed its container's width */
+    max-width: 55%; 
+	height: auto;
 }
 
 .image-container {
-    text-align: center; /* Center align the image and quote */
+    text-align: center; 
+	animation: bounce 1s ease-in-out;
 }
 
+@keyframes bounce {
+    0% { transform: translateY(-20px); }
+    50% { transform: translateY(20px); }
+    100% { transform: translateY(0); }
+}
+
+
 .quote {
-    font-size: 16px; /* Adjust font size as needed */
+    font-size: 16px; 
     margin-top: 10px; /* Add some space between the image and quote */
 	font-weight: bold;
 	font-style: italic;
+	color: #640c6bde;
+	animation: pulse 3s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
 
 header {
-	background-color: #333;
+	background-color: #483c3c;
 	color: #fff;
 	padding: 20px;
 }
@@ -101,5 +150,5 @@ footer {
 	color: #fff;
 	text-align: center;
 	padding: 20px;
-    margin-top: 30px; /* Add space between content and footer */
+    margin-top: 30px; 
 }
