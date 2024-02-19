@@ -82,14 +82,16 @@ nav ul {
     padding: 0;
     list-style-type: none;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 nav ul li {
     margin: 0.5em;
     font-weight: bold;
     text-align: center;
-    display: inline-block; 
+    display: inline-block;
 }
 
 nav ul li a {
@@ -98,6 +100,8 @@ nav ul li a {
     border-radius: 0.5em;
     padding: 0.5em 1em;
     margin: 0.25em;
+    display: block;
+    width: 100%;
 }
 
 /* styling for login/logout button */
@@ -114,7 +118,7 @@ nav ul li a {
 .login-container {
     padding: 15px 20px; 
     position: absolute;
-    top: 10px;
+    top: 60px;
     right: 10px;
     display: flex; /* Use flexbox */
     align-items: center; /* Center items vertically */
