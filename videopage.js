@@ -1,38 +1,65 @@
-// Waits until DOM is loaded before running script
-document.addEventListener('DOMContentLoaded', function() {
-    // Retrieves modal element using its ID
-    const modal = document.getElementById("modal");
-    const span = document.getElementsByClassName("close")[0];
-    // Retrieves iframe element where the video will be embedded
-    const videoFrame = document.getElementById("videoFrame");
+class VideoModal {
+    // Constructor to initialize the modal with necessary DOM elements
+    constructor(modalId, videoFrameId, closeButtonClass, videoCardClass) {
+        this.modal = document.getElementById(modalId); 
+        this.videoFrame = document.getElementById(videoFrameId); 
+        this.closeButton = document.getElementsByClassName(closeButtonClass)[0]; 
+        this.videoCards = document.querySelectorAll(videoCardClass); 
+        this.init(); // Initialize the modal functionality
+    }
 
-    // Attaches click event listeners to elements with video-card class
-    document.querySelectorAll(".video-card").forEach(function(video) {
-        video.addEventListener('click', function(e) {
-            e.preventDefault();
-            const videoUrl = this.getAttribute("data-video-url");
-            // Transforms video URL into proper embed URL and autoplay
-            const embedUrl = videoUrl.replace("watch?v=", "embed/");
-            videoFrame.src = `${embedUrl}?autoplay=1&rel=0`;
-            // Displays modal
-            modal.style.display = "block";
+    // Initialize the modal by attaching event listeners
+    init() {
+        this.attachVideoCardsEvents(); 
+        this.attachCloseButtonEvent(); 
+        this.attachWindowClickEvent(); 
+    }
+
+    // Attach click event listeners to each video card
+    attachVideoCardsEvents() {
+        this.videoCards.forEach(videoCard => {
+            videoCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.openModal(videoCard.getAttribute("data-video-url"));
+            });
         });
-    });
+    }
 
-    // Onclick event listener attached to close button
-    span.onclick = function() {
-        // Hides the modal
-        modal.style.display = "none";
-        videoFrame.src = "";
+    // Function to open the modal and play the video
+    openModal(videoUrl) {
+        const embedUrl = this.transformVideoUrl(videoUrl); // Transform the video URL for embedding
+        this.videoFrame.src = `${embedUrl}?autoplay=1&rel=0`; 
+        this.modal.style.display = "block"; 
     }
-    
-    // Onclick event listener attached to window
-    window.onclick = function(event) {
-        // Checks if click event is outside video player
-        if (event.target === modal) {
-            // Hides the modal and clears video src
-            modal.style.display = "none";
-            videoFrame.src = "";
-        }
+
+    transformVideoUrl(videoUrl) {
+        return videoUrl.replace("watch?v=", "embed/");
     }
+
+    // Attach an event listener to the close button to close the modal
+    attachCloseButtonEvent() {
+        this.closeButton.onclick = () => {
+            this.closeModal(); 
+        };
+    }
+
+    // Attach an event listener to the window to close the modal when clicking outside of it
+    attachWindowClickEvent() {
+        window.onclick = (event) => {
+            if (event.target === this.modal) {
+                this.closeModal(); 
+            }
+        };
+    }
+
+    // Function to close the modal
+    closeModal() {
+        this.modal.style.display = "none"; 
+        this.videoFrame.src = ""; 
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
 });
+
