@@ -1,0 +1,31 @@
+1. Create a "Cloudflare Pages" project and connect a Git repository to it.
+
+2. Ensure the following settings are set for the project to successfully build.
+
+Custom domains:
+coolfrog.net
+
+Build command:
+npm run
+
+Build system version:
+Version: 2 (latest)
+
+Compatibility date:
+2024-02-20
+
+Compatibility flags:
+nodejs_compat
+
+KV namespace bindings:
+Variable name		KV namespace
+--------------------------------------------
+COOLFROG_EMAILS		coolfrog.emails
+COOLFROG_SESSIONS	coolfrog.sessions
+COOLFROG_USERS		coolfrog.users
+
+3. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
+
+4. If you have defined any node.js APIs, you must use the "node:" prefix. (Do not do this for npm packages).
+	DO THIS ---->	import { pbkdf2Sync } from 'node:crypto';
+	NOT THIS ---->	import { pbkdf2Sync } from 'crypto';
