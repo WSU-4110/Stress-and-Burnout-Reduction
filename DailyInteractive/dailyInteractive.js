@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
         case 2: // Tuesday
             setupTuesdayContent();
             break;
-        case 3: // Wednesday
+        case 4: // Wednesday
             setupWednesdayContent();
             break;
-        case 4: // Thursday
+        case 3: // Thursday
             setupThursdayContent();
             break;
         case 5: // Friday

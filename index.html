@@ -15,6 +15,44 @@
     <!-- Use the below 3 lines to import style sheet, keeps formatting consistent across all webpages -->
     <style>
         @import url(menuStyles.css);
+
+        /* Added styles for fixed navigation bar */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+        }
+
+        /* Adjusted styles for smaller screens */
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap; /* Added to allow items to wrap */
+        }
+
+        nav ul li {
+            margin: 0.5em;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            border: 1px solid;
+            border-radius: 0.5em;
+            padding: 0.5em 1em;
+            margin: 0.25em;
+            display: block; /* Added to ensure full width for smaller screens */
+            width: 100%; /* Added to make the items take full width */
+        }
     </style>
 </head>
 

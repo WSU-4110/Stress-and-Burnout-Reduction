@@ -2,12 +2,13 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
-    font-family: sans-serif;
+    font-family: monospace;
     color: white;
 }
 
 h1 {
     margin: 0;
+    padding: 100px;
     display: table-cell;
     vertical-align: middle;
     text-align: center !important;
@@ -17,30 +18,15 @@ h1 {
     text-transform: uppercase;
 }
 
-h1::before,
-h1::after {
-    width: 220px;
-    height: 1px;
-    border: 4px double white;
-    content: "";
-    display: block;
-    margin: 20px auto;
-}
-
-#item2 h1::before, #item2 h1::after {
-    content: none; /* This effectively removes the pseudo-elements for this section */
-}
-
 header {
     height: calc(100% - 65px);
-    -webkit-appearance: 1500px;
     perspective: 1500px;
     perspective-origin: center bottom;
 }
 
 .hero {
     position: relative;
-    background:#333 url(test4.jpg) no-repeat center center;
+    background:#333 url(DIcover.jpg) no-repeat center center;
     background-size: cover;
     height: 100%;
     width: 100%;
@@ -61,7 +47,7 @@ header {
 }
 
 nav {
-    background:#000a1d;
+    background:#000000;
     height: 65px;
 }
 
@@ -106,13 +92,14 @@ section {
 }
 
 section#item1 {
-    background: #F8D39D;
+    background: #000000;
     font-family: sans-serif;
 }
 
 section#item2 {
-    background-image: url(test1.jpg);
+    background-image: url(https://wallpapercave.com/wp/wp2757896.gif);
     background-size: cover;
+    background-color: #000000;
     font-family: sans-serif;
 }
 
