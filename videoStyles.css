@@ -44,6 +44,17 @@ body, html {
   margin-top: 50px;
 }
 
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: black;
+    text-align: left;
+    padding: 10px;
+    font-size: small;
+}
+
 .modal {
     display: none; 
     position: fixed; 
