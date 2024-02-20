@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
         case 1: // Monday
             setupMondayContent();
             break;
-        case 2: // Tuesday
+        case 3: // Tuesday
             setupTuesdayContent();
             break;
-        case 4: // Wednesday
+        case 2: // Wednesday
             setupWednesdayContent();
             break;
-        case 3: // Thursday
+        case 4: // Thursday
             setupThursdayContent();
             break;
         case 5: // Friday
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         case 6: // Saturday
             setupSaturdayContent();
             break;
-        case 7: // Sunday
+        case 0: // Sunday
             setupSundayContent();
             break;
     }
@@ -28,9 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setupWednesdayContent() {
     const content = `
-        <button class="sound-button" data-sound="keyboard-typing.mp3">Keyboard Typing</button>
-        <button class="sound-button" data-sound="deep-breath.mp3">Deep Breath</button>
-        <button class="sound-button" data-sound="ziplock-bag.mp3">Ziplock Bag</button>
+        <div class="interactive-box">
+            <button class="sound-button" data-sound="keyboard-typing.mp3">Keyboard Typing</button>
+            <button class="sound-button" data-sound="deep-breath.mp3">Deep Breath</button>
+            <button class="sound-button" data-sound="ziplock-bag.mp3">Ziplock Bag</button>
+        </div>
     `;
     document.querySelector('#item2 h1').innerHTML = content; // Ensure this targets the correct container
     
@@ -63,7 +65,7 @@ function setupWednesdayContent() {
 
 function setupThursdayContent() {
     const content = `<img class="cat-gif" src="https://i.pinimg.com/originals/36/99/23/3699234f311b8d44ba46d6503b4a033c.gif" alt="Cat">`;
-    document.querySelector('#item2 h1').innerHTML = content;
+    document.querySelector('#item2').innerHTML = content;
     const sound = new Audio('purring-cat.mp3');
     sound.loop = true; // Enable looping
 
