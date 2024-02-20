@@ -5,11 +5,26 @@ body {
     padding: 20px; /* Add padding for better readability */
 }
 
+/* Add pulse animation */
+@keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+
 header {
     background-color: #a9507b; /* Header background color */
     color: #fff; /* Header text color */
     padding: 20px; /* Add padding for better readability */
     text-align: center;
+    animation: pulse 3s;
 }
 
 main {
@@ -26,6 +41,7 @@ main {
     border-radius: 8px; /* Rounded corners */
     padding: 20px;
     width: 300px;
+    animation: pulse 3s;
 }
 
 .article h2 {
@@ -62,6 +78,7 @@ main {
     z-index: 1; /* Ensure the image appears on top of other content */
     width: 150px; /* Adjust the width of the image container */
     max-width: calc(100% - 40px); /* Limit the maximum width to prevent crossing the header box */
+    animation: pulse 3s;
 }
 
 .image-container img {
