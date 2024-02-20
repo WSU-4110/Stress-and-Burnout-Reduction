@@ -11,10 +11,28 @@
     </style>
     <!-- Bootstrap 4.3.1 CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 
 <body>
-    <header>
+    <header class="fixed-header">
         <!-- nav and ul elements used for formatting organization -->
         <nav>
             <div class="link-buttons mt-3">
@@ -29,7 +47,7 @@
     </header>
 
     <!-- Login button -->
-    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 10px;">
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 50px;">
         <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
         <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
     </div>
