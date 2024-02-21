@@ -105,7 +105,7 @@
             <label for="postContent">Content:</label>
             <textarea id="postContent" name="postContent" required></textarea>
 
-            <button type="submit">Post</button>
+            <button type="button" onclick="submitPost()">Post</button>
         </form>
     </div>
 
@@ -148,7 +148,45 @@
                 rightButton.textContent = 'Login';
                 rightButton.onclick = function () { window.location.href = '/login'; };
             });
+
+            const postForm = document.getElementById('postForm');
+
+            postForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const postTitle = document.getElementById('postTitle').value;
+                const postContent = document.getElementById('postContent').value;
+
+                // Call a function to handle the creation of a new page
+                createNewPage(postTitle, postContent);
+            });
         });
+        async function createNewPage(title, content) {
+            try {
+                // Send the post data to your server
+                const response = await fetch('/api/createPage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title, content }),
+                });
+
+                // Get the generated unique identifier for the new page
+                const pageId = await response.json();
+
+                // Create a link to the new page and append it to the 'forum-posts' section
+                const forumPostsSection = document.getElementById('forum-posts');
+                const newPageLink = document.createElement('a');
+                newPageLink.href = `/forum/${pageId}`; // Update the path based on your URL structure
+                newPageLink.textContent = title;
+                const newPageElement = document.createElement('div');
+                newPageElement.appendChild(newPageLink);
+                forumPostsSection.appendChild(newPageElement);
+            } catch (error) {
+                console.error('Error creating a new page:', error);
+            }
+        }
     </script>
 </body>
 
