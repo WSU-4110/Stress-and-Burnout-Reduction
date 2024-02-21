@@ -148,46 +148,82 @@ async function checkLoggedIn(request) {
     }
 }
 
-async function fetchForumPosts() {
-    try {
-        const response = await fetch('/api/forum/posts');
-        const forumPosts = await response.json();
-
-        // Clear existing posts
-        const forumPostsContainer = document.getElementById('forum-posts');
-        forumPostsContainer.innerHTML = '';
-
-        // Append new posts
-        forumPosts.forEach(post => {
-            const postElement = createPostElement(post);
-            forumPostsContainer.appendChild(postElement);
-        });
-    } catch (error) {
-        console.error('Error fetching forum posts:', error);
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Fetch and update forum posts
+    const leftButton = document.getElementById('leftButton');
+    const rightButton = document.getElementById('rightButton');
     fetchForumPosts();
 
-    // Add event listener to the form
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', async function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        // Get form data
-        const title = document.getElementById('postTitle').value;
-        const content = document.getElementById('postContent').value;
-
-        // Call the API to create a new post
-        await createForumPost(title, content);
-
-        // Fetch and update forum posts after creating a new post
-        fetchForumPosts();
-
-        // Optionally, clear the form fields after submission
-        document.getElementById('postTitle').value = '';
-        document.getElementById('postContent').value = '';
+    fetch('/api/username').then(response => response.json()).then(data => {
+        if (data.username) {
+            leftButton.textContent = 'Account';
+            leftButton.onclick = function () { window.location.href = '/account'; };
+            // Dynamically use the username in the 'Sign Out' button text
+            rightButton.textContent = `Sign Out of ${data.username}`;
+            rightButton.onclick = function () { window.location.href = '/signout'; };
+        } else {
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function () { window.location.href = '/signup'; };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function () { window.location.href = '/login'; };
+        }
+    }).catch(error => {
+        console.error("Error fetching username:", error);
+        leftButton.textContent = 'Sign Up';
+        leftButton.onclick = function () { window.location.href = '/signup'; };
+        rightButton.textContent = 'Login';
+        rightButton.onclick = function () { window.location.href = '/login'; };
     });
+
+    async function fetchForumPosts() {
+        try {
+            const response = await fetch('/api/forum/posts');
+            const forumPosts = await response.json();
+
+            // Clear existing posts
+            const forumPostsContainer = document.getElementById('forum-posts');
+            forumPostsContainer.innerHTML = '';
+
+            // Append new posts
+            forumPosts.forEach(post => {
+                const postElement = createPostElement(post);
+                forumPostsContainer.appendChild(postElement);
+            });
+        } catch (error) {
+            console.error('Error fetching forum posts:', error);
+        }
+    }
+            
+    function createPostElement(post) {
+        // Create a new post element
+        const postElement = document.createElement('div');
+        postElement.classList.add('forum-post');
+
+        // Title
+        const titleElement = document.createElement('h2');
+        titleElement.textContent = post.title;
+        postElement.appendChild(titleElement);
+
+        // Content
+        const contentElement = document.createElement('p');
+        contentElement.textContent = post.content;
+        postElement.appendChild(contentElement);
+
+        // Likes
+        const likesElement = document.createElement('span');
+        likesElement.textContent = `Likes: ${post.likes}`;
+        postElement.appendChild(likesElement);
+
+        // Dislikes
+        const dislikesElement = document.createElement('span');
+        dislikesElement.textContent = `Dislikes: ${post.dislikes}`;
+        postElement.appendChild(dislikesElement);
+
+        // Link to view comments
+        const commentsLink = document.createElement('a');
+        commentsLink.href = `/forum/${post.id}/comments`;
+        commentsLink.textContent = 'View Comments';
+        postElement.appendChild(commentsLink);
+
+        return postElement;
+    }
 });
