@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const postContent = document.getElementById('postContent').value;
 
         // Call a function to handle the creation of a new post
-        createNewPost(postTitle, postContent);
+        createNewPage(postTitle, postContent);
     });
 });
 
