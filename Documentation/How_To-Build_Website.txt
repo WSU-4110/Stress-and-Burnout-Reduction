@@ -23,6 +23,7 @@ Variable name		KV namespace
 COOLFROG_EMAILS		coolfrog.emails
 COOLFROG_SESSIONS	coolfrog.sessions
 COOLFROG_USERS		coolfrog.users
+COOLFROG_FORUM		coolfrog.forum
 
 3. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
 
