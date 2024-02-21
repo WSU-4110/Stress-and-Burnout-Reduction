@@ -77,7 +77,7 @@ function responseForRetry(message) {
                 document.getElementById('retryButton').disabled = false;
                 document.getElementById('retryButton').innerText = 'Retry Now';
                 document.getElementById('retryButton').onclick = function() {
-                  window.location.href = '/';
+                  window.location.href = '/login';
                 };
               }, 5000);
             </script>
