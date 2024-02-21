@@ -132,9 +132,9 @@ section#item2 {
     border: none;
     border-radius: var(--button_radius);
     background: var(--button_outline_color);
-    color: var(--button_color); /* Adjust if you want a different text color */
+    color: var(--button_color);
     cursor: pointer;
-    display: inline-block; /* Adjust display to inline-block for better control */
+    display: inline-block;
     box-sizing: border-box;
     border: 2px solid var(--button_outline_color);
     border-radius: var(--button_radius);

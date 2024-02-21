@@ -11,19 +11,52 @@
 <head>
     <meta charset="utf-8">
     <title>Home Webpage</title>
-    
+
     <!-- Use the below 3 lines to import style sheet, keeps formatting consistent across all webpages -->
     <style>
         @import url(menuStyles.css);
     </style>
     <!-- Bootstrap 4.3.1 CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 
 <!-- Body, used to designate main content of page -->
 <body>
+    <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
+    <header class="fixed-header">
+        <!-- nav and ul elements used for formatting organization -->
+        <nav>
+            <div class="link-buttons mt-3">
+                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+            </div>
+        </nav>
+    </header>
+
     <!-- New Button Container -->
-    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 10px;">
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 50px;"> <!-- Adjust the value of padding-top -->
         <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
         <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
     </div>
@@ -32,23 +65,6 @@
     <!-- Images can also be placed as h2, h3, p... etc. elements -->
     <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
 
-    <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
-    <header>
-        <!-- nav and ul elements used for formatting organization -->
-        <nav>
-            
-<div class="link-buttons mt-3">
-    <a href="index.html" target="_blank" class="btn btn-primary mr-2 mb-2">Home</a>
-    <a href="forum.html" target="_blank" class="btn btn-primary mr-2 mb-2">Forum</a>
-    <a href="videopage.html" target="_blank" class="btn btn-primary mr-2 mb-2">Video Library</a>
-    <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
-    <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
-    <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
-</div>
-           
-        </nav>
-    </header>
-
     <!-- h1, h2, h3... etc. are used for header titles and organizational levels -->
     <h1>Meditation+</h1>
 
@@ -56,16 +72,16 @@
     <div class="content">
         <!-- h2 is a sub header title, can be formatted differently from h1, h3... etc. -->
         <h2>Our Organization</h2>
-        
+
         <!-- <p></p> elements stand for paragraph -->
         <p>
-            Introducing "Meditation+," a cutting-edge wellness company dedicated to promoting mental and emotional well-being. 
+            Introducing "Meditation+," a cutting-edge wellness company dedicated to promoting mental and emotional well-being.
         </p>
         <p>
             Our mission is to provide a holistic approach to stress reduction, burnout prevention, and relaxation through a variety of activities and services.
         </p>
         <p>
-            At Meditation+, we understand the demands of modern life and the importance of finding balance. 
+            At Meditation+, we understand the demands of modern life and the importance of finding balance.
         </p>
         <p>
             Our team of certified meditation instructors, mindfulness experts, and wellness coaches collaborates to create personalized programs tailored to each individual's needs.
@@ -73,23 +89,23 @@
 
         <h2>Our Organization's Goals</h2>
         <p>
-            <b>Promote Mental Wellness:</b> Meditation+ is committed to raising awareness about the importance of mental health. 
+            <b>Promote Mental Wellness:</b> Meditation+ is committed to raising awareness about the importance of mental health.
             Our primary goal is to promote mental wellness by providing accessible and effective tools to manage stress, reduce burnout, and enhance overall mental well-being.
         </p>
         <p>
-            <b>Empower Individuals:</b> We strive to empower individuals to take control of their mental health journey. 
+            <b>Empower Individuals:</b> We strive to empower individuals to take control of their mental health journey.
             Through personalized wellness plans, educational resources, and supportive communities, Meditation+ aims to give individuals the tools they need to navigate life's challenges with resilience and mindfulness.
         </p>
         <p>
-            <b>Cultivate Mindfulness Practices:</b> Our organization is dedicated to cultivating mindfulness practices as a key component of a balanced lifestyle. 
+            <b>Cultivate Mindfulness Practices:</b> Our organization is dedicated to cultivating mindfulness practices as a key component of a balanced lifestyle.
             We aim to integrate mindfulness into daily routines, encouraging individuals to embrace the present moment and develop a heightened sense of self-awareness.
         </p>
         <p>
-            <b>Foster Inclusivity:</b> Meditation+ is committed to creating an inclusive and welcoming environment for people from all walks of life. 
+            <b>Foster Inclusivity:</b> Meditation+ is committed to creating an inclusive and welcoming environment for people from all walks of life.
             We believe that everyone should have access to resources that promote mental well-being, and we actively work towards removing barriers and promoting diversity in our programs.
         </p>
         <p>
-            <b>Collaborate for Impact:</b> To maximize our impact, we actively seek collaborations with mental health professionals, researchers, and community organizations. 
+            <b>Collaborate for Impact:</b> To maximize our impact, we actively seek collaborations with mental health professionals, researchers, and community organizations.
             By fostering partnerships, Meditation+ aims to contribute to the collective effort in advancing the understanding and practice of mental wellness.
         </p>
 
@@ -106,38 +122,39 @@
     <div class="services">
         <h1>Services:</h1>
 
-        <h3>Self Help Articles</h2>
-        <p>
-            On the Meditation+ website, you can find a diverse range of self-help and mental wellness articles aimed at providing valuable insights, 
-            practical tips, and evidence-based information to support individuals on their journey towards better mental health. 
-        </p>
+        <h3>
+            Self Help Articles</h2>
+            <p>
+                On the Meditation+ website, you can find a diverse range of self-help and mental wellness articles aimed at providing valuable insights,
+                practical tips, and evidence-based information to support individuals on their journey towards better mental health.
+            </p>
 
-        <h3>De-Stress Meditations</h3>
-        <p>
-            On the Meditation+ website, you'll find a variety of meditation services designed to cater to individuals at different experience levels and preferences. 
-            These services aim to foster a sense of calm, mindfulness, and overall mental well-being. 
-        </p>
+            <h3>De-Stress Meditations</h3>
+            <p>
+                On the Meditation+ website, you'll find a variety of meditation services designed to cater to individuals at different experience levels and preferences.
+                These services aim to foster a sense of calm, mindfulness, and overall mental well-being.
+            </p>
 
-        <h3>Relaxing Sound and ASMR Library</h3>
-        <p>
-            Meditation+ offers a curated Relaxing Sound and ASMR Library, providing a soothing auditory experience to enhance relaxation, mindfulness, and overall well-being. 
-            The library is designed to cater to diverse preferences, offering a variety of sounds that can be used for meditation, stress relief, focus enhancement, 
-            or simply to create a calming atmosphere.
-        </p>
+            <h3>Relaxing Sound and ASMR Library</h3>
+            <p>
+                Meditation+ offers a curated Relaxing Sound and ASMR Library, providing a soothing auditory experience to enhance relaxation, mindfulness, and overall well-being.
+                The library is designed to cater to diverse preferences, offering a variety of sounds that can be used for meditation, stress relief, focus enhancement,
+                or simply to create a calming atmosphere.
+            </p>
     </div>
 
     <div class="other services">
         <h1>Other Services:</h1>
         <p>
-            In addition to meditation services and a Relaxing Sound and ASMR Library, Meditation+ offers a range of basic services to support individuals on their journey towards mental well-being. 
-            These services are designed to provide comprehensive and accessible resources for users at various stages of their mindfulness practice. 
+            In addition to meditation services and a Relaxing Sound and ASMR Library, Meditation+ offers a range of basic services to support individuals on their journey towards mental well-being.
+            These services are designed to provide comprehensive and accessible resources for users at various stages of their mindfulness practice.
         </p>
     </div>
 
     <div class="message">
         <h1>Organization Public Statement</h1>
         <p>
-            Join Meditation+ and embark on a journey toward a healthier, more balanced life. 
+            Join Meditation+ and embark on a journey toward a healthier, more balanced life.
             Embrace the power of mindfulness, reduce stress, and discover the tranquility that comes with our comprehensive approach to well-being.
         </p>
     </div>
@@ -150,33 +167,33 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const leftButton = document.getElementById('leftButton');
-        const rightButton = document.getElementById('rightButton');
-        
-        fetch('/api/username').then(response => response.json()).then(data => {
-            if (data.username) {
-                leftButton.textContent = 'Account';
-                leftButton.onclick = function() { window.location.href = '/account'; };
-                // Dynamically use the username in the 'Sign Out' button text
-                rightButton.textContent = `Sign Out of ${data.username}`;
-                rightButton.onclick = function() { window.location.href = '/signout'; };
-            } else {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    // Dynamically use the username in the 'Sign Out' button text
+                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
                 leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function() { window.location.href = '/signup'; };
+                leftButton.onclick = function () { window.location.href = '/signup'; };
                 rightButton.textContent = 'Login';
-                rightButton.onclick = function() { window.location.href = '/login'; };
-            }
-        }).catch(error => {
-            console.error("Error fetching username:", error);
-            leftButton.textContent = 'Sign Up';
-            leftButton.onclick = function() { window.location.href = '/signup'; };
-            rightButton.textContent = 'Login';
-            rightButton.onclick = function() { window.location.href = '/login'; };
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>

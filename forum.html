@@ -5,32 +5,54 @@
 <head>
     <meta charset="utf-8">
     <title>Forum Webpage</title>
-    
+
     <style>
         @import url(menuStyles.css);
     </style>
+    <!-- Bootstrap 4.3.1 CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 
 <body>
-    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
-
-    <!-- Login button -->
-    <div class="login-container">
-        <li id="loginButton" class="user-button" onclick="toggleLogin()">Login</li>
-
-        <li id="profileButton" class="user-button" style="display: none;" onclick="goToProfile()">Profile</li>
-    </div>
-
-    <header>
+    <header class="fixed-header">
+        <!-- nav and ul elements used for formatting organization -->
         <nav>
-            <ul>
-                <li><a href="index.html" target="_blank">Home</a></li>
-                <li><a href="forum.html" target="_blank">Forum</a></li>
-                <li><a href="register.html">Create Account</a></li>
-		<li><a href="videopage.html" target="_blank">Video Library</a></li>
-            </ul>
+            <div class="link-buttons mt-3">
+                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+            </div>
         </nav>
     </header>
+
+    <!-- Login button -->
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 50px;">
+        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+    </div>
+
+    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
 
     <h1>Meditation+ Forum</h1>
 
