@@ -120,3 +120,43 @@ nav div a {
     text-transform: uppercase;
     text-decoration: none;
 }
+
+/* Styling for the post form container */
+.post-form-container {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Styling for the form labels */
+.post-form-container label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+/* Styling for form inputs and textarea */
+.post-form-container input,
+.post-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+/* Styling for the submit button */
+.post-form-container button {
+    background-color: #a1a1a1;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.post-form-container button:hover {
+    background-color: #a1a1a1;
+}
