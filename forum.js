@@ -122,9 +122,72 @@ async function handleLikeDislike(request) {
 
 // Helper function to check if the user is logged in
 async function checkLoggedIn(request) {
-    // Perform necessary checks to ensure the user is logged in
-    // ...
+    try {
+        // Check for the session ID in cookies
+        const sessionIdCookie = request.headers.get('Cookie')?.match(/session-id=([^;]+)(;|$)/)?.[1];
 
-    // If not logged in, throw an error
-    throw new Error('User not logged in');
+        if (!sessionIdCookie) {
+            // If session ID not found, user is not logged in
+            throw new Error('User not logged in');
+        }
+
+        // Validate the session ID against your data store (KV worker)
+        const sessionData = await env.COOLFROG_SESSIONS.get(sessionIdCookie);
+
+        if (!sessionData) {
+            // If session not found, user is not logged in
+            throw new Error('User not logged in');
+        }
+
+        // If all checks pass, return the username
+        const { username } = JSON.parse(sessionData);
+        return username;
+    } catch (error) {
+        // Handle errors or redirect the user to the login page
+        throw new Error('User not logged in');
+    }
 }
+
+async function fetchForumPosts() {
+    try {
+        const response = await fetch('/api/forum/posts');
+        const forumPosts = await response.json();
+
+        // Clear existing posts
+        const forumPostsContainer = document.getElementById('forum-posts');
+        forumPostsContainer.innerHTML = '';
+
+        // Append new posts
+        forumPosts.forEach(post => {
+            const postElement = createPostElement(post);
+            forumPostsContainer.appendChild(postElement);
+        });
+    } catch (error) {
+        console.error('Error fetching forum posts:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch and update forum posts
+    fetchForumPosts();
+
+    // Add event listener to the form
+    const postForm = document.getElementById('postForm');
+    postForm.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get form data
+        const title = document.getElementById('postTitle').value;
+        const content = document.getElementById('postContent').value;
+
+        // Call the API to create a new post
+        await createForumPost(title, content);
+
+        // Fetch and update forum posts after creating a new post
+        fetchForumPosts();
+
+        // Optionally, clear the form fields after submission
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postContent').value = '';
+    });
+});
