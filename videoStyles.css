@@ -3,7 +3,7 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
+  background-color: black;
 }
 
 
@@ -11,30 +11,59 @@ body, html {
     text-align: center;
     margin-top: 20px;
     font-size: 28px;
-    color: #333;
+    color: white;
 }
 
 
 /* Navigation bar styles */
 .navbar {
-  background-color: #333;
+  background-color: black;
   overflow: hidden;
   position: sticky;
   top: 0;
   z-index: 1000;
+  font-family: Arial; 
+  margin: 0 auto; /* Center the navbar horizontally */
+  text-align: center; /* Center the text inside navbar */
 }
 
 .navbar a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
   text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+    height: 65px;
+    line-height: 65px;
+    padding: 10px 15px;
+    color: #a1a1a1;
+    background-color: black;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
 }
 
 .navbar a:hover {
   background-color: #ddd;
+  color: black;
+}
+
+/* styling for user login and sign up buttons*/
+.user-button-container {
+  text-align: right;
+  padding-right: 20px;
+  padding-top: 80px;
+}
+
+.user-button-container button {
+  color: #a1a1a1;
+  background-color: black;
+  border: 1px solid #a1a1a1;
+  font-family: 'Arial', sans-serif; 
+  font-size: 16px; 
+  padding: 10px 20px; 
+}
+
+.user-button-container button:hover {
+  background-color: #a1a1a1;
   color: black;
 }
 
@@ -99,7 +128,12 @@ body, html {
     cursor: pointer;
 }
 
-
+footer {
+  padding: 10px;
+  bottom: 0;
+  width: 100%;
+  color: white;
+}
 
 /* Video gallery styles */
 .video-gallery {

@@ -1,5 +1,5 @@
 body {
-    background-color: #6991b9; /* Light background color */
+    background-color: black; /* Light background color */
     color: #333; /* Dark text color */
     font-family: 'Roboto', sans-serif; /* Modern font */
     padding: 20px; /* Add padding for better readability */
@@ -20,8 +20,8 @@ body {
 
 
 header {
-    background-color: #a9507b; /* Header background color */
-    color: #fff; /* Header text color */
+    background-color: white; /* Header background color */
+    color: black; /* Header text color */
     padding: 20px; /* Add padding for better readability */
     text-align: center;
     animation: pulse 3s;
@@ -57,7 +57,7 @@ main {
 
 .article a {
     display: inline-block;
-    background-color: #5d5db1; /* Button background color */
+    background-color: black; /* Button background color */
     color: #fff; /* Button text color */
     padding: 10px 20px;
     text-decoration: none;
@@ -67,7 +67,7 @@ main {
 }
 
 .article a:hover {
-    background-color: #0056b3; /* Darker button color on hover */
+    background-color: #a1a1a1; /* Darker button color on hover */
 }
 
 .image-container {
@@ -86,3 +86,50 @@ main {
     height: auto; /* Maintain the aspect ratio */
 }
 
+/* styling for user login and sign up buttons*/
+.user-button-container {
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 80px;
+}
+
+.user-button-container button {
+    color: #a1a1a1;
+    background-color: black;
+    border: 1px solid #a1a1a1;
+    font-family: 'Arial', sans-serif; 
+    font-size: 16px; 
+    padding: 10px 20px; 
+}
+
+.user-button-container button:hover {
+    background-color: #a1a1a1;
+    color: black;
+}
+
+nav {
+    text-align: center;
+}
+
+nav div {
+    text-align: center;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+nav div a {
+    text-align: center;
+    height: 65px;
+    line-height: 65px;
+    padding: 10px 15px;
+    color: #a1a1a1;
+    background-color: black;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
+}
