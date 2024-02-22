@@ -46,13 +46,13 @@ function generateUniqueId() {
 }
 
 // Function to get all posts from server
-async function getAllPosts() {
+async function getAllPosts({env}) {
     // Retrieve all posts from KV
-    const allKeys = await COOLFROG_FORUM.list();
+    const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
 
     for (const key of allKeys.keys) {
-        const post = await COOLFROG_FORUM.get(key.name, { type: 'json' });
+        const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
         allPosts.push(post);
     }
 
@@ -60,7 +60,7 @@ async function getAllPosts() {
 }
 
 // Function to create a new page
-async function createNewPage(title, content) {
+export async function createNewPage(title, content, {env}) {
     try {
 
         // Get information to send to server
@@ -68,7 +68,7 @@ async function createNewPage(title, content) {
         const postId = generateUniqueId();
 
         // Send information to server
-        await COOLFROG_FORUM.put(postId, JSON.stringify(postContent));
+        await env.COOLFROG_FORUM.put(postId, JSON.stringify(postContent));
 
         // Create a link to the new page and append it to the 'forum-posts' section
         const forumPostsSection = document.getElementById('forum-posts');
