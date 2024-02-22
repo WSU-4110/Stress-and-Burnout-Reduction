@@ -38,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-
 // Function to generate a unique identifier
 function generateUniqueId() {
     return Math.random().toString(36).substring(2, 10);
