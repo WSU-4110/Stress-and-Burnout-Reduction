@@ -5,97 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progress Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="dailyInteractive.css"> <!-- Add your friend's CSS file -->
-</head>
-<body>
-    <header id="home">
-        <div class="hero">
-            <div class="overlay"></div>
-            <h1>Welcome to the Progress Dashboard</h1>
-        </div>
-    </header>
 
-    <div class="sticky-wrapper">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
+</head>
+
+<header class="fixed-header">
+    <!-- nav and ul elements used for formatting organization -->
+    <nav>
+        <div>
+            <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+            <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+            <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+            <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+            <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+        </div>
+    </nav>
+</header>
+
+<header>
+    <div class="header-box">
+        <h1>Welcome to the Progress Dashboard</h1>
         <nav>
             <ul>
                 <li><a href="#overview">Overview</a></li>
                 <li><a href="#goals">Goal Tracking</a></li>
                 <li><a href="#progress">Progress Charts</a></li>
                 <li><a href="#achievements">Achievement Badges</a></li>
+                
             </ul>
         </nav>
     </div>
+</header>
 
+<body>
     <main>
-        
+
+        <div class="image-container">
+            <img id="mindfulnessImage" src="MindfulnessImage.jpeg" alt="Mindfulness Image">
             <blockquote class="quote">
                 <p>"Rest when you're weary. Refresh and renew yourself, your body, your mind, your spirit. Then get back to work." - Ralph Marston</p>
             </blockquote>
         </div>
 
+
+
         <!-- Overview Section -->
-        <section id="overview" class="dashboard-section">
+        <section id="overview">
             <h2>Overview</h2>
-            <div class="section-content">
+            <!-- Summary of user's progress and achievements -->
+            <div class="summary">
                 <p>A brief overview of your progress and key metrics.</p>
             </div>
         </section>
 
         <!-- Goal Tracking Section -->
-        <section id="goals" class="dashboard-section">
+        <section id="goals"> 
             <h2>Goal Tracking</h2>
-            <div class="section-content">
+            <div class="summary">
                 <p>Set and track your goals to achieve your objectives.</p>
             </div>
-            <ul id="goalList" class="section-content">
+            <ul id="goalList">
                 <!-- Goal cards will be dynamically added here -->
             </ul>
             <!-- Form to add/edit goals -->
-            <form id="goalForm" class="section-content">
+            <form id="goalForm">
                 <input type="text" id="goalInput" placeholder="Enter new goal">
                 <button type="submit">Add Goal</button>
             </form>
         </section>
 
         <!-- Progress Charts Section -->
-        <section id="progress" class="dashboard-section">
+        <section id="progress">
             <h2>Progress Charts</h2>
-            <div class="section-content">
+            <div class="summary">
                 <p>Visualize your progress with interactive charts and graphs.</p>
             </div>
             <!-- Display charts/graphs to visualize user's progress -->
-            <div id="chartContainer" class="section-content">
+            <div id="chartContainer">
                 <!-- Charts will be dynamically added here -->
             </div>
         </section>
 
         <!-- Achievement Badges Section -->
-        <section id="achievements" class="dashboard-section">
+        <section id="achievements">
             <h2>Achievement Badges</h2>
-            <div class="section-content">
+            <div class="summary">
                 <p>Earn badges and rewards for completing tasks and reaching milestones.</p>
             </div>
             <!-- Showcase badges earned by the user -->
-            <div class="badges section-content">
+            <div class="badges">
                 <!-- Badges will be dynamically added here -->
             </div>
         </section>
-
         <!-- Percentage of Finished Goals Section -->
-        <section id="percentage" class="dashboard-section">
-            <h2>Percentage of Finished Goals</h2>
-            <div class="section-content">
-                <p>Track your progress by viewing the percentage of finished goals.</p>
-            </div>
-            <!-- Display the percentage of finished goals -->
-            <div id="percentageContainer" class="section-content">
-                <!-- Percentage will be dynamically updated here -->
-            </div>
-        </section>
+<section id="percentage">
+    <h2>Percentage of Finished Goals</h2>
+    <!-- Summary of percentage of finished goals section -->
+    <div class="summary">
+        <p>Track your progress by viewing the percentage of finished goals.</p>
+    </div>
+    <!-- Display the percentage of finished goals -->
+    <div id="percentageContainer">
+        <!-- Percentage will be dynamically updated here -->
+    </div>
+</section>
+
+
+    
     </main>
 
     <footer>
-        <p>&copy; Meditation++</p>
+        <p>&copy; Meditation++ </p>
     </footer>
 
     <script src="dashboard.js"></script>

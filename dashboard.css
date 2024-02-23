@@ -1,60 +1,71 @@
 /* Reset default browser styles */
 body, h1, h2, p, ul, li, nav {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
-/* Dark mode theme */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #121212; /* Dark background color */
-    color: #fff; /* White text color */
-}
-
-/* Header Styles */
-header {
-    background-color: #333; /* Darker background color */
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-}
-
-header h1 {
-    margin-bottom: 10px;
-    font-size: 36px;
-}
-
-/* Navigation Styles */
-nav ul {
-    list-style-type: none;
-    text-align: center;
-    margin-top: 10px;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-/* Main Content Styles */
-main {
-    padding: 20px;
-}
-
-/* Section Styles */
-section {
-    margin-bottom: 30px;
+.header-box {
+    background-color: black; 
+    padding: 20px 50px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Light shadow for dark mode */
+    text-align: center;
+	margin: 0 10%;
+    font-family: Verdana, sans-serif;
+    font-size: 100%;
+    color: #a1a1a1;
+}
+
+.header-message {
+    color: #a1a1a1; 
+    font-size: 24px; /* Adjust font size as needed */
+}
+
+/* styling to keep nav bar scrolling with website*/
+.fixed-header {
+    position: fixed;
+    justify-content: center;
+    width: 100%;
+    z-index: 1000;
+    background-color: black; 
+}
+
+nav {
+    text-align: center;
+}
+
+nav div {
+    text-align: center;
+}
+
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+nav div a {
+    text-align: center;
+    height: 65px;
+    line-height: 65px;
+    padding: 10px 15px;
+    color: #a1a1a1;
+    background-color: black;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: black;
+}
+.dashboard-section {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background-color: #333; /* Darker background color */
+    margin-bottom: 30px;
 }
 
 .section-content {
@@ -63,53 +74,118 @@ section {
 }
 
 .section-content h2 {
-    color: #fff;
+    color: #333;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
-/* Form Styles */
-form input[type="text"],
-form button {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #555; /* Darker background color for form elements */
-    color: #fff;
+#mindfulnessImage {
+    display: block; /* Ensure the image takes up the full width available */
+    margin: 0 auto; /* Center the image horizontally */
+    border: 2px solid #333; 
+    border-radius: 10px; /* Add rounded corners to the border */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
+    max-width: 55%; 
+	height: auto;
+}
+
+.image-container {
+    text-align: center; 
+	animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0% { transform: translateY(-20px); }
+    50% { transform: translateY(20px); }
+    100% { transform: translateY(0); }
+}
+
+
+.quote {
+    font-size: 16px; 
+    margin-top: 10px; /* Add some space between the image and quote */
+	font-weight: bold;
+	font-style: italic;
+	color: #a1a1a1;
+	animation: pulse 3s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+
+header {
+	background-color: black;
+	color: #a1a1a1;
+}
+
+header h1 {
+	margin-bottom: 10px;
+}
+
+nav ul {
+	list-style-type: none;
+}
+
+nav ul li {
+	display: inline;
+	margin-right: 10px;
+}
+
+nav ul li a {
+	color: #a1a1a1;
+	text-decoration: none;
+    font-weight: bold; /* Enhance readability and make links stand out */
+	font-family: Arial, sans-serif;
+}
+
+main {
+	padding: 20px;
+}
+
+section {
+	margin-bottom: 30px;
+    border-bottom: 1px solid #ccc; /* Add a separator between sections */
+    padding-bottom: 20px; /* Improve spacing between sections */
+}
+
+h2 {
+	margin-bottom: 10px;
+    color: #a1a1a1; /* Darken header text color for better contrast */
+}
+
+ul {
+	list-style-type: none;
+}
+
+form input[type="text"] {
+	width: 200px;
+	padding: 5px;
+	margin-right: 10px;
+    border: 1px solid #ccc; /* Add border to input fields for better visibility */
+    border-radius: 5px; /* Add rounded corners to input fields */
 }
 
 form button {
-    cursor: pointer;
+	padding: 5px 10px;
+	background-color: #333;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+    border-radius: 5px; /* Add rounded corners to buttons */
 }
 
 form button:hover {
-    background-color: #777; /* Darken background color on hover */
+	background-color: #555;
 }
 
-/* Footer Styles */
 footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-    margin-top: 30px;
+	background-color: #333;
+	color: #fff;
+	text-align: center;
+	padding: 20px;
+    margin-top: 30px; 
 }
-
-
-@keyframes fadeIn {
-    from {
-        opacity: 0; /* Start with opacity 0 */
-    }
-    to {
-        opacity: 1; /* End with opacity 1 */
-    }
-}
-.quote {
-    font-size: 18px;
-    color: #fff;
-    font-style: italic;
-    margin-top: 10px;
-}
-
-
