@@ -60,21 +60,25 @@ async function getAllPosts({env}) {
 }
 
 // Function to create a new page
-// Function to create a new page
-async function createNewPage(title, content) {
-    const postContent = [title, content];
-    const response = await fetch('/path/to/your/worker', { // Update the path to your worker
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postContent),
-    });
-    if (response.ok) {
-        // Handle success, e.g., update the UI to reflect the new post
-        console.log('Post created successfully');
-    } else {
-        console.error('Error creating a new post:', response.statusText);
+async function createNewPage(title, content, {env}) {
+    try {
+        // Get information to send to server
+        const postContent = [title, content];
+        const postId = generateUniqueId();
+
+        // Send information to server
+        await env.COOLFROG_FORUM.put(postId, JSON.stringify(postContent));
+
+        // Create a link to the new page and append it to the 'forum-posts' section
+        const forumPostsSection = document.getElementById('forum-posts');
+        const newPageLink = document.createElement('a');
+        newPageLink.href = `/forum/${postId}`; // Update the path based on your URL structure
+        newPageLink.textContent = title;
+        const newPageElement = document.createElement('div');
+        newPageElement.appendChild(newPageLink);
+        forumPostsSection.appendChild(newPageElement);
+    } catch (error) {
+        console.error('Error creating a new page:', error);
     }
 }
 
