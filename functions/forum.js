@@ -26,15 +26,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Functionality for listening for user interaction
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        const postTitle = document.getElementById('postTitle').value;
-        const postContent = document.getElementById('postContent').value;
-
-        // Call a function to handle the creation of a new post
-        createNewPage(postTitle, postContent);
+    document.addEventListener('DOMContentLoaded', function () {
+        const postForm = document.getElementById('postForm');
+        postForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
+    
+            // Call a function to handle the creation of a new post
+            createNewPage(postTitle, postContent);
+        });
     });
 });
 
@@ -58,9 +60,8 @@ async function getAllPosts({env}) {
 }
 
 // Function to create a new page
-export async function createNewPage(title, content, {env}) {
+async function createNewPage(title, content, {env}) {
     try {
-
         // Get information to send to server
         const postContent = [title, content];
         const postId = generateUniqueId();
