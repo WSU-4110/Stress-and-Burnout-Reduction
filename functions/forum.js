@@ -26,15 +26,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Functionality for listening for user interaction
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        const postTitle = document.getElementById('postTitle').value;
-        const postContent = document.getElementById('postContent').value;
-
-        // Call a function to handle the creation of a new post
-        createNewPage(postTitle, postContent);
+    document.addEventListener('DOMContentLoaded', function () {
+        const postForm = document.getElementById('postForm');
+        postForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            const postTitle = document.getElementById('postTitle').value;
+            const postContent = document.getElementById('postContent').value;
+    
+            // Call a function to handle the creation of a new post
+            createNewPage(postTitle, postContent);
+        });
     });
 });
 
@@ -58,26 +60,21 @@ async function getAllPosts({env}) {
 }
 
 // Function to create a new page
-export async function createNewPage(title, content, {env}) {
-    try {
-
-        // Get information to send to server
-        const postContent = [title, content];
-        const postId = generateUniqueId();
-
-        // Send information to server
-        await env.COOLFROG_FORUM.put(postId, JSON.stringify(postContent));
-
-        // Create a link to the new page and append it to the 'forum-posts' section
-        const forumPostsSection = document.getElementById('forum-posts');
-        const newPageLink = document.createElement('a');
-        newPageLink.href = `/forum/${postId}`; // Update the path based on your URL structure
-        newPageLink.textContent = title;
-        const newPageElement = document.createElement('div');
-        newPageElement.appendChild(newPageLink);
-        forumPostsSection.appendChild(newPageElement);
-    } catch (error) {
-        console.error('Error creating a new page:', error);
+// Function to create a new page
+async function createNewPage(title, content) {
+    const postContent = [title, content];
+    const response = await fetch('/path/to/your/worker', { // Update the path to your worker
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postContent),
+    });
+    if (response.ok) {
+        // Handle success, e.g., update the UI to reflect the new post
+        console.log('Post created successfully');
+    } else {
+        console.error('Error creating a new post:', response.statusText);
     }
 }
 
