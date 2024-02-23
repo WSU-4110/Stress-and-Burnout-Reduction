@@ -1,32 +1,60 @@
 /* Reset default browser styles */
 body, h1, h2, p, ul, li, nav {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
-.header-box {
-    background-color: #c4a8be; /* Yellow color */
+/* Dark mode theme */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background color */
+    color: #fff; /* White text color */
+}
+
+/* Header Styles */
+header {
+    background-color: #333; /* Darker background color */
+    color: #fff;
     padding: 20px;
-    border-radius: 10px;
     text-align: center;
 }
 
-.header-message {
-    color: black; 
-    font-size: 24px; /* Adjust font size as needed */
+header h1 {
+    margin-bottom: 10px;
+    font-size: 36px;
 }
 
-
-body {
-	font-family: Arial, sans-serif;
-	background-color: #f0f0f0;
+/* Navigation Styles */
+nav ul {
+    list-style-type: none;
+    text-align: center;
+    margin-top: 10px;
 }
-.dashboard-section {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Main Content Styles */
+main {
     padding: 20px;
+}
+
+/* Section Styles */
+section {
     margin-bottom: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Light shadow for dark mode */
+    padding: 20px;
+    background-color: #333; /* Darker background color */
 }
 
 .section-content {
@@ -35,120 +63,53 @@ body {
 }
 
 .section-content h2 {
-    color: #333;
+    color: #fff;
     font-size: 24px;
     margin-bottom: 10px;
 }
 
-
-
-#mindfulnessImage {
-    display: block; /* Ensure the image takes up the full width available */
-    margin: 0 auto; /* Center the image horizontally */
-    border: 2px solid #333; 
-    border-radius: 10px; /* Add rounded corners to the border */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow effect */
-    max-width: 55%; 
-	height: auto;
-}
-
-.image-container {
-    text-align: center; 
-	animation: bounce 1s ease-in-out;
-}
-
-@keyframes bounce {
-    0% { transform: translateY(-20px); }
-    50% { transform: translateY(20px); }
-    100% { transform: translateY(0); }
-}
-
-
-.quote {
-    font-size: 16px; 
-    margin-top: 10px; /* Add some space between the image and quote */
-	font-weight: bold;
-	font-style: italic;
-	color: #640c6bde;
-	animation: pulse 3s;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-
-
-header {
-	background-color: #483c3c;
-	color: #fff;
-	padding: 20px;
-}
-
-	header h1 {
-		margin-bottom: 10px;
-	}
-
-nav ul {
-	list-style-type: none;
-}
-
-	nav ul li {
-		display: inline;
-		margin-right: 10px;
-	}
-
-		nav ul li a {
-			color: #fff;
-			text-decoration: none;
-            font-weight: bold; /* Enhance readability and make links stand out */
-		}
-
-main {
-	padding: 20px;
-}
-
-section {
-	margin-bottom: 30px;
-    border-bottom: 1px solid #ccc; /* Add a separator between sections */
-    padding-bottom: 20px; /* Improve spacing between sections */
-}
-
-h2 {
-	margin-bottom: 10px;
-    color: #333; /* Darken header text color for better contrast */
-}
-
-ul {
-	list-style-type: none;
-}
-
-form input[type="text"] {
-	width: 200px;
-	padding: 5px;
-	margin-right: 10px;
-    border: 1px solid #ccc; /* Add border to input fields for better visibility */
-    border-radius: 5px; /* Add rounded corners to input fields */
+/* Form Styles */
+form input[type="text"],
+form button {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #555; /* Darker background color for form elements */
+    color: #fff;
 }
 
 form button {
-	padding: 5px 10px;
-	background-color: #333;
-	color: #fff;
-	border: none;
-	cursor: pointer;
-    border-radius: 5px; /* Add rounded corners to buttons */
+    cursor: pointer;
 }
 
-	form button:hover {
-		background-color: #555;
-	}
+form button:hover {
+    background-color: #777; /* Darken background color on hover */
+}
 
+/* Footer Styles */
 footer {
-	background-color: #333;
-	color: #fff;
-	text-align: center;
-	padding: 20px;
-    margin-top: 30px; 
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
 }
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start with opacity 0 */
+    }
+    to {
+        opacity: 1; /* End with opacity 1 */
+    }
+}
+.quote {
+    font-size: 18px;
+    color: #fff;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+

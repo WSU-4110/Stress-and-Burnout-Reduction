@@ -5,101 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progress Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dailyInteractive.css"> <!-- Add your friend's CSS file -->
 </head>
 <body>
-    <header>
-        <div class="header-box">
+    <header id="home">
+        <div class="hero">
+            <div class="overlay"></div>
             <h1>Welcome to the Progress Dashboard</h1>
-            <nav>
-                <ul>
-                    <li><a href="#overview">Overview</a></li>
-                    <li><a href="#goals">Goal Tracking</a></li>
-                    <li><a href="#progress">Progress Charts</a></li>
-                    <li><a href="#achievements">Achievement Badges</a></li>
-                    
-                </ul>
-            </nav>
         </div>
     </header>
 
-    <main>
+    <div class="sticky-wrapper">
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#goals">Goal Tracking</a></li>
+                <li><a href="#progress">Progress Charts</a></li>
+                <li><a href="#achievements">Achievement Badges</a></li>
+            </ul>
+        </nav>
+    </div>
 
-        <div class="image-container">
-            <img id="mindfulnessImage" src="MindfulnessImage.jpeg" alt="Mindfulness Image">
+    <main>
+        
             <blockquote class="quote">
                 <p>"Rest when you're weary. Refresh and renew yourself, your body, your mind, your spirit. Then get back to work." - Ralph Marston</p>
             </blockquote>
         </div>
 
-
-
         <!-- Overview Section -->
-        <section id="overview">
+        <section id="overview" class="dashboard-section">
             <h2>Overview</h2>
-            <!-- Summary of user's progress and achievements -->
-            <div class="summary">
+            <div class="section-content">
                 <p>A brief overview of your progress and key metrics.</p>
             </div>
         </section>
 
         <!-- Goal Tracking Section -->
-        <section id="goals"> 
+        <section id="goals" class="dashboard-section">
             <h2>Goal Tracking</h2>
-            <div class="summary">
+            <div class="section-content">
                 <p>Set and track your goals to achieve your objectives.</p>
             </div>
-            <ul id="goalList">
+            <ul id="goalList" class="section-content">
                 <!-- Goal cards will be dynamically added here -->
             </ul>
             <!-- Form to add/edit goals -->
-            <form id="goalForm">
+            <form id="goalForm" class="section-content">
                 <input type="text" id="goalInput" placeholder="Enter new goal">
                 <button type="submit">Add Goal</button>
             </form>
         </section>
 
         <!-- Progress Charts Section -->
-        <section id="progress">
+        <section id="progress" class="dashboard-section">
             <h2>Progress Charts</h2>
-            <div class="summary">
+            <div class="section-content">
                 <p>Visualize your progress with interactive charts and graphs.</p>
             </div>
             <!-- Display charts/graphs to visualize user's progress -->
-            <div id="chartContainer">
+            <div id="chartContainer" class="section-content">
                 <!-- Charts will be dynamically added here -->
             </div>
         </section>
 
         <!-- Achievement Badges Section -->
-        <section id="achievements">
+        <section id="achievements" class="dashboard-section">
             <h2>Achievement Badges</h2>
-            <div class="summary">
+            <div class="section-content">
                 <p>Earn badges and rewards for completing tasks and reaching milestones.</p>
             </div>
             <!-- Showcase badges earned by the user -->
-            <div class="badges">
+            <div class="badges section-content">
                 <!-- Badges will be dynamically added here -->
             </div>
         </section>
+
         <!-- Percentage of Finished Goals Section -->
-<section id="percentage">
-    <h2>Percentage of Finished Goals</h2>
-    <!-- Summary of percentage of finished goals section -->
-    <div class="summary">
-        <p>Track your progress by viewing the percentage of finished goals.</p>
-    </div>
-    <!-- Display the percentage of finished goals -->
-    <div id="percentageContainer">
-        <!-- Percentage will be dynamically updated here -->
-    </div>
-</section>
-
-
-    
+        <section id="percentage" class="dashboard-section">
+            <h2>Percentage of Finished Goals</h2>
+            <div class="section-content">
+                <p>Track your progress by viewing the percentage of finished goals.</p>
+            </div>
+            <!-- Display the percentage of finished goals -->
+            <div id="percentageContainer" class="section-content">
+                <!-- Percentage will be dynamically updated here -->
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; Meditation++ </p>
+        <p>&copy; Meditation++</p>
     </footer>
 
     <script src="dashboard.js"></script>

@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         goalList.appendChild(goalItem);
     }
 
-    // Event listener for submitting the goal form
+    
     const goalForm = document.getElementById('goalForm');
     goalForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent form submission
@@ -39,6 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Call the updateDashboard function when the page loads
+    
     updateDashboard();
 });
