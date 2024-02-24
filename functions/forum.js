@@ -46,7 +46,7 @@ function generateUniqueId() {
 }
 
 // Function to get all posts from server
-async function getAllPosts({env}) {
+export async function getAllPosts({env}) {
     // Retrieve all posts from KV
     const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
@@ -60,7 +60,7 @@ async function getAllPosts({env}) {
 }
 
 // Function to create a new page
-async function createNewPage(title, content, {env}) {
+export async function createNewPage(title, content, {env}) {
     try {
         // Get information to send to server
         const postContent = [title, content];
