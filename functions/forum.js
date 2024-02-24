@@ -72,8 +72,12 @@ export async function createNewPage(title, content, {env}) {
         const stringifiedPostContent = JSON.stringify(post);
         const postId = generateUniqueId();
 
+        //Console log to test program
+        console.log("Post object:", stringifiedPostContent);
         // Send information to server
         await env.COOLFROG_FORUM.put(postId, stringifiedPostContent);
+        //Console log to test put
+        console.log("Put: ", stringifiedPostContent)
 
         // Create a link to the new page and append it to the 'forum-posts' section
         /*
