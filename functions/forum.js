@@ -1,3 +1,5 @@
+import { stringify } from "uuid";
+
 document.addEventListener('DOMContentLoaded', function () {
 
     //Functionality for login and signup
@@ -62,14 +64,19 @@ export async function getAllPosts({env}) {
 // Function to create a new page
 export async function createNewPage(title, content, {env}) {
     try {
-        // Get information to send to server
-        const postContent = [title, content];
+        // Get information to send to server, convert post to object to store
+        const post = {
+            title: title,
+            content: content
+        }
+        const stringifiedPostContent = JSON.stringify(post);
         const postId = generateUniqueId();
 
         // Send information to server
-        await env.COOLFROG_FORUM.put(postId, JSON.stringify(postContent));
+        await env.COOLFROG_FORUM.put(postId, stringifiedPostContent);
 
         // Create a link to the new page and append it to the 'forum-posts' section
+        /*
         const forumPostsSection = document.getElementById('forum-posts');
         const newPageLink = document.createElement('a');
         newPageLink.href = `/forum/${postId}`; // Update the path based on your URL structure
@@ -77,6 +84,7 @@ export async function createNewPage(title, content, {env}) {
         const newPageElement = document.createElement('div');
         newPageElement.appendChild(newPageLink);
         forumPostsSection.appendChild(newPageElement);
+        */
     } catch (error) {
         console.error('Error creating a new page:', error);
     }
