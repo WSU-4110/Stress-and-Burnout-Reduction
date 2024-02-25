@@ -1,0 +1,68 @@
+body {
+    background-image: url('giphy.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    height:  100vh;
+    margin:  0;
+    padding:  0;
+}
+
+h1 {
+    text-align: center;
+    margin-top:  0%;
+    padding:  20px  0; 
+    color: rgb(241, 241, 241); 
+    background-color: rgba(0,  0,  0,  0.5);
+}
+
+#soundsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top:  20px;
+}
+
+.sound-item {
+    width:  200px;
+    padding:  20px;
+    margin:  10px;
+    background-color: #fff;
+    box-shadow:  0  2px  4px rgba(0,  0,  0,  0.1);
+    text-align: center;
+}
+
+.sound-item img {
+    width:  100%;
+    height: auto;
+}
+
+.sound-item button {
+    margin-top:  10px;
+    padding:  10px  20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+nav {
+    background-color: #efeaea; /* Dark background */
+    color: white; /* Light text */
+    padding:  20px; /* Padding for better readability */
+    text-align: center; /* Center the text */
+}
+
+nav a {
+    padding:  15px  30px; /* Increased padding for larger tabs */
+    font-size:  18px; /* Corrected the missing semicolon here */
+    color: rgb(131,  65,  65); /* Light text */
+    text-decoration: none; /* Remove underline */
+    margin:  0  10px; /* Horizontal spacing between tabs */
+}
+
+nav a:hover {
+    background-color: #4CAF50; /* Green background on hover */
+    color: rgb(244,  228,  228); /* Light text */
+}
