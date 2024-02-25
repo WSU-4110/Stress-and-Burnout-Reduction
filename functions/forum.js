@@ -80,7 +80,6 @@ export async function createNewPage(title, content, {env}) {
         console.log("Put: ", stringifiedPostContent)
 
         // Create a link to the new page and append it to the 'forum-posts' section
-        /*
         const forumPostsSection = document.getElementById('forum-posts');
         const newPageLink = document.createElement('a');
         newPageLink.href = `/forum/${postId}`; // Update the path based on your URL structure
@@ -88,7 +87,6 @@ export async function createNewPage(title, content, {env}) {
         const newPageElement = document.createElement('div');
         newPageElement.appendChild(newPageLink);
         forumPostsSection.appendChild(newPageElement);
-        */
     } catch (error) {
         console.error('Error creating a new page:', error);
     }
