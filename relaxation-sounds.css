@@ -1,76 +1,80 @@
-
 body {
     background-image: url('giphy.gif');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
-    height: 100vh;
-    margin: 0;
-    padding: 0;
+    height:  100vh;
+    margin:  0;
+    padding:  0;
 }
 
 h1 {
     text-align: center;
-    margin-top: 0%;
-    padding: 20px 0;
-    color: rgb(241, 241, 241);
-    background-color: rgba(0, 0, 0, 0.5);
+    margin-top:  0%;
+    padding:  20px  0;
+    color: rgb(241,  241,  241);
+    background-color: rgba(0,  0,  0,  0.5);
 }
 
 nav {
     background-color: #efeaea;
     color: white;
-    padding: 20px;
+    padding:  20px;
     text-align: center;
 }
 
 nav a {
-    padding: 15px 30px;
-    font-size: 18px;
-    color: rgb(131, 65, 65);
+    padding:  15px  30px;
+    font-size:  18px;
+    color: rgb(131,  65,  65);
     text-decoration: none;
-    margin: 0 10px;
+    margin:  0  10px;
     display: inline-block;
 }
 
 nav a:hover {
     background-color: #4CAF50;
-    color: rgb(59, 3, 3);
+    color: rgb(59,  3,  3);
 }
 
-/* Styles specific to the Relaxation Sound Library page (index.html) */
 #soundsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 20px;
+    margin-top:  20px;
 }
 
 .sound-item {
-    position: relative;
-    width: 170px;
-    height: 170px;
-    padding: 10px;
-    margin: 10px;
-    background-color: #e8dede73;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    width:  200px;
+    height:  200px;
+    padding:  10px;
+    margin:  10px;
+    background-color: #9e9a9a27;
+    box-shadow:  0  2px  4px rgba(0, 0, 0, 0.685);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .sound-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    
+    width: 100px; 
+    height: 100px;
+    object-fit: cover; 
 }
 
 .sound-item h2 {
-    font-size: 16px;
-    margin-top: 10px;
+    font-size:  16px;
+    margin-top:  10px;
 }
 
-
-nav a.btn {
-    padding: 20px 40px; 
-    font-size: 20px; 
-}
+.sound-audio {
+    width: 100%;
+   
+    margin-top: 10px; 
+  }
+  
