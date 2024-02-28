@@ -5,6 +5,7 @@ body {
     padding: 20px; /* Add padding for better readability */
 }
 
+
 /* Add pulse animation */
 @keyframes pulse {
     0% {
