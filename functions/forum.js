@@ -1,6 +1,4 @@
-import { stringify } from "uuid";
-
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener({env}, 'DOMContentLoaded', function () {
 
   // Functionality for login and signup
   const leftButton = document.getElementById('leftButton');
@@ -31,19 +29,33 @@ document.addEventListener('DOMContentLoaded', function () {
       rightButton.onclick = function () { window.location.href = '/login'; };
     });
 
-  // Functionality for listening for user interaction
-  document.addEventListener('DOMContentLoaded', function () {
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', function (event) {
-      event.preventDefault(); // Prevent the default form submission
-
-      const postTitle = document.getElementById('postTitle').value;
-      const postContent = document.getElementById('postContent').value;
-
-      // Call a function to handle the creation of a new post
-      createNewPage(postTitle, postContent);
+    // Functionality for submitting a new post
+    document.addEventListener('DOMContentLoaded', function () {
+        const postForm = document.getElementById('postForm');
+        postForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        const postTitle = document.getElementById('postTitle').value;
+        const postContent = document.getElementById('postContent').value;
+    
+        // Convert post to JSON string for KV storage
+        const post = JSON.stringify({
+            title: postTitle,
+            content: postContent,
+            // Add other relevant fields like author, timestamp, etc.
+        });
+    
+        // Store the post directly in the KV namespace (not recommended)
+        env.COOLFROG_FORUM.put(generateUniqueId(), post)
+            .then(() => {
+            // Success handling (e.g., display success message)
+            })
+            .catch(error => {
+            console.error("Error storing post:", error);
+            // Error handling (e.g., display error message)
+            });
+        });
     });
-  });
 });
 
 // Function to generate a unique identifier
@@ -63,39 +75,6 @@ export async function getAllPosts({ env }) {
   }
 
   return allPosts;
-}
-
-// Function to create a new page (already asynchronous)
-export async function createNewPage(title, content, { env }) {
-  try {
-    // Get information to send to server, convert post to object to store
-    const post = {
-      title,
-      content
-    };
-    const stringifiedPostContent = JSON.stringify(post);
-    const postId = generateUniqueId();
-
-    // Console log to test program
-    console.log("Post object:", stringifiedPostContent);
-
-    // Send information to server
-    await env.COOLFROG_FORUM.put(postId, stringifiedPostContent);
-
-    // Console log to test put
-    console.log("Put: ", stringifiedPostContent)
-
-    // Create a link to the new page and append it to the 'forum-posts' section
-    const forumPostsSection = document.getElementById('forum-posts');
-    const newPageLink = document.createElement('a');
-    newPageLink.href = `/forum/${postId}`; // Update the path based on your URL structure
-    newPageLink.textContent = title;
-    const newPageElement = document.createElement('div');
-    newPageElement.appendChild(newPageLink);
-    forumPostsSection.appendChild(newPageElement);
-  } catch (error) {
-    console.error('Error creating a new page:', error);
-  }
 }
 
 // Attach functions to the window object to make them globally accessible
