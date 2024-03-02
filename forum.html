@@ -69,7 +69,7 @@
                 });
         });
 
-        document.addEventListener({env}, 'DOMContentLoaded', function () {
+        document.addEventListener(globalThis.env, 'DOMContentLoaded', function () {
 
         // Functionality for login and signup
         const leftButton = document.getElementById('leftButton');
@@ -117,7 +117,7 @@
             });
         
             // Store the post directly in the KV namespace (not recommended)
-            env.COOLFROG_FORUM.put(generateUniqueId(), post)
+            globalThis.env.COOLFROG_FORUM.put(generateUniqueId(), post)
                 .then(() => {
                 // Success handling (e.g., display success message)
                 })
@@ -135,13 +135,13 @@
         }
 
         // Function to get all posts from server (already asynchronous)
-        async function getAllPosts({ env }) {
+        async function getAllPosts(env) {
             // Retrieve all posts from KV
-            const allKeys = await env.COOLFROG_FORUM.list();
+            const allKeys = await globalThis.env.COOLFROG_FORUM.list();
             const allPosts = [];
 
             for (const key of allKeys.keys) {
-            const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+            const post = await globalThis.env.COOLFROG_FORUM.get(key.name, { type: 'json' });
             allPosts.push(post);
             }
 
