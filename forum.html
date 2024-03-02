@@ -68,62 +68,7 @@
                     rightButton.onclick = function () { window.location.href = '/login'; };
                 });
         });
-    </script>
-</head>
 
-<body>
-    <header class="fixed-header">
-        <!-- nav and ul elements used for formatting organization -->
-        <nav>
-            <div class="link-buttons mt-3">
-                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
-                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
-                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
-                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
-                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
-                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Login button -->
-    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 80px;">
-        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-    </div>
-
-    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
-
-    <h1>Meditation+ Forum</h1>
-
-    <div class="post-form-container">
-        <h2>Create a New Post</h2>
-        <form id="postForm">
-            <label for="postTitle">Title:</label>
-            <input type="text" id="postTitle" name="postTitle" required>
-    
-            <label for="postContent">Content:</label>
-            <textarea id="postContent" name="postContent" required></textarea>
-    
-            <button type="submit">Post</button>
-        </form>
-    </div>
-
-    <!-- Section for displaying forum posts -->
-    <h2>Forum Posts</h2>
-
-    <section id="forum-posts">
-
-    </section>
-
-    <footer>
-        <p><small>This page and all properties owned by Meditation+&copy;</small></p>
-    </footer>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
         document.addEventListener({env}, 'DOMContentLoaded', function () {
 
         // Functionality for login and signup
@@ -190,7 +135,7 @@
         }
 
         // Function to get all posts from server (already asynchronous)
-        export async function getAllPosts({ env }) {
+        async function getAllPosts({ env }) {
             // Retrieve all posts from KV
             const allKeys = await env.COOLFROG_FORUM.list();
             const allPosts = [];
@@ -203,6 +148,60 @@
             return allPosts;
         }
     </script>
+</head>
+
+<body>
+    <header class="fixed-header">
+        <!-- nav and ul elements used for formatting organization -->
+        <nav>
+            <div class="link-buttons mt-3">
+                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Login button -->
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 80px;">
+        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+    </div>
+
+    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
+
+    <h1>Meditation+ Forum</h1>
+
+    <div class="post-form-container">
+        <h2>Create a New Post</h2>
+        <form id="postForm">
+            <label for="postTitle">Title:</label>
+            <input type="text" id="postTitle" name="postTitle" required>
+    
+            <label for="postContent">Content:</label>
+            <textarea id="postContent" name="postContent" required></textarea>
+    
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+    <!-- Section for displaying forum posts -->
+    <h2>Forum Posts</h2>
+
+    <section id="forum-posts">
+
+    </section>
+
+    <footer>
+        <p><small>This page and all properties owned by Meditation+&copy;</small></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>
