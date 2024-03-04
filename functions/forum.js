@@ -19,10 +19,6 @@ export async function onRequestPost({ request, env }) {
     // Store the post in the KV namespace
     await env.COOLFROG_FORUM.put(uniqueId, post);
 
-    // Return a success response
-    return new Response('Post submitted successfully', { status: 200 
-  });
-
   } catch (error) {
     console.error("Error:", error);
     // Error handling
