@@ -13,43 +13,6 @@ export async function getAllPosts({ env }) {
   return allPosts;
 }
 
-export async function refreshPosts({ env }) {
-  try {
-      // Clear existing posts
-      const forumPostsSection = document.getElementById('forum-posts');
-      forumPostsSection.innerHTML = '';
-
-      // Fetch and display updated posts
-      const posts = await getAllPosts({ env });
-      displayPosts(posts);
-  } catch (error) {
-      console.error("Error refreshing posts:", error);
-  }
-}
-
-function displayPosts(posts) {
-  const forumPostsSection = document.getElementById('forum-posts');
-
-  posts.forEach(post => {
-      const postElement = document.createElement('div');
-      postElement.className = 'forum-post';
-
-      const titleElement = document.createElement('h3');
-      titleElement.style.textAlign = 'left';
-      titleElement.textContent = post.title;
-      postElement.appendChild(titleElement);
-
-      const contentElement = document.createElement('p');
-      contentElement.style.textAlign = 'left';
-      contentElement.textContent = post.content;
-      postElement.appendChild(contentElement);
-
-      postElement.style.marginBottom = '20px';
-
-      forumPostsSection.appendChild(postElement);
-  });
-}
-
 export async function onRequestRefreshPost({ request, env }) {
   try {
     
