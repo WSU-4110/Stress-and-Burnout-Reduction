@@ -36,27 +36,4 @@ export async function onRequestPost({ request, env }) {
     console.error("Error:", error);
     // Error handling
   }
-
-  const posts = await getAllPosts({ env });
-  
-        const forumPostsSection = document.getElementById('forum-posts');
-  
-        posts.forEach(post => {
-            const postElement = document.createElement('div');
-            postElement.className = 'forum-post';
-  
-            const titleElement = document.createElement('h3');
-            titleElement.style.textAlign = 'left';
-            titleElement.textContent = post.title;
-            postElement.appendChild(titleElement);
-  
-            const contentElement = document.createElement('p');
-            contentElement.style.textAlign = 'left';
-            contentElement.textContent = post.content;
-            postElement.appendChild(contentElement);
-  
-            postElement.style.marginBottom = '20px';
-  
-            forumPostsSection.appendChild(postElement);
-        });
 };
