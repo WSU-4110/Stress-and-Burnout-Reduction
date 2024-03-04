@@ -2,25 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function onRequestPost({ request, env }) {
  try {
-    const leftButton = document.getElementById('leftButton');
-    const rightButton = document.getElementById('rightButton');
-
-    const response = await fetch('/api/username');
-    const data = await response.json();
-
-    if (data.username) {
-      leftButton.textContent = 'Account';
-      leftButton.onclick = function () { window.location.href = '/account'; };
-
-      rightButton.textContent = `Sign Out of ${data.username}`;
-      rightButton.onclick = function () { window.location.href = '/signout'; };
-    } else {
-      leftButton.textContent = 'Sign Up';
-      leftButton.onclick = function () { window.location.href = '/signup'; };
-      rightButton.textContent = 'Login';
-      rightButton.onclick = function () { window.location.href = '/login'; };
-    }
-
     // Assuming the request body contains the form data
     const formData = await request.formData();
     const postTitle = formData.get('postTitle');
