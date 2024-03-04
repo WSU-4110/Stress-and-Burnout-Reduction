@@ -74,9 +74,3 @@ export async function onRequestPost({ request, env }) {
     return allPosts;
   }
 };
-
-
-
-// Attach functions to the window object to make them globally accessible
-window.createNewPage = createNewPage;
-window.getAllPosts = getAllPosts;
