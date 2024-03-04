@@ -7,6 +7,7 @@ export async function getAllPosts({env}) {
 
   for (const key of allKeys.keys) {
     const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+    console.log(post);
     allPosts.push(post);
   }
 
