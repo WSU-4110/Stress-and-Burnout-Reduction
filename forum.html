@@ -69,8 +69,6 @@
                 });
         });
 
-        document.addEventListener({env}, 'DOMContentLoaded', function () {
-
         // Functionality for login and signup
         const leftButton = document.getElementById('leftButton');
         const rightButton = document.getElementById('rightButton');
@@ -99,54 +97,6 @@
             rightButton.textContent = 'Login';
             rightButton.onclick = function () { window.location.href = '/login'; };
         });
-
-        // Functionality for submitting a new post
-        document.addEventListener('DOMContentLoaded', function () {
-            const postForm = document.getElementById('postForm');
-            postForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent the default form submission
-        
-            const postTitle = document.getElementById('postTitle').value;
-            const postContent = document.getElementById('postContent').value;
-        
-            // Convert post to JSON string for KV storage
-            const post = JSON.stringify({
-                title: postTitle,
-                content: postContent,
-                // Add other relevant fields like author, timestamp, etc.
-            });
-        
-            // Store the post directly in the KV namespace (not recommended)
-            env.COOLFROG_FORUM.put(generateUniqueId(), post)
-                .then(() => {
-                // Success handling (e.g., display success message)
-                })
-                .catch(error => {
-                console.error("Error storing post:", error);
-                // Error handling (e.g., display error message)
-                });
-            });
-        });
-        });
-
-        // Function to generate a unique identifier
-        function generateUniqueId() {
-            
-        }
-
-        // Function to get all posts from server (already asynchronous)
-        async function getAllPosts({env}) {
-            // Retrieve all posts from KV
-            const allKeys = await env.COOLFROG_FORUM.list();
-            const allPosts = [];
-
-            for (const key of allKeys.keys) {
-            const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-            allPosts.push(post);
-            }
-
-            return allPosts;
-        }
     </script>
 </head>
 
@@ -202,6 +152,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="functions/login.js"></script>
 </body>
 
 </html>
