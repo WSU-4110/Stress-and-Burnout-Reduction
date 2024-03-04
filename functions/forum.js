@@ -37,9 +37,7 @@ export async function onRequestPost({ request, env }) {
     // Error handling
   }
 
-  document.addEventListener('DOMContentLoaded', async function() {
-    try {
-        const posts = await getAllPosts({ env });
+  const posts = await getAllPosts({ env });
   
         const forumPostsSection = document.getElementById('forum-posts');
   
@@ -61,8 +59,4 @@ export async function onRequestPost({ request, env }) {
   
             forumPostsSection.appendChild(postElement);
         });
-    } catch (error) {
-        console.error('Failed to fetch and display posts:', error);
-    }
-  });
 };
