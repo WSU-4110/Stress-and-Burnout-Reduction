@@ -13,15 +13,6 @@ export async function getAllPosts({ env }) {
   return allPosts;
 }
 
-export async function onRequestRefreshPost({ request, env }) {
-  try {
-    
-  } catch (error) {
-    console.error("Error:", error);
-    // Error handling
-  }
-}
-
 export async function onRequestPost({ request, env }) {
  try {
     // Assuming the request body contains the form data
