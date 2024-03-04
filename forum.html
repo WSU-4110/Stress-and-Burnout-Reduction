@@ -9,6 +9,17 @@
     <style>
         @import url(forumStyles.css);
     </style>
+
+    <script type="module">
+        import { refreshPosts } from './functions/forum.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshButton = document.getElementById('refreshButton');
+            refreshButton.addEventListener('click', async function() {
+                await refreshPosts({ env: window.env });
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -50,7 +61,10 @@
     </div>
 
     <!-- Section for displaying forum posts -->
-    <h2>Forum Posts</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Forum Posts</h2>
+        <button id="refreshButton" class="btn btn-secondary">Refresh</button>
+    </div>
 
     <section id="forum-posts">
 
@@ -63,39 +77,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
-    <script type="module">
-        import { getAllPosts } from './functions/forum.js';
-
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                const posts = await getAllPosts({ env: window.env });
-
-                const forumPostsSection = document.getElementById('forum-posts');
-
-                posts.forEach(post => {
-                    const postElement = document.createElement('div');
-                    postElement.className = 'forum-post';
-
-                    const titleElement = document.createElement('h3');
-                    titleElement.style.textAlign = 'left';
-                    titleElement.textContent = post.title;
-                    postElement.appendChild(titleElement);
-
-                    const contentElement = document.createElement('p');
-                    contentElement.style.textAlign = 'left';
-                    contentElement.textContent = post.content;
-                    postElement.appendChild(contentElement);
-
-                    postElement.style.marginBottom = '20px';
-
-                    forumPostsSection.appendChild(postElement);
-                });
-            } catch (error) {
-                console.error('Failed to fetch and display posts:', error);
-            }
-        });
-    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
