@@ -155,7 +155,7 @@
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 // Fetch all posts from the server
-                const response = await fetch('/path/to/your/api/that/calls/getAllPosts');
+                const response = await fetch('functions/forum/getAllPosts');
                 const posts = await response.json();
         
                 // Select the forum posts section
