@@ -25,7 +25,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   // Function to get all posts from server
-  async function getAllPosts({env}) {
+  export async function getAllPosts({env}) {
     const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
 

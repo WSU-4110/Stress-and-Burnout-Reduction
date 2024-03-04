@@ -151,6 +151,41 @@
             rightButton.onclick = function () { window.location.href = '/login'; };
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Fetch all posts from the server
+                const response = await fetch('/path/to/your/api/that/calls/getAllPosts');
+                const posts = await response.json();
+        
+                // Select the forum posts section
+                const forumPostsSection = document.getElementById('forum-posts');
+        
+                // Iterate over the posts and add them to the DOM
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'forum-post';
+        
+                    const titleElement = document.createElement('h3');
+                    titleElement.style.textAlign = 'left';
+                    titleElement.textContent = post.title;
+                    postElement.appendChild(titleElement);
+        
+                    const contentElement = document.createElement('p');
+                    contentElement.style.textAlign = 'left';
+                    contentElement.textContent = post.content;
+                    postElement.appendChild(contentElement);
+        
+                    // Add a margin to create space between posts
+                    postElement.style.marginBottom = '20px'; // Adjust the value as needed
+        
+                    forumPostsSection.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Failed to fetch and display posts:', error);
+            }
+        });
+    </script>
 </body>
 
 </html>
