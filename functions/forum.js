@@ -21,31 +21,34 @@ export async function onRequestPost({ request, env }) {
       rightButton.onclick = function () { window.location.href = '/login'; };
     }
 
-    const postForm = document.getElementById('postForm');
-    postForm.addEventListener('submit', async function (event) {
-      event.preventDefault();
+    // Assuming the request body contains the form data
+    const formData = await request.formData();
+    const postTitle = formData.get('postTitle');
+    const postContent = formData.get('postContent');
 
-      const postTitle = document.getElementById('postTitle').value;
-      const postContent = document.getElementById('postContent').value;
-
-      const post = JSON.stringify({
-        title: postTitle,
-        content: postContent,
-      });
-
-      const uniqueId = uuidv4();
-      await env.COOLFROG_FORUM.put(uniqueId, post);
-
-      // Success handling
+    // Create a post object
+    const post = JSON.stringify({
+      title: postTitle,
+      content: postContent,
     });
 
- } catch (error) {
+    // Generate a unique ID for the post
+    const uniqueId = uuidv4();
+
+    // Store the post in the KV namespace
+    await env.COOLFROG_FORUM.put(uniqueId, post);
+
+    // Return a success response
+    return new Response('Post submitted successfully', { status: 200 
+  });
+
+  } catch (error) {
     console.error("Error:", error);
     // Error handling
- }
+  }
 
- // Function to get all posts from server
- async function getAllPosts({env}) {
+  // Function to get all posts from server
+  async function getAllPosts({env}) {
     const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
 
@@ -55,5 +58,5 @@ export async function onRequestPost({ request, env }) {
     }
 
     return allPosts;
- }
+  }
 };
