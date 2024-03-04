@@ -151,8 +151,8 @@
             rightButton.onclick = function () { window.location.href = '/login'; };
         });
     </script>
-    <script type="module" src="functions/forum.js"></script>
-    <script type="module">
+
+    <script type="text/javascript" src="functions/forum.js">
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const posts = await getAllPosts({ env: window.env });
