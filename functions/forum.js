@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+export async function onRequestPost({ request, env }) {
 
   // Functionality for login and signup
   const leftButton = document.getElementById('leftButton');
@@ -55,26 +55,27 @@ document.addEventListener('DOMContentLoaded', function () {
           rightButton.textContent = 'Login';
           rightButton.onclick = function () { window.location.href = '/login'; };
       });
-});
-
-// Function to generate a unique identifier
-function generateUniqueId() {
-  return Math.random().toString(36).substring(2, 10);
-}
-
-// Function to get all posts from server (already asynchronous)
-export async function getAllPosts({ env }) {
-  // Retrieve all posts from KV
-  const allKeys = await env.COOLFROG_FORUM.list();
-  const allPosts = [];
-
-  for (const key of allKeys.keys) {
-      const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-      allPosts.push(post);
+  // Function to generate a unique identifier
+  function generateUniqueId() {
+    return Math.random().toString(36).substring(2, 10);
   }
 
-  return allPosts;
-}
+  // Function to get all posts from server (already asynchronous)
+  async function getAllPosts({env}) {
+    // Retrieve all posts from KV
+    const allKeys = await env.COOLFROG_FORUM.list();
+    const allPosts = [];
+
+    for (const key of allKeys.keys) {
+        const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+        allPosts.push(post);
+    }
+
+    return allPosts;
+  }
+};
+
+
 
 // Attach functions to the window object to make them globally accessible
 window.createNewPage = createNewPage;
