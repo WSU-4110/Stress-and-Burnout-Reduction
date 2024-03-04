@@ -1,5 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 
+// Function to get all posts from server
+export async function getAllPosts({env}) {
+  const allKeys = await env.COOLFROG_FORUM.list();
+  const allPosts = [];
+
+  for (const key of allKeys.keys) {
+    const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+    allPosts.push(post);
+  }
+
+  return allPosts;
+}
+
 export async function onRequestPost({ request, env }) {
  try {
     // Assuming the request body contains the form data
@@ -22,18 +35,5 @@ export async function onRequestPost({ request, env }) {
   } catch (error) {
     console.error("Error:", error);
     // Error handling
-  }
-
-  // Function to get all posts from server
-  export async function getAllPosts({env}) {
-    const allKeys = await env.COOLFROG_FORUM.list();
-    const allPosts = [];
-
-    for (const key of allKeys.keys) {
-      const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-      allPosts.push(post);
-    }
-
-    return allPosts;
   }
 };
