@@ -152,7 +152,8 @@
         });
     </script>
 
-    <script type="text/javascript" src="functions/forum.js">
+    <script type="module" src="/functions/forum.js"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', async function() {
             try {
                 const posts = await getAllPosts({ env: window.env });
