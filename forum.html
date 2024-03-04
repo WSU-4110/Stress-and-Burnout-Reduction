@@ -11,13 +11,13 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const refreshButton = document.getElementById('refreshButton');
-            refreshButton.addEventListener('click', async function() {
-                await refreshPosts({ env: window.env });
-            });
-        });
-    </script>
+        (function() {
+          'use strict';
+          form.addEventListener('refreshButton', async function(event) {
+            await refreshPosts({ env: window.env });
+          }, false);
+        })();
+        </script>
 </head>
 
 <body>
