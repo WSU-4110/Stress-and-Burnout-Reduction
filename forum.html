@@ -129,26 +129,24 @@
         fetch('/api/username')
         .then(response => response.json())
         .then(data => {
-            if (data.username) {
-            leftButton.textContent = 'Account';
-            leftButton.onclick = function () { window.location.href = '/account'; };
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
 
-            // Dynamically use the username in the 'Sign Out' button text
-            rightButton.textContent = `Sign Out of ${data.username}`;
-            rightButton.onclick = function () { window.location.href = '/signout'; };
+            if (data.username) {
+                leftButton.textContent = 'Account';
+                leftButton.onclick = function () { window.location.href = '/account'; };
+                rightButton.textContent = `Sign Out of ${data.username}`;
+                rightButton.onclick = function () { window.location.href = '/signout'; };
             } else {
-            leftButton.textContent = 'Sign Up';
-            leftButton.onclick = function () { window.location.href = '/signup'; };
-            rightButton.textContent = 'Login';
-            rightButton.onclick = function () { window.location.href = '/login'; };
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
             }
         })
         .catch(error => {
             console.error("Error fetching username:", error);
-            leftButton.textContent = 'Sign Up';
-            leftButton.onclick = function () { window.location.href = '/signup'; };
-            rightButton.textContent = 'Login';
-            rightButton.onclick = function () { window.location.href = '/login'; };
+            // Handle error, e.g., by showing a message to the user
         });
     </script>
 </body>
