@@ -13,7 +13,7 @@
     <script>
         (function() {
           'use strict';
-          form.addEventListener('refreshButton', async function(event) {
+          document.addEventListener('refreshButton', async function(event) {
             await refreshPosts({ env: window.env });
           }, false);
         })();
