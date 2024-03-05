@@ -152,6 +152,50 @@
             rightButton.onclick = function () { window.location.href = '/login'; };
         });
     </script>
+
+    <!-- The below script is meant to display an implementation of the Iterator Method design structure -->
+    <!-- I have not gotten the getAllPosts function working as of yet, assume that it is, and that it
+    returns an array of key-value pairs, consisting of post titles and post contents -->
+    <script type="Module">
+        import {getAllPosts} from "./functions/forum.js";
+
+        // Iterator base
+        interface PostIterator {
+            hasNext(): boolean;
+            next(): any;
+        }
+
+        // Post class for use with iterator interface
+        class PostIterator implements PostIterator {
+            private index: number = 0;
+            private posts: any[];
+
+            constructor(posts: any[]) {
+                this.posts = posts;
+            }
+
+            hasNext(): boolean {
+                return this.index < this.posts.length;
+            }
+
+            next(): any {
+                return this.posts[this.index++];
+            }
+        }
+
+        // Function for displaying posts
+        async function displayPosts() {
+            const postIterator = await getAllPosts({ env: env });
+
+            while (postIterator.hasNext()) {
+            const post = postIterator.next();
+            // Display the post information using post object properties
+            console.log(post.title); 
+            }
+        }
+
+        displayPosts();
+    </script>
 </body>
 
 </html>
