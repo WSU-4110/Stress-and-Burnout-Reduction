@@ -28,9 +28,6 @@ export async function onRequestPost({ request, env }) {
     // Generate a unique ID for the post
     const uniqueId = uuidv4();
 
-    // Store the post in the KV namespace
-    await env.COOLFROG_FORUM.put(uniqueId, post);
-
     console.log("Post submitted successfully");
 
   } catch (error) {
