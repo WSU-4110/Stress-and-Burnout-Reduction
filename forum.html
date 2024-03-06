@@ -82,33 +82,7 @@
             document.getElementById('postForm').addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
 
-                // Capture form data
-                const formData = new FormData(event.target);
-
-                // Convert form data to JSON
-                const data = {};
-                for (const [key, value] of formData.entries()) {
-                    data[key] = value;
-                }
-
-                // Use fetch to send the form data to your server
-                fetch('/forum', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    // Redirect to forum.html after successful submission
-                    window.location.href = "forum.html";
-                })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
+                window.location.href = "forum.html";
             });
 
             // Function to toggle visibility of post form based on user login status
