@@ -11,14 +11,13 @@
     </style>
 </head>
 
-<body> 
+<body>
     <header class="fixed-header">
         <!-- nav and ul elements used for formatting organization -->
         <nav>
             <div class="link-buttons mt-3">
                 <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
                 <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
-                <a href="meetForum.html" class="btn btn-primary mr-2 mb-2">Meetup Forum</a>
                 <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
                 <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
                 <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
@@ -64,6 +63,39 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <script type="module">
+        import { getAllPosts } from './functions/forum.js';
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const posts = await getAllPosts({ env: window.env });
+
+                const forumPostsSection = document.getElementById('forum-posts');
+
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.className = 'forum-post';
+
+                    const titleElement = document.createElement('h3');
+                    titleElement.style.textAlign = 'left';
+                    titleElement.textContent = post.title;
+                    postElement.appendChild(titleElement);
+
+                    const contentElement = document.createElement('p');
+                    contentElement.style.textAlign = 'left';
+                    contentElement.textContent = post.content;
+                    postElement.appendChild(contentElement);
+
+                    postElement.style.marginBottom = '20px';
+
+                    forumPostsSection.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error('Failed to fetch and display posts:', error);
+            }
+        });
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
