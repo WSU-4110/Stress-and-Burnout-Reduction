@@ -1,17 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export async function getAllPosts({ env }) {
-  const allKeys = await env.FORUM.list();
-  const allPosts = [];
-
-  for (const key of allKeys.keys) {
-    const post = await env.FORUM.get(key.name, { type: 'json' });
-    allPosts.push(post);
-  }
-
-  return allPosts;
-}
-
 export async function onRequestPost({ request, env }) {
  try {
 
