@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Meetup Forum Webpage</title>
+
+    <style>
+        @import url(forumStyles.css);
+    </style>
+</head>
+
+<body>
+    <header class="fixed-header">
+        <!-- nav and ul elements used for formatting organization -->
+        <nav>
+            <div class="link-buttons mt-3">
+                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Login button -->
+    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 80px;">
+        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+    </div>
+
+    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
+
+    <h1>Meditation+ Meetup Forum</h1>
+
+    <div class="post-form-container">
+        <h2>Create a New Meetup Post</h2>
+        <form id="postForm" action="/forum" method="POST">            
+            <label for="postTitle">Title:</label>
+            <input type="text" id="postTitle" name="postTitle" required>
+
+            <label for="postLocation">Location:</label>
+            <input type="text" id="postLocation" name="postLocation" required>
+
+            <label for="postMeetingDate">Meeting Date:</label>
+            <input type="text" id="postMeetingDate" name="postMeetingDate" required>
+    
+            <label for="postContent">Content:</label>
+            <textarea id="postContent" name="postContent" required></textarea>
+    
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+    <!-- Section for displaying forum posts -->
+    <h2>Meetup Posts</h2>
+
+    <section id="forum-posts">
+
+    </section>
+
+    <footer>
+        <p><small>This page and all properties owned by Meditation+&copy;</small></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+            const postFormContainer = document.querySelector('.post-form-container');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Function to toggle visibility of post form based on user login status
+            function togglePostFormVisibility(isUserLoggedIn) {
+                postFormContainer.style.display = isUserLoggedIn ? 'block' : 'none';
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+
+            // Fetch user login status and toggle post form visibility
+            fetch('/api/username')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.username) {
+                        togglePostFormVisibility(true);
+
+                        const leftButton = document.getElementById('leftButton');
+                        const rightButton = document.getElementById('rightButton');
+                        leftButton.textContent = 'Account';
+                        leftButton.onclick = function () { window.location.href = '/account'; };
+                        rightButton.textContent = `Sign Out of ${data.username}`;
+                        rightButton.onclick = function () { window.location.href = '/signout'; };
+                    } else {
+                        togglePostFormVisibility(false);
+
+                        const leftButton = document.getElementById('leftButton');
+                        const rightButton = document.getElementById('rightButton');
+                        leftButton.textContent = 'Sign Up';
+                        leftButton.onclick = function () { window.location.href = '/signup'; };
+                        rightButton.textContent = 'Login';
+                        rightButton.onclick = function () { window.location.href = '/login'; };
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching username:", error);
+                    togglePostFormVisibility(false);
+
+                    const leftButton = document.getElementById('leftButton');
+                    const rightButton = document.getElementById('rightButton');
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                });
+        });
+
+        // Functionality for login and signup
+        const leftButton = document.getElementById('leftButton');
+        const rightButton = document.getElementById('rightButton');
+
+        fetch('/api/username')
+        .then(response => response.json())
+        .then(data => {
+            if (data.username) {
+            leftButton.textContent = 'Account';
+            leftButton.onclick = function () { window.location.href = '/account'; };
+
+            // Dynamically use the username in the 'Sign Out' button text
+            rightButton.textContent = `Sign Out of ${data.username}`;
+            rightButton.onclick = function () { window.location.href = '/signout'; };
+            } else {
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function () { window.location.href = '/signup'; };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function () { window.location.href = '/login'; };
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function () { window.location.href = '/signup'; };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function () { window.location.href = '/login'; };
+        });
+    </script>
+</body>
+
+</html>

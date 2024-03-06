@@ -2,11 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Function for using getAllPosts
 export async function getAllPosts({ env }) {
-  const allKeys = await env.COOLFROG_FORUM.list();
+  const allKeys = await env.COOLFROG_MEETFORUM.list();
   const allPosts = [];
  
   for (const key of allKeys.keys) {
-     const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+     const post = await env.COOLFROG_MEETFORUM.get(key.name, { type: 'json' });
      allPosts.push(post);
   }
  
@@ -19,18 +19,22 @@ export async function onRequestPost({ request, env }) {
     const formData = await request.formData();
     const postTitle = formData.get('postTitle');
     const postContent = formData.get('postContent');
+    const postLocation = formData.get('postLocation');
+    const postMeetingDate = formData.get('postMeetingDate');
 
-    // Create a post object
+    // Create a post object with 4 attributes so far
     const post = JSON.stringify({
       title: postTitle,
       content: postContent,
+      location: postLocation,
+      date: postMeetingDate,
     });
 
     // Generate a unique ID for the post
     const uniqueId = uuidv4();
 
     // Store the post in the KV namespace
-    await env.COOLFROG_FORUM.put(uniqueId, post);
+    await env.COOLFROG_MEETFORUM.put(uniqueId, post);
 
   } catch (error) {
     // Error handling
