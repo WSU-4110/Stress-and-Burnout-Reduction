@@ -35,5 +35,6 @@ export async function onRequestPost({ request, env }) {
 
   } catch (error) {
     console.error("Error:", error);
+    console.error("Stack trace:", error.stack);
   }
 };
