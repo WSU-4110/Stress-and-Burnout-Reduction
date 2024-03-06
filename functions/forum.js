@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Edited getAllPosts for use with Assignment 4 Iterator implementation
-export async function getAllPosts({ env }): Promise<PostIterator> {
+export async function getAllPosts({ env }) {
   const allKeys = await env.FORUM.list();
   const allPosts = [];
 
