@@ -64,30 +64,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const header = document.querySelector('.fixed-header');
-            const postFormContainer = document.querySelector('.post-form-container');
-
-            // Function to add or remove the 'fixed' class based on scroll position
-            function toggleFixedHeader() {
-                if (window.scrollY > header.offsetTop) {
-                    header.classList.add('fixed');
-                } else {
-                    header.classList.remove('fixed');
-                }
-            }
-
-            // Function to toggle visibility of post form based on user login status
-            function togglePostFormVisibility(isUserLoggedIn) {
-                postFormContainer.style.display = isUserLoggedIn ? 'block' : 'none';
-            }
-
-            // Listen for the scroll event and call the toggleFixedHeader function
-            window.addEventListener('scroll', toggleFixedHeader);
-        });
-    </script>
 </body>
 
 </html>
