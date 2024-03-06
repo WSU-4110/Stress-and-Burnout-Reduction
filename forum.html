@@ -78,38 +78,6 @@
                 }
             }
 
-            // Testing redirection after form submission
-            document.getElementById('postForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission
-
-                async function onRequestPost({ request, env }) {
-                    try {
-                        // Form data getting
-                        const formData = await request.formData();
-                        const postTitle = formData.get('postTitle');
-                        const postContent = formData.get('postContent');
-
-                        // Create a post object
-                        const post = JSON.stringify({
-                        title: postTitle,
-                        content: postContent,
-                        });
-
-                        // Generate a unique ID for the post
-                        const uniqueId = uuidv4();
-
-                        // Store the post in the KV namespace
-                        await env.COOLFROG_FORUM.put(uniqueId, post);
-
-                    } catch (error) {
-                        // Error handling
-                        console.error("Error:", error);
-                    }
-                };
-
-                window.location.href = "forum.html";
-            });
-
             // Function to toggle visibility of post form based on user login status
             function togglePostFormVisibility(isUserLoggedIn) {
                 postFormContainer.style.display = isUserLoggedIn ? 'block' : 'none';

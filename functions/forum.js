@@ -32,8 +32,11 @@ export async function onRequestPost({ request, env }) {
     // Store the post in the KV namespace
     await env.COOLFROG_FORUM.put(uniqueId, post);
 
+    window.location.href = "forum.html";
   } catch (error) {
     // Error handling
     console.error("Error:", error);
+
+    window.location.href = "forum.html";
   }
 };
