@@ -9,8 +9,7 @@ export async function getAllPosts({ env }) {
     allPosts.push(post);
   }
 
-  // Return iterator
-  return new PostIterator(allPosts);
+  return allPosts;
 }
 
 export async function onRequestPost({ request, env }) {
@@ -33,7 +32,12 @@ export async function onRequestPost({ request, env }) {
     await env.COOLFROG_FORUM.put(uniqueId, post);
 
   } catch (error) {
+    document.getElementById('postForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      // Your form submission logic here
+    });
     console.error("Error:", error);
+    console.log(error);
     // Error handling
   }
 };
