@@ -16,7 +16,7 @@ export async function getAllPosts({ env }) {
 export async function onRequestPost({ request, env }) {
  try {
     // Assuming the request body contains the form data
-    const formData = await request.formData();
+    const formData = await request.postForm();
     const postTitle = formData.get('postTitle');
     const postContent = formData.get('postContent');
 
