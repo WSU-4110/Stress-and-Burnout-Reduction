@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export async function onRequestPost({ request, env }) {
     try {
         // Capture form data
@@ -22,6 +24,5 @@ export async function onRequestPost({ request, env }) {
     } catch (error) {
         //Handle errors
         console.error("Error:", error);
-        console.log(error);
     }
 };

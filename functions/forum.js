@@ -14,7 +14,7 @@ export async function getAllPosts({ env }) {
 
 export async function onRequestPost({ request, env }) {
  try {
-    // Assuming the request body contains the form data
+    // Capture form data
     const formData = await request.formData();
     const postTitle = formData.get('postTitle');
     const postContent = formData.get('postContent');
@@ -31,13 +31,9 @@ export async function onRequestPost({ request, env }) {
     // Store the post in the KV namespace
     await env.COOLFROG_FORUM.put(uniqueId, post);
 
+    console.log("Post submitted successfully");
+
   } catch (error) {
-    document.getElementById('postForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      // Your form submission logic here
-    });
     console.error("Error:", error);
-    console.log(error);
-    // Error handling
   }
 };
