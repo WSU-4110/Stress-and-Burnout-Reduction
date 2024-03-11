@@ -1,30 +1,38 @@
 document.addEventListener('DOMContentLoaded', function() {
     var dayOfWeek = new Date().getDay();
-    switch(dayOfWeek) {
-        case 1: // Monday
-            setupMondayContent();
-            break;
-        case 3: // Tuesday
-            setupTuesdayContent();
-            break;
-        case 2: // Wednesday
-            setupWednesdayContent();
-            break;
-        case 4: // Thursday
-            setupThursdayContent();
-            break;
-        case 5: // Friday
-            setupFridayContent();
-            break;
-        case 6: // Saturday
-            setupSaturdayContent();
-            break;
-        case 0: // Sunday
-            setupSundayContent();
-            break;
+    const contentStrategy = {
+        1: setupMondayContent,
+        2: setupTuesdayContent,
+        3: setupWednesdayContent,
+        4: setupThursdayContent,
+        5: setupFridayContent,
+        6: setupSaturdayContent,
+        0: setupSundayContent,
+    };
+
+    // Execute the strategy for the current day
+    if (contentStrategy[dayOfWeek]) {
+        contentStrategy[dayOfWeek]();
     }
 });
 
+function setupMondayContent() {
+    const content = `
+        <div class="day-checker">
+            <p>Monday</p>
+        </div>
+    `;
+    document.querySelector('#item2').innerHTML = content;
+}
+
+function setupTuesdayContent() {
+    const content = `
+        <div class="day-checker">
+            <p>Tuesday</p>
+        </div>
+    `;
+    document.querySelector('#item2').innerHTML = content;
+}
 
 function setupWednesdayContent() {
     const content = `
@@ -79,4 +87,31 @@ function setupThursdayContent() {
         sound.pause();
         sound.currentTime = 0; // Optionally reset the audio to start to ensure it starts from the beginning next time
     });
+}
+
+function setupFridayContent() {
+    const content = `
+        <div class="day-checker">
+            <p>friday</p>
+        </div>
+    `;
+    document.querySelector('#item2').innerHTML = content;
+}
+
+function setupSaturdayContent() {
+    const content = `
+        <div class="day-checker">
+            <p>saturday</p>
+        </div>
+    `;
+    document.querySelector('#item2').innerHTML = content;
+}
+
+function setupSundayContent() {
+    const content = `
+        <div class="day-checker">
+            <p>sunday</p>
+        </div>
+    `;
+    document.querySelector('#item2').innerHTML = content;
 }
