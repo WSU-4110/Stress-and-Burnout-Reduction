@@ -1,40 +1,33 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var dayOfWeek = new Date().getDay();
-    const contentStrategy = {
-        1: setupMondayContent,
-        2: setupTuesdayContent,
-        3: setupWednesdayContent,
-        4: setupThursdayContent,
-        5: setupFridayContent,
-        6: setupSaturdayContent,
-        0: setupSundayContent,
-    };
-
-    // Execute the strategy for the current day
-    if (contentStrategy[dayOfWeek]) {
-        contentStrategy[dayOfWeek]();
+class DayContent {
+    setupContent() {
+        throw new Error("This method should be implemented by subclasses");
     }
-});
+}
 
-function setupMondayContent() {
+class MondayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="day-checker">
             <p>Monday</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
+    }
 }
 
-function setupTuesdayContent() {
+class TuesdayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="day-checker">
             <p>Tuesday</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
+    }
 }
 
-function setupWednesdayContent() {
+class WednesdayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="interactive-box">
             <button class="sound-button" data-sound="keyboard-typing.mp3">Keyboard Typing</button>
@@ -42,7 +35,7 @@ function setupWednesdayContent() {
             <button class="sound-button" data-sound="ziplock-bag.mp3">Ziplock Bag</button>
         </div>
     `;
-    document.querySelector('#item2 h1').innerHTML = content; // Ensure this targets the correct container
+    document.querySelector('#item2 h1').innerHTML = content;
     
     document.querySelectorAll('.sound-button').forEach(button => {
         let audio = new Audio(button.dataset.sound);
@@ -51,31 +44,32 @@ function setupWednesdayContent() {
             if (audio.paused) {
                 audio.play();
             } else {
-                audio.currentTime = 0; // Restart the audio if it's already playing
+                audio.currentTime = 0;
             }
         };
         
         const stopSound = () => {
             audio.pause();
-            audio.currentTime = 0; // Reset audio position to start
+            audio.currentTime = 0;
         };
 
-        // Event listeners
         button.addEventListener('mousedown', () => {
             playSound();
-            audio.loop = true; // Keep repeating audio if they continue to hold down
+            audio.loop = true;
         });
 
         button.addEventListener('mouseup', stopSound);
-        button.addEventListener('mouseleave', stopSound); // Consider pausing and resetting audio if the mouse leaves the button while holding down
+        button.addEventListener('mouseleave', stopSound);
     });
 }
+}
 
-function setupThursdayContent() {
+class ThursdayContent extends DayContent {
+    setupContent() {
     const content = `<img class="cat-gif" src="https://i.pinimg.com/originals/36/99/23/3699234f311b8d44ba46d6503b4a033c.gif" alt="Cat">`;
     document.querySelector('#item2').innerHTML = content;
     const sound = new Audio('purring-cat.mp3');
-    sound.loop = true; // Enable looping
+    sound.loop = true;
 
     const catGif = document.querySelector('.cat-gif');
     
@@ -85,33 +79,62 @@ function setupThursdayContent() {
 
     catGif.addEventListener('mouseleave', () => {
         sound.pause();
-        sound.currentTime = 0; // Optionally reset the audio to start to ensure it starts from the beginning next time
+        sound.currentTime = 0;
     });
 }
+}
 
-function setupFridayContent() {
+class FridayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="day-checker">
             <p>friday</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
+    }
 }
 
-function setupSaturdayContent() {
+class SaturdayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="day-checker">
             <p>saturday</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
+    }
 }
 
-function setupSundayContent() {
+class SundayContent extends DayContent {
+    setupContent() {
     const content = `
         <div class="day-checker">
             <p>sunday</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
+    }
 }
+
+
+class ContentFactory {
+    static createContent(dayOfWeek) {
+        switch(dayOfWeek) {
+            case 1: return new MondayContent();
+            case 2: return new TuesdayContent();
+            case 3: return new WednesdayContent();
+            case 4: return new ThursdayContent();
+            case 5: return new FridayContent();
+            case 6: return new SaturdayContent();
+            case 0: return new SundayContent();
+            default: throw new Error("Invalid day of week");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var dayOfWeek = new Date().getDay();
+    const contentCreator = ContentFactory.createContent(dayOfWeek);
+    contentCreator.setupContent();
+});
