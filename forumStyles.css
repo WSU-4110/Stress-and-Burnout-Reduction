@@ -94,9 +94,11 @@ li {
 .fixed-header {
     position: fixed;
     justify-content: center;
-    width: 80%;
+    width: 100%;
     z-index: 1000;
-    background-color: black; 
+    background-color: black;
+    left: 0;
+    right: 0; 
 }
 
 nav {
