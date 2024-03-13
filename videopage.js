@@ -1,6 +1,27 @@
-class VideoModal {
-    // Constructor to initialize the modal with necessary DOM elements
+// General base Modal interface for different types of modals
+class Modal {
+    constructor() {
+        if (this.constructor === Modal) {
+            throw new Error("Abstract class Modal cannot be instantiated directly.");
+        }
+    }
+
+    init() {
+        throw new Error("Method 'init()' must be implemented.");
+    }
+
+    openModal() {
+        throw new Error("Method 'openModal()' must be implemented.");
+    }
+
+    closeModal() {
+        throw new Error("Method 'closeModal()' must be implemented.");
+    }
+}
+
+class VideoModal extends Modal {
     constructor(modalId, videoFrameId, closeButtonClass, videoCardClass) {
+        super(); // Call the constructor of the base Modal class
         this.modal = document.getElementById(modalId); 
         this.videoFrame = document.getElementById(videoFrameId); 
         this.closeButton = document.getElementsByClassName(closeButtonClass)[0]; 
@@ -8,14 +29,12 @@ class VideoModal {
         this.init(); // Initialize the modal functionality
     }
 
-    // Initialize the modal by attaching event listeners
     init() {
         this.attachVideoCardsEvents(); 
         this.attachCloseButtonEvent(); 
         this.attachWindowClickEvent(); 
     }
 
-    // Attach click event listeners to each video card
     attachVideoCardsEvents() {
         this.videoCards.forEach(videoCard => {
             videoCard.addEventListener('click', (e) => {
@@ -25,9 +44,8 @@ class VideoModal {
         });
     }
 
-    // Function to open the modal and play the video
     openModal(videoUrl) {
-        const embedUrl = this.transformVideoUrl(videoUrl); // Transform the video URL for embedding
+        const embedUrl = this.transformVideoUrl(videoUrl); 
         this.videoFrame.src = `${embedUrl}?autoplay=1&rel=0`; 
         this.modal.style.display = "block"; 
     }
@@ -36,14 +54,12 @@ class VideoModal {
         return videoUrl.replace("watch?v=", "embed/");
     }
 
-    // Attach an event listener to the close button to close the modal
     attachCloseButtonEvent() {
         this.closeButton.onclick = () => {
             this.closeModal(); 
         };
     }
 
-    // Attach an event listener to the window to close the modal when clicking outside of it
     attachWindowClickEvent() {
         window.onclick = (event) => {
             if (event.target === this.modal) {
@@ -52,14 +68,31 @@ class VideoModal {
         };
     }
 
-    // Function to close the modal
     closeModal() {
         this.modal.style.display = "none"; 
         this.videoFrame.src = ""; 
     }
 }
 
+// Factory that determines which type of modal to create
+class ModalFactory {
+    static createModal(type, options) {
+        switch (type) {
+            case "video":
+                return new VideoModal(options.modalId, options.videoFrameId, options.closeButtonClass, options.videoCardClass);
+            default:
+                throw new Error("Invalid modal type");
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+    const videoModal = ModalFactory.createModal("video", {
+        modalId: "modal",
+        videoFrameId: "videoFrame",
+        closeButtonClass: "close",
+        videoCardClass: ".video-card"
+    });
 });
+
 
