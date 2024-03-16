@@ -3,12 +3,12 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('n.gif');
-    background-size: auto; /* Set background size to auto to maintain original GIF dimensions */
-    background-position: center center; /* Center the background image horizontally and vertically */
+    background-image: url('p.jpg');
+    background-size: cover; /* Set background size to auto to maintain original GIF dimensions */
+    background-position: center; /* Center the background image horizontally and vertically */
     background-repeat: no-repeat;
      /* Prevent background image from repeating */
-     background-position-y: 60px
+     background-position-y: 30px
 }
 
 header {
@@ -46,3 +46,18 @@ h2 {
     color: #080909; /* Set the title color to blue */
     margin-top: 20px; /* Add some space above the title */
 }
+.youtube-tab {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px; /* Add space between each tab */
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    background-color: #dbe0e5; /* Blue background color */
+    transition: background-color 0.3s ease;
+}
+
+.youtube-tab:hover {
+    background-color: #c2d5ea; /* Darker blue on hover */
+}
+
