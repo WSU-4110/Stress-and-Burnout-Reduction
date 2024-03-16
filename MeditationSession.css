@@ -1,0 +1,48 @@
+/* Add your styles for layout and design here */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('n.gif');
+    background-size: auto; /* Set background size to auto to maintain original GIF dimensions */
+    background-position: center center; /* Center the background image horizontally and vertically */
+    background-repeat: no-repeat;
+     /* Prevent background image from repeating */
+     background-position-y: 60px
+}
+
+header {
+    background-color: rgba(184, 173, 173, 0.8); /* Semi-transparent white background */
+    padding: 10px;
+}
+
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab {
+    padding: 10px 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    background-color: #dbe0e5; /* Blue background color */
+    transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #c2d5ea; /* Darker blue on hover */
+}
+
+.active-tab {
+    background-color: #97abc1; /* Darker blue for active tab */
+    color: #fff; /* White text for active tab */
+}
+
+h2 {
+    text-align: center; /* Center the title */
+    color: #080909; /* Set the title color to blue */
+    margin-top: 20px; /* Add some space above the title */
+}
