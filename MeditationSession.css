@@ -1,14 +1,16 @@
-/* Add your styles for layout and design here */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url('p.jpg');
-    background-size: cover; /* Set background size to auto to maintain original GIF dimensions */
-    background-position: center; /* Center the background image horizontally and vertically */
-    background-repeat: no-repeat;
-     /* Prevent background image from repeating */
-     background-position-y: 30px
+    
+    
+}
+.side-image {
+    position: fixed;
+    top: 50px; /* Adjust the top position to move the image down */
+    right: 0;
+    width: 700px;
+    z-index: -1;
 }
 
 header {
@@ -37,13 +39,13 @@ header {
 }
 
 .active-tab {
-    background-color: #97abc1; /* Darker blue for active tab */
+    background-color: #0b1117; /* Darker blue for active tab */
     color: #fff; /* White text for active tab */
 }
 
 h2 {
     text-align: center; /* Center the title */
-    color: #080909; /* Set the title color to blue */
+    color: #fbf8f8; /* Set the title color to blue */
     margin-top: 20px; /* Add some space above the title */
 }
 .youtube-tab {
@@ -60,4 +62,3 @@ h2 {
 .youtube-tab:hover {
     background-color: #c2d5ea; /* Darker blue on hover */
 }
-
