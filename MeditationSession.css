@@ -62,3 +62,16 @@ h2 {
 .youtube-tab:hover {
     background-color: #c2d5ea; /* Darker blue on hover */
 }
+
+.session-description {
+    background-color: #f0f0f0; /* Light gray background color */
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px; /* Add space above each session box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 630px;
+}
+
+.session-description p {
+    margin: 0; /* Remove default margin for paragraphs */
+}
