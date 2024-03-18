@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // Function for retreiving post data from meetForum KV worker
-export async function getAllPosts({ env }) {
+export async function getMeetAllPosts({ env }) {
   const allKeys = await env.COOLFROG_MEETFORUM.list();
   const allPosts = [];
 
@@ -14,7 +14,7 @@ export async function getAllPosts({ env }) {
 };
 
 // Function for sending post data to meetForum KV worker
-export async function onRequestPost({ request, env }) {
+export async function onMeetRequestPost({ request, env }) {
   try {
      // Request body contains the form data
      const formData = await request.formData();
