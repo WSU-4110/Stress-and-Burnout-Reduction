@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // Function for retreiving post data from meetForum KV worker
-export async function getMeetAllPosts({ env }) {
+export async function getAllPosts({ env }) {
   const allKeys = await env.COOLFROG_MEETFORUM.list();
   const allPosts = [];
 
@@ -14,7 +14,7 @@ export async function getMeetAllPosts({ env }) {
 };
 
 // Function for sending post data to meetForum KV worker
-export async function onMeetRequestPost({ request, env }) {
+export async function onRequestPost({ request, env }) {
   try {
      // Request body contains the form data
      const formData = await request.formData();
@@ -41,7 +41,7 @@ export async function onMeetRequestPost({ request, env }) {
     return new Response('Post created successfully!', {
       status: 302,
       headers: {
-        location: '/meetForum.html'
+        location: '/meetForum'
       },
     });
   } catch (error) {

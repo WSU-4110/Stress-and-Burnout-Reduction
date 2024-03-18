@@ -37,7 +37,7 @@ export async function onRequestPost({ request, env }) {
     return new Response('Post created successfully!', {
       status: 302,
       headers: {
-        location: '/forum.html'
+        location: '/forum'
       },
     });
   } catch (error) {
