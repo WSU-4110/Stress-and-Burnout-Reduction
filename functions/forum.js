@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Function for using getAllPosts
+// Function for retreiving post data from regular forum KV worker
 export async function getAllPosts({ env }) {
   const allKeys = await env.COOLFROG_FORUM.list();
   const allPosts = [];
@@ -13,6 +13,7 @@ export async function getAllPosts({ env }) {
   return allPosts;
 };
 
+// Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
      // Request body contains the form data
