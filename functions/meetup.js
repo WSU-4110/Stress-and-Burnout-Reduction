@@ -38,7 +38,7 @@ export async function onRequestPost({ request, env }) {
      await env.COOLFROG_MEETFORUM.put(uniqueId, post);
 
      // After storing the post, redirect to the homepage
-    return new Response('Post created successfully!', {
+    return new Response('Meetup post created successfully!', {
       status: 302,
       headers: {
         location: '/meetup'
