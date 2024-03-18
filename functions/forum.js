@@ -18,28 +18,57 @@ export async function onRequestPost({ request, env }) {
   try {
      // Request body contains the form data
      const formData = await request.formData();
-     const postTitle = formData.get('postTitle');
-     const postContent = formData.get('postContent');
+     const postTitle = formData.get('meetPostTitle');
+     const postContent = formData.get('meetPostContent');
+     const postLocation = formData.get('meetPostLocation');
+     const postMeetingDate = formData.get('meetPostMeetingDate');
  
-     // Create a post object
-     const post = JSON.stringify({
-       title: postTitle,
-       content: postContent,
-     });
- 
-     // Generate a unique ID for the post
-     const uniqueId = uuidv4();
- 
-     // Store the post in the KV namespace
-     await env.COOLFROG_FORUM.put(uniqueId, post);
+    if (postLocation == null && postMeetingDate == null) {
+      // Create a meetup post object
+      const post = JSON.stringify({
+        title: postTitle,
+        content: postContent,
+        location: postLocation,
+        date: postMeetingDate,
+        type: 2, // Signifies a meetup post
+      });
 
-     // After storing the post, redirect to the homepage
-    return new Response('Post created successfully!', {
-      status: 302,
-      headers: {
-        location: '/forum'
-      },
-    });
+      // Generate a unique ID for the post
+      const uniqueId = uuidv4();
+  
+      // Store the post in the KV namespace
+      await env.COOLFROG_FORUM.put(uniqueId, post);
+
+      // After storing the post, redirect to the meetup forum
+      return new Response('Meetup post created successfully!', {
+        status: 302,
+        headers: {
+          location: '/meetup'
+        },
+      });
+
+    } else {
+      const post = JSON.stringify({
+        title: postTitle,
+        content: postContent,
+        type: 1, // Signifies a regular post
+      });
+
+      // Generate a unique ID for the post
+      const uniqueId = uuidv4();
+  
+      // Store the post in the KV namespace
+      await env.COOLFROG_FORUM.put(uniqueId, post);
+
+      // After storing the post, redirect to the regular forum
+      return new Response('Meetup post created successfully!', {
+        status: 302,
+        headers: {
+          location: '/forum'
+        },
+      });
+    }
+
   } catch (error) {
      console.error("Error:", error);
      // Error handling
