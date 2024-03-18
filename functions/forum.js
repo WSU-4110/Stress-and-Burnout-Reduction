@@ -64,7 +64,7 @@ export async function onRequestPost({ request, env }) {
       return new Response('Meetup post created successfully!', {
         status: 302,
         headers: {
-          location: '/meetup'
+          location: '/meetForum'
         },
       });
     }
