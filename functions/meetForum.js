@@ -20,11 +20,15 @@ export async function onRequestPost({ request, env }) {
      const formData = await request.formData();
      const postTitle = formData.get('postTitle');
      const postContent = formData.get('postContent');
+     const postLocation = formData.get('postLocation');
+     const postMeetingDate = formData.get('postMeetingDate');
  
      // Create a post object
      const post = JSON.stringify({
-       title: postTitle,
-       content: postContent,
+      title: postTitle,
+      content: postContent,
+      location: postLocation,
+      date: postMeetingDate,
      });
  
      // Generate a unique ID for the post
