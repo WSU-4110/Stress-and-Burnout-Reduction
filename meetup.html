@@ -9,6 +9,56 @@
     <style>
         @import url(forumStyles.css);
     </style>
+    <style>
+        /* Include forumStyles.css styles inline */
+        body {
+            margin: 0 10%;
+            font-family: Verdana, sans-serif;
+            font-size: 100%;
+            color: #fff;
+            background-color: #000;
+        }
+
+        /* Styling for the post form container */
+        .post-form-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Styling for the form labels */
+        .post-form-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        /* Styling for form inputs and textarea */
+        .post-form-container input,
+        .post-form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+        }
+
+        /* Styling for the submit button */
+        .post-form-container button {
+            background-color: #a1a1a1;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .post-form-container button:hover {
+            background-color: #a1a1a1;
+        }
+    </style>
 </head>
 
 <body>
@@ -40,7 +90,7 @@
 
     <div class="meet-form-container">
         <h2>Create a New Meetup Post</h2>
-        <form id="meetForm" action="/meetup" method="POST">            
+        <form id="postForm" action="/meetup" method="POST">            
             <label for="postTitle">Title:</label>
             <input type="text" id="postTitle" name="postTitle" required>
 
