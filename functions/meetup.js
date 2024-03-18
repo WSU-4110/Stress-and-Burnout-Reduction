@@ -18,10 +18,10 @@ export async function onRequestPost({ request, env }) {
   try {
      // Request body contains the form data
      const formData = await request.formData();
-     const postTitle = formData.get('postTitle');
-     const postContent = formData.get('postContent');
-     const postLocation = formData.get('postLocation');
-     const postMeetingDate = formData.get('postMeetingDate');
+     const postTitle = formData.get('meetPostTitle');
+     const postContent = formData.get('meetPostContent');
+     const postLocation = formData.get('meetPostLocation');
+     const postMeetingDate = formData.get('meetPostMeetingDate');
  
      // Create a post object
      const post = JSON.stringify({

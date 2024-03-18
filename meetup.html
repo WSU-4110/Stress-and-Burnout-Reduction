@@ -38,20 +38,20 @@
 
     <h1>Meditation+ Meetup Forum</h1>
 
-    <div class="meet-post-form-container">
+    <div class="meet-form-container">
         <h2>Create a New Meetup Post</h2>
-        <form id="meetPostForm" action="/meetup" method="POST">            
-            <label for="postTitle">Title:</label>
-            <input type="text" id="postTitle" name="postTitle" required>
+        <form id="meetForm" action="/meetup" method="POST">            
+            <label for="meetPostTitle">Title:</label>
+            <input type="text" id="meetPostTitle" name="meetPostTitle" required>
 
-            <label for="postLocation">Location:</label>
-            <input type="text" id="postLocation" name="postLocation" required>
+            <label for="meetPostLocation">Location:</label>
+            <input type="text" id="meetPostLocation" name="meetPostLocation" required>
 
-            <label for="postMeetingDate">Meeting Date:</label>
-            <input type="text" id="postMeetingDate" name="postMeetingDate" required>
+            <label for="meetPostMeetingDate">Meeting Date:</label>
+            <input type="text" id="meetPostMeetingDate" name="meetPostMeetingDate" required>
     
             <label for="postContent">Content:</label>
-            <textarea id="postContent" name="postContent" required></textarea>
+            <textarea id="meetPostContent" name="meetPostContent" required></textarea>
     
             <button type="submit">Post</button>
         </form>
