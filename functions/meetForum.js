@@ -13,7 +13,7 @@ export async function getAllMeetupPosts({ env }) {
   return allPosts;
  };
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestMeetupPost({ request, env }) {
  try {
     // Form data getting
     const formData = await request.formData();
