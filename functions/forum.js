@@ -33,7 +33,15 @@ export async function onRequestPost({ request, env }) {
     await env.COOLFROG_FORUM.put(uniqueId, post);
 
   } catch (error) {
-    // Error handling
-    console.error("Error:", error);
+    // Without ctx.waitUntil(), your fetch() to Cloudflare's
+    // logging service may or may not complete
+    ctx.waitUntil(postLog(err.toString()));
+    const stack = JSON.stringify(err.stack) || err;
+    // Copy the response and initialize body to the stack trace
+    response = new Response(stack, response);
+    // Add the error stack into a header to find out what happened
+    response.headers.set("X-Debug-stack", stack);
+    response.headers.set("X-Debug-err", err);
+    return response;
   }
 };
