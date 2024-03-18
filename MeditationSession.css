@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    
+    
+}
+.side-image {
+    position: fixed;
+    top: 50px; /* Adjust the top position to move the image down */
+    right: 0;
+    width: 700px;
+    z-index: -1;
+}
+
+header {
+    background-color: rgba(184, 173, 173, 0.8); /* Semi-transparent white background */
+    padding: 10px;
+}
+
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tab {
+    padding: 10px 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    background-color: #dbe0e5; /* Blue background color */
+    transition: background-color 0.3s ease;
+}
+
+.tab:hover {
+    background-color: #c2d5ea; /* Darker blue on hover */
+}
+
+.active-tab {
+    background-color: #0b1117; /* Darker blue for active tab */
+    color: #fff; /* White text for active tab */
+}
+
+h2 {
+    text-align: center; /* Center the title */
+    color: #0c0c0c; /* Set the title color to blue */
+    margin-top: 20px; /* Add some space above the title */
+}
+.youtube-tab {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px; /* Add space between each tab */
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    background-color: #dbe0e5; /* Blue background color */
+    transition: background-color 0.3s ease;
+}
+
+.youtube-tab:hover {
+    background-color: #c2d5ea; /* Darker blue on hover */
+}
+
+.session-description {
+    background-color: #f0f0f0; /* Light gray background color */
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px; /* Add space above each session box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 630px;
+}
+
+.session-description p {
+    margin: 0; /* Remove default margin for paragraphs */
+}

@@ -1,4 +1,31 @@
-const sounds = [
+//Factory Method Pattern
+// Factory function to create a new sound item
+function createSoundItem(sound) {
+  const soundItem = document.createElement("div");
+  soundItem.classList.add("sound-item");
+ 
+  const icon = document.createElement("img");
+  icon.src = sound.iconSrc;
+  icon.alt = sound.name; // Assuming 'name' property exists in your sound objects
+  icon.classList.add("sound-icon");
+ 
+  const audio = document.createElement("audio");
+  audio.src = sound.audioSrc;
+  audio.controls = true; // Add controls to allow users to play/pause the audio
+  audio.classList.add("sound-audio");
+ 
+  const title = document.createElement("h2");
+  title.textContent = sound.name; // Assuming 'name' property exists in your sound objects
+ 
+  soundItem.appendChild(icon);
+  soundItem.appendChild(audio);
+  soundItem.appendChild(title);
+ 
+  return soundItem;
+ }
+ 
+ // Array of sound objects
+ const sounds = [
   { iconSrc: "Images/background.gif", audioSrc: "Sounds/Birds.mp3" },
   { iconSrc: "Images/Cat.gif", audioSrc: "Sounds/beat.mp3"  },
   { iconSrc: "Images/listen.jpg", audioSrc: "Sounds/jazz.mp3"  },
@@ -14,32 +41,34 @@ const sounds = [
   { iconSrc: "Images/rain.gif", audioSrc: "Sounds/sunset.mp3" },
   { iconSrc: "Images/coding.jpeg", audioSrc: "Sounds/violin.mp3" },
   { iconSrc: "Images/girl.gif", audioSrc: "Sounds/nostalgia.mp3" },
-];
-
-
-const soundsContainer = document.getElementById("soundsContainer");
-
-sounds.forEach(sound => {
-  const soundItem = document.createElement("div");
-  soundItem.classList.add("sound-item");
-
-  const icon = document.createElement("img");
-  icon.src = sound.iconSrc;
-  icon.alt = sound.name;
-  icon.classList.add("sound-icon");
-
-  const audio = document.createElement("audio");
-  audio.src = sound.audioSrc;
-  audio.controls = true; // Add controls to allow users to play/pause the audio
-  audio.classList.add("sound-audio");
-
-  const title = document.createElement("h2");
-  title.textContent = sound.name; 
-
-  soundItem.appendChild(icon);
-  soundItem.appendChild(audio);
-  soundItem.appendChild(title);
-
+ ];
+ 
+ // Get the container element
+ const soundsContainer = document.getElementById("soundsContainer");
+ 
+ // Use the factory function to create and append sound items
+ sounds.forEach(sound => {
+  const soundItem = createSoundItem(sound);
   soundsContainer.appendChild(soundItem);
-});
+ });
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
