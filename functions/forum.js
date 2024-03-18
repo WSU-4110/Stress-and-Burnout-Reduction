@@ -24,6 +24,27 @@ export async function onRequestPost({ request, env }) {
      const postMeetingDate = formData.get('meetPostMeetingDate');
  
     if (postLocation == null && postMeetingDate == null) {
+      const post = JSON.stringify({
+        title: postTitle,
+        content: postContent,
+        type: 1, // Signifies a regular post
+      });
+      
+      // Generate a unique ID for the post
+      const uniqueId = uuidv4();
+      
+      // Store the post in the KV namespace
+      await env.COOLFROG_FORUM.put(uniqueId, post);
+      
+      // After storing the post, redirect to the regular forum
+      return new Response('Meetup post created successfully!', {
+        status: 302,
+        headers: {
+          location: '/forum'
+        },
+      });
+
+    } else {
       // Create a meetup post object
       const post = JSON.stringify({
         title: postTitle,
@@ -46,27 +67,6 @@ export async function onRequestPost({ request, env }) {
           location: '/meetup'
         },
       });
-
-    } else {
-      const post = JSON.stringify({
-        title: postTitle,
-        content: postContent,
-        type: 1, // Signifies a regular post
-      });
-
-      // Generate a unique ID for the post
-      const uniqueId = uuidv4();
-  
-      // Store the post in the KV namespace
-      await env.COOLFROG_FORUM.put(uniqueId, post);
-
-      // After storing the post, redirect to the regular forum
-      return new Response('Meetup post created successfully!', {
-        status: 302,
-        headers: {
-          location: '/forum'
-        },
-      });
     }
 
   } catch (error) {
@@ -74,3 +74,4 @@ export async function onRequestPost({ request, env }) {
      // Error handling
   }
 };
+
