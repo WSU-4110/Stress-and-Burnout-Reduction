@@ -18,10 +18,10 @@ export async function onRequestPost({ request, env }) {
   try {
      // Request body contains the form data
      const formData = await request.formData();
-     const postTitle = formData.get('meetPostTitle');
-     const postContent = formData.get('meetPostContent');
-     const postLocation = formData.get('meetPostLocation');
-     const postMeetingDate = formData.get('meetPostMeetingDate');
+     const postTitle = formData.get('postTitle');
+     const postContent = formData.get('postContent');
+     const postLocation = formData.get('postLocation');
+     const postMeetingDate = formData.get('postMeetingDate');
  
     if (postLocation == null && postMeetingDate == null) {
       const post = JSON.stringify({
@@ -37,7 +37,7 @@ export async function onRequestPost({ request, env }) {
       await env.COOLFROG_FORUM.put(uniqueId, post);
       
       // After storing the post, redirect to the regular forum
-      return new Response('Meetup post created successfully!', {
+      return new Response('Forum post created successfully!', {
         status: 302,
         headers: {
           location: '/forum'
