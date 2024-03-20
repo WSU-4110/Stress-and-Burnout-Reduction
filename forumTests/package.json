@@ -1,0 +1,24 @@
+{
+  "name": "stress-and-burnout-reduction",
+  "version": "1.0.0",
+  "description": "Your project description",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.1",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6",
+    "jest-fetch-mock": "^3.0.3"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
+    
+  }
+}
