@@ -1,5 +1,30 @@
 {
   "dependencies": {
     "uuid": "^9.0.1"
-  }
+  },
+  "name": "stress-and-burnout-reduction",
+  "description": "Group Members:\r Deboshree Chowdhury,\r Ali Mehaidli,\r Jesse Naser,\r Carlos Nunez,\r Noah Mousseau",
+  "version": "1.0.0",
+  "main": "MeditationSession.js",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WSU-4110/Stress-and-Burnout-Reduction.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WSU-4110/Stress-and-Burnout-Reduction/issues"
+  },
+  "homepage": "https://github.com/WSU-4110/Stress-and-Burnout-Reduction#readme"
 }

@@ -19,7 +19,7 @@ class TuesdayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>text box to type in ur wories and it ques an animation that gets rid of them</p>
+            <p>text box to type in ur worries and it ques an animation that gets rid of them</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -88,7 +88,7 @@ class FridayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>pick and enviroment ad it comes with sound/changes background</p>
+            <p>pick a enviroment and it comes with sound/changes background</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -138,3 +138,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentCreator = ContentFactory.createContent(dayOfWeek);
     contentCreator.setupContent();
 });
+
+module.exports = {
+    DayContent,
+    MondayContent,
+    TuesdayContent,
+    WednesdayContent,
+    ThursdayContent,
+    FridayContent,
+    SaturdayContent,
+    SundayContent
+};
