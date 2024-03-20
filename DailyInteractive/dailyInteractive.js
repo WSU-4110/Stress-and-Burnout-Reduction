@@ -8,7 +8,7 @@ class MondayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>Monday</p>
+            <p>Words of affirmation generator</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -19,7 +19,7 @@ class TuesdayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>Tuesday</p>
+            <p>text box to type in ur wories and it ques an animation that gets rid of them</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -88,7 +88,7 @@ class FridayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>friday</p>
+            <p>pick and enviroment ad it comes with sound/changes background</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -99,7 +99,7 @@ class SaturdayContent extends DayContent {
     setupContent() {
     const content = `
         <div class="day-checker">
-            <p>saturday</p>
+            <p>do nothing for 2 minutes</p>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
