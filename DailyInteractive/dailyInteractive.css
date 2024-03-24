@@ -24,6 +24,32 @@ header {
     perspective-origin: center bottom;
 }
 
+section {
+    height: 100%;
+    width: 100%;
+    display: table;
+}
+
+section#item1 {
+    background-color: #000000;
+    background-size: cover;
+    font-family: sans-serif;
+}
+
+section#item2 {
+    background-image: url(DIcontent.gif);
+    background-color: #000000;
+    font-family: sans-serif;
+}
+
+#item2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .hero {
     position: relative;
     background:#333 url(DIcover.jpg) no-repeat center center;
@@ -85,39 +111,21 @@ nav ul a {
     text-decoration: none;
 }
 
-section {
-    height: 100%;
-    width: 100%;
-    display: table;
-}
-
-section#item1 {
-    background-color: #000000;
-    background-size: cover;
-    font-family: sans-serif;
-}
-
-section#item2 {
-    background-image: url(DIcontent.gif);
-    background-color: #000000;
-    font-family: sans-serif;
-}
-
 
 .interactive-box {
-    width: 600px; /* Adjust the size of the square box */
-    height: 300px; /* Adjust the size of the square box */
-    margin: 20px auto; /* Center the box */
-    padding: 20px; /* Padding inside the box */
-    background-color: #000000a5; /* Background color of the box */
-    border: 2px solid #272626; /* Border around the box */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow for depth */
-    display: flex; /* Utilize Flexbox for internal alignment */
-    flex-direction: row; /* Stack children vertically */
+    width: 600px; 
+    height: auto; 
+    margin: 20px auto; 
+    padding: 20px; 
+    background-color: #000000a5; 
+    border: 2px solid #272626; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    display: flex; 
+    flex-direction: row;
     gap: 30px;
-    justify-content: center; /* Center children vertically */
-    align-items: center; /* Center children horizontally */
-    border-radius: 8px; /* Optional: Rounds the corners of the box */
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
 }
 
 :root {
@@ -142,24 +150,181 @@ section#item2 {
     background: var(--button_color);
     color: var(--button_outline_color);
     transform: translateY(-0.2em);
-    transition: transform 0.1s ease, background-color 0.3s, color 0.3s; /* Added transition for color and background-color */
+    transition: transform 0.1s ease, background-color 0.3s, color 0.3s;
 }
-  
+
+.cat-gif {
+    display: block;
+    margin: 10px auto;
+    width: auto; 
+    height: auto; 
+}
+
+#affirmation-text {
+    font-size: 24px; 
+    font-family: 'Bradley Hand', cursive; 
+    color: #FFFFFF; 
+    text-align: center; 
+    margin-bottom: 20px;
+}
+
+#generate-affirmation {
+    width: 10em;
+    position: relative;
+    height: 3.5em;
+    border: 3px ridge #ffffff;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    transition: 1s;
+    border-radius: 0.3em;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#item2 #worry-text {
+    width: calc(100% - 20px);
+    height: 150px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#item2 #submit-worry {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#item2 #submit-worry:hover {
+    background-color: #45a049;
+}
+
+.instruction-text {
+    font-size: 18px;
+    color: #FFFFFF;
+    margin-bottom: 10px; 
+    font-family: 'Bradley Hand', cursive;
+}
+
+.environment-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin: 5px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.environment-button[data-environment="summary-night"] {
+    background-color: #2c3e50;
+}
+
+.environment-button[data-environment="garden"] {
+    background-color: #27ae60;
+}
+
+.environment-button[data-environment="cafe"] {
+    background-color: #d35400;
+}
+
 .sound-button:hover {
-    /* Pull the button upwards when hovered */
     transform: translateY(-0.33em);
 }
   
 .sound-button:active {
-    /* Push the button downwards when pressed */
     transform: translateY(0);
 }
 
-.cat-gif {
-    /* Style for the cat GIF */
-    display: block;
-    margin: 10px auto;
-    width: auto; /* Adjust as needed */
-    height: auto; /* Adjust as needed */
+#generate-affirmation::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 3%;
+    width: 95%;
+    height: 40%;
+    background-color: #000000;
+    transition: 0.5s;
+    transform-origin: center;
+}
+  
+#generate-affirmation::before {
+    content: "";
+    transform-origin: center;
+    position: absolute;
+    top: 80%;
+    left: 3%;
+    width: 95%;
+    height: 40%;
+    background-color: #000000;
+    transition: 0.5s;
+}
+  
+#generate-affirmation:hover::before, button:hover::after {
+    transform: scale(0)
+}
+  
+#generate-affirmation:hover {
+    box-shadow: inset 0px 0px 25px #9cb3cd;
+}
+  
+  .environment-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
+.environment-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #4CAF50;
+}
+
+#start-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#start-button:hover {
+    background-color: #367c39;
+}
+
+#start-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#saturday-box {
+    text-align: center;
+    padding: 20px;
+}
+
+#loading-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+#loading-bar {
+    height: 20px;
+    background-color: #4CAF50;
+    width: 0%;
+    border-radius: 5px;
+    transition: width 1s ease-in-out;
+}
