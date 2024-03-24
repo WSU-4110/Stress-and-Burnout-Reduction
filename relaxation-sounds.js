@@ -15,7 +15,7 @@ function createSoundItem(sound) {
   audio.classList.add("sound-audio");
  
   const title = document.createElement("h2");
-  title.textContent = sound.name; // Assuming 'name' property exists in your sound objects
+  title.textContent = sound.name; 
  
   soundItem.appendChild(icon);
   soundItem.appendChild(audio);

@@ -17,6 +17,29 @@ h1 {
     background-color: rgba(0,  0,  0,  0.5);
 }
 
+.page-description {
+    
+    background-color: rgba(236, 231, 231, 0.8);
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-description h1 {
+    text-align: center ;
+    color: #f7eff3;
+    
+}
+
+.page-description p {
+    text-align: justify;
+    color: #0f0f0f;
+    line-height: 1.6;
+   
+}
+
+
 nav {
     background-color: #efeaea;
     color: white;

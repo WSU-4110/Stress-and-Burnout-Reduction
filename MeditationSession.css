@@ -2,16 +2,8 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    
-    
-}
-.side-image {
-    position: fixed;
-    top: 50px; /* Adjust the top position to move the image down */
-    right: 0;
-    width: 700px;
-    z-index: -1;
-}
+    background-color: rgba(194, 173, 173, 0.8); }
+
 
 header {
     background-color: rgba(184, 173, 173, 0.8); /* Semi-transparent white background */
@@ -45,7 +37,7 @@ header {
 
 h2 {
     text-align: center; /* Center the title */
-    color: #0c0c0c; /* Set the title color to blue */
+    color: #0d0d0d; /* Set the title color to blue */
     margin-top: 20px; /* Add some space above the title */
 }
 .youtube-tab {
@@ -69,9 +61,10 @@ h2 {
     padding: 10px;
     margin-top: 10px; /* Add space above each session box */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 630px;
+    width: 700px;
 }
 
 .session-description p {
     margin: 0; /* Remove default margin for paragraphs */
 }
+
