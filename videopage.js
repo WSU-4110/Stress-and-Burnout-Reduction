@@ -61,5 +61,26 @@ class VideoModal {
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const videoCards = document.querySelectorAll('.video-card');
+    const videoInfos = document.querySelectorAll('.video-info');
+
+    searchInput.addEventListener('input', () => {
+        const searchQuery = searchInput.value.toLowerCase();
+
+        videoCards.forEach((card, index) => {
+            const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
+            const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
+            const isVisible = title.includes(searchQuery) || description.includes(searchQuery);
+            card.style.display = isVisible ? '' : 'none';
+        });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
 });
 
