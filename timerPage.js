@@ -1,3 +1,5 @@
+const timerSound = new Audio('Sounds/hotel-bell-ding.mp3');
+
 let timers = {};
 
 function startTimer(timerId) {
@@ -21,7 +23,7 @@ function startTimer(timerId) {
         if (duration <= 0) {
             clearInterval(timers[timerId]);
             delete timers[timerId];
-            alert(`Timer ${timerId} done!`);
+            timerSound.play().catch(e => console.error("Error playing the sound:", e));
         }
     }, 1000);
 }
