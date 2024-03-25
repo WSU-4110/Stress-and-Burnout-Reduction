@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timers</title>
+    <link rel="stylesheet" href="timerStyles.css">
+</head>
+<body>
+    <!-- Header, contains link to other webpages (feel free to copy paste across all webpages to keep consistency) -->
+    <header class="fixed-header">
+        <!-- nav and ul elements used for formatting organization -->
+        <nav>
+            <div>
+                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+                <a href="meetup.html" class="btn btn-primary mr-2 mb-2">Meetup Forum</a>
+                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+                <a href="relaxation-sounds.html" class="btn btn-primary mr-2 mb-2">Relaxation Sounds Library</a>
+                <a href="MeditationSession.html" class="btn btn-primary mr-2 mb-2">Meditation Sessions</a>
+            </div>
+        </nav>
+    </header>
+    <h1>Set Your Timers</h1>
+
+    <!-- Timer 1 -->
+    <div class="timer-container" id="timer1">
+        <input type="text" placeholder="Set time in seconds" id="timeInput1">
+        <div id="display1">00:00</div>
+        <button onclick="startTimer(1)">Start</button>
+        <button onclick="stopTimer(1)">Stop</button>
+        <button onclick="resetTimer(1)">Reset</button>
+    </div>
+
+    <!-- Timer 2 -->
+    <div class="timer-container" id="timer2">
+        <input type="text" placeholder="Set time in seconds" id="timeInput2">
+        <div id="display2">00:00</div>
+        <button onclick="startTimer(2)">Start</button>
+        <button onclick="stopTimer(2)">Stop</button>
+        <button onclick="resetTimer(2)">Reset</button>
+    </div>
+
+    <!-- Timer 3 -->
+    <div class="timer-container" id="timer3">
+        <input type="text" placeholder="Set time in seconds" id="timeInput3">
+        <div id="display3">00:00</div>
+        <button onclick="startTimer(3)">Start</button>
+        <button onclick="stopTimer(3)">Stop</button>
+        <button onclick="resetTimer(3)">Reset</button>
+    </div>
+
+    <footer>
+        <p><small>Meditation+&copy;</small></p>
+    </footer>
+
+    <script src="timerPage.js"></script>
+</body>
+</html>
