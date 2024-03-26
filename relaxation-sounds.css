@@ -97,7 +97,7 @@ nav a:hover {
 
 .sound-audio {
     width: 100%;
-   
     margin-top: 10px; 
+    opacity: 0.6; /* Adjust the opacity value as needed */
   }
   

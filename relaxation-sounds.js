@@ -28,15 +28,8 @@ function createSoundItem(sound) {
     a.click();
   });
 
-   // Add loop button
-   const loopButton = document.createElement("button");
-   loopButton.textContent = "Loop";
-   loopButton.classList.add("loop-button");
-   loopButton.addEventListener("click", () => {
-     audio.loop = !audio.loop; // Toggle looping behavior
-     loopButton.textContent = audio.loop ? "Loop On" : "Loop Off";
-   });
-
+   
+ 
   soundItem.appendChild(icon);
   soundItem.appendChild(audio);
   soundItem.appendChild(title);
@@ -72,23 +65,3 @@ function createSoundItem(sound) {
   soundsContainer.appendChild(soundItem);
  });
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
