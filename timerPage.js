@@ -10,16 +10,18 @@ class Timer {
 
     start() {
         if (this.intervalId) return; // Timer already running
-
-        this.duration = parseInt(document.getElementById(this.inputId).value);
-        if (isNaN(this.duration) || this.duration <= 0) {
-            alert("Please enter a valid number of seconds.");
-            return;
+    
+        if (this.duration <= 0) {
+            this.duration = parseInt(document.getElementById(this.inputId).value);
+            if (isNaN(this.duration) || this.duration <= 0) {
+                alert("Please enter a valid number of seconds.");
+                return;
+            }
         }
-
+    
         this.updateDisplay();
         this.intervalId = setInterval(() => this.tick(), 1000);
-    }
+    }    
 
     stop() {
         if (this.intervalId) {
