@@ -16,7 +16,27 @@ function createSoundItem(sound) {
  
   const title = document.createElement("h2");
   title.textContent = sound.name; 
- 
+
+  // Create a download button
+  const downloadBtn = document.createElement("button");
+  downloadBtn.textContent = "Download";
+  downloadBtn.classList.add("download-btn");
+  downloadBtn.addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = sound.audioSrc;
+    a.download = sound.name + ".mp3";
+    a.click();
+  });
+
+   // Add loop button
+   const loopButton = document.createElement("button");
+   loopButton.textContent = "Loop";
+   loopButton.classList.add("loop-button");
+   loopButton.addEventListener("click", () => {
+     audio.loop = !audio.loop; // Toggle looping behavior
+     loopButton.textContent = audio.loop ? "Loop On" : "Loop Off";
+   });
+
   soundItem.appendChild(icon);
   soundItem.appendChild(audio);
   soundItem.appendChild(title);
