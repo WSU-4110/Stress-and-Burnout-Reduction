@@ -72,33 +72,49 @@
     <script src="forumFormatting.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
-            //Fetch all posts
-            const response = await fetch('/get-all-posts');
-            const allPosts = await response.json();
-            
-            //Get the section where forum posts will be displayed
-            const forumPostsSection = document.getElementById('forum-posts');
-            
-            //Iterate over each post and display type 1 posts only
-            allPosts.forEach(post => {
-                if (post.type === 1) {
-                    const postElement = document.createElement('div');
-                    postElement.classList.add('post');
+            try {
+                // Fetch all posts
+                const response = await fetch('/get-all-posts');
     
-                    //Create HTML structure for each type 1 post
-                    postElement.innerHTML = `
-                        <h3>${post.title}</h3>
-                        <p>${post.content}</p>
-                        <p>Type: Regular</p>
-                        <hr>
-                    `;
-    
-                    //Append the post element to the forum posts section
-                    forumPostsSection.appendChild(postElement);
+                // Check if the response is successful (status code 200)
+                if (!response.ok) {
+                    throw new Error('Failed to fetch posts');
                 }
-            });
+    
+                // Parse the response as JSON
+                const allPosts = await response.json();
+
+                // Log the retrieved JSON data to the console
+                console.log('Retrieved JSON data:', allPosts);
+                
+                // Get the section where forum posts will be displayed
+                const forumPostsSection = document.getElementById('forum-posts');
+                
+                // Iterate over each post and display type 1 posts only
+                allPosts.forEach(post => {
+                    if (post.type === 1) {
+                        const postElement = document.createElement('div');
+                        postElement.classList.add('post');
+        
+                        // Create HTML structure for each type 1 post
+                        postElement.innerHTML = `
+                            <h3>${post.title}</h3>
+                            <p>${post.content}</p>
+                            <p>Type: Regular</p>
+                            <hr>
+                        `;
+        
+                        // Append the post element to the forum posts section
+                        forumPostsSection.appendChild(postElement);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching posts:', error.message);
+                // Handle the error, e.g., display an error message to the user
+            }
         });
     </script>
+    
     
 </body>
 
