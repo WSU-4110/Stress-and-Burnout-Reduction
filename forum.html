@@ -68,6 +68,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
+    
+    <!-- Script for importing and displaying posts-->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                // Fetch forum posts directly from getAllPosts function
+                const allPosts = await getAllPosts({});
+                const forumPostsSection = document.getElementById('forum-posts');
+                allPosts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <hr>
+                    `;
+                    forumPostsSection.appendChild(postElement);
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Handle error
+            }
+        });
+    </script>
 </body>
 
 </html>
