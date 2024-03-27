@@ -69,30 +69,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
     
-    <!-- Script for importing and displaying posts-->
-    <script src="functions/api/forum.js" type="module"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            try {
-                // Fetch forum posts directly from getAllPosts function
-                const allPosts = await getAllPosts({});
-                const forumPostsSection = document.getElementById('forum-posts');
-                allPosts.forEach(post => {
-                    const postElement = document.createElement('div');
-                    postElement.classList.add('post');
-                    postElement.innerHTML = `
-                        <h3>${post.title}</h3>
-                        <p>${post.content}</p>
-                        <hr>
-                    `;
-                    forumPostsSection.appendChild(postElement);
-                });
-            } catch (error) {
-                // Handle errors if they occur
-                console.error("Error fetching data:", error);
-            }
-        });
-    </script>
 </body>
 
 </html>

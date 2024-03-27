@@ -13,6 +13,29 @@ export async function getAllPosts({ env }) {
   return allPosts;
 };
 
+// Function to fetch and filter posts with type 1
+async function displayForumPosts() {
+  const posts = await getAllPosts({ env }); // Assuming env is defined elsewhere
+
+  // Filter posts with type 1
+  const filteredPosts = posts.filter(post => post.type === 1);
+
+  // Render filtered posts on the webpage
+  const forumPostsContainer = document.getElementById('forum-posts');
+  filteredPosts.forEach(post => {
+      const postElement = document.createElement('div');
+      postElement.classList.add('forum-post');
+      postElement.innerHTML = `
+          <h3>${post.title}</h3>
+          <p>${post.content}</p>
+      `;
+      forumPostsContainer.appendChild(postElement);
+  });
+}
+
+// Call the function to display forum posts when the webpage loads
+window.onload = displayForumPosts;
+
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
