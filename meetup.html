@@ -44,10 +44,7 @@
 
     <div class="post-form-container">
         <h2>Create a New Meetup Post</h2>
-        <!-- Replace textarea with Quill editor -->
-        <div id="editor-container">
-            <div id="postContent" name="postContent"></div>
-        </div>
+        
         <form id="postForm" action="/forum" method="POST">
             <label for="postTitle">Title:</label>
             <input type="text" id="postTitle" name="postTitle" required>
@@ -58,6 +55,11 @@
             <label for="postMeetingDate">Meeting Date:</label>
             <input type="text" id="postMeetingDate" name="postMeetingDate" required>
             <button type="submit">Post</button>
+
+                <!-- Replace textarea with Quill editor -->
+            <div id="editor-container">
+                <div id="postContent" name="postContent"></div>
+            </div>
         </form>
     </div>
 

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import QuillDeltaToHtmlConverter from 'quill-delta-to-html';
 
 // Function for displaying posts in forum.html and meetup.html
 /*
@@ -52,26 +53,32 @@ export async function onRequestGet({ env }) {
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
-     // Request body contains the form data
-     const formData = await request.formData();
-     const postTitle = formData.get('postTitle');
-     const postContent = formData.get('postContent');
-     const postLocation = formData.get('postLocation');
-     const postMeetingDate = formData.get('postMeetingDate');
- 
-    if (postLocation == null && postMeetingDate == null) {
+    // Request body contains the form data
+    const formData = await request.formData();
+    const postTitle = formData.get('postTitle');
+
+    // Get HTML content from Quill editor
+    const postContentDelta = formData.get('postContent');
+    const converter = new QuillDeltaToHtmlConverter(JSON.parse(postContentDelta).ops);
+    const postContentHTML = converter.convert();
+
+    // Check if it's a regular post or meetup post
+    const postLocation = formData.get('postLocation');
+    const postMeetingDate = formData.get('postMeetingDate');
+
+    if (!postLocation && !postMeetingDate) {
       const post = JSON.stringify({
         title: postTitle,
-        content: postContent,
+        content: postContentHTML, // Save formatted HTML content
         type: 1, // Signifies a regular post
       });
-      
+
       // Generate a unique ID for the post
       const uniqueId = uuidv4();
-      
+
       // Store the post in the KV namespace
       await env.COOLFROG_FORUM.put(uniqueId, post);
-      
+
       // After storing the post, redirect to the regular forum
       return new Response('Forum post created successfully!', {
         status: 302,
@@ -79,12 +86,11 @@ export async function onRequestPost({ request, env }) {
           location: '/forum'
         },
       });
-
     } else {
       // Create a meetup post object
       const post = JSON.stringify({
         title: postTitle,
-        content: postContent,
+        content: postContentHTML, // Save formatted HTML content
         location: postLocation,
         date: postMeetingDate,
         type: 2, // Signifies a meetup post
@@ -92,7 +98,7 @@ export async function onRequestPost({ request, env }) {
 
       // Generate a unique ID for the post
       const uniqueId = uuidv4();
-  
+
       // Store the post in the KV namespace
       await env.COOLFROG_FORUM.put(uniqueId, post);
 
@@ -104,9 +110,8 @@ export async function onRequestPost({ request, env }) {
         },
       });
     }
-
   } catch (error) {
-     console.error("Error:", error);
-     // Error handling
+    console.error("Error:", error);
+    // Error handling
   }
 };
