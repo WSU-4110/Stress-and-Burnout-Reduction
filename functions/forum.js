@@ -44,7 +44,7 @@ export async function onRequestGet({ env }) {
   } catch (error) {
     // Error handling for if errors occur
     console.error("Error:", error);
-  }
+    }
 }
 
 // Function for sending post data to regular forum KV worker
