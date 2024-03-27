@@ -109,6 +109,10 @@
                     }
                 });
             } catch (error) {
+                // Fetch all posts
+                const response = await fetch('/get-all-posts');
+                // Log the retrieved JSON data to the console
+                console.log('Retrieved JSON data:', allPosts);
                 console.error('Error fetching posts:', error.message);
                 // Handle the error, e.g., display an error message to the user
             }
