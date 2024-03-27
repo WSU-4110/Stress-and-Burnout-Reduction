@@ -75,6 +75,7 @@
             try {
                 // Fetch forum posts directly from getAllPosts function
                 const allPosts = await getAllPosts({});
+                console.log(allPosts);
                 const forumPostsSection = document.getElementById('forum-posts');
                 allPosts.forEach(post => {
                     const postElement = document.createElement('div');
