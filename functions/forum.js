@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // Function for displaying posts in forum.html and meetup.html
-/*
 export async function onRequestGet({ env }) {
   try {
     const allKeys = await env.COOLFROG_FORUM.list();
@@ -47,7 +46,6 @@ export async function onRequestGet({ env }) {
     console.error("Error:", error);
   }
 }
-*/
 
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
