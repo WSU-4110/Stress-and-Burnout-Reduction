@@ -70,31 +70,7 @@
     <script src="forumFormatting.js"></script>
     
     <script>
-        async function displayForumPosts() {
-            try {
-                const response = await fetch('/forum');
-                const posts = await response.json();
-
-                const forumPostsContainer = document.getElementById('forum-posts');
-                posts.forEach(post => {
-                    if (post.type === 1) { // Display only posts with type 1
-                        const postElement = document.createElement('div');
-                        postElement.classList.add('forum-post');
-                        postElement.innerHTML = `
-                            <h3>${post.title}</h3>
-                            <p>${post.content}</p>
-                        `;
-                        forumPostsContainer.appendChild(postElement);
-                    }
-                });
-            } catch (error) {
-                console.error("Error:", error);
-                // Error handling
-            }
-        }
-
-        // Call the function to display forum posts when the webpage loads
-        window.onload = displayForumPosts();
+        
     </script>
 </body>
 
