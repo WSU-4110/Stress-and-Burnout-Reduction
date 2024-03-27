@@ -69,6 +69,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
     
+    <script src="forum.js" type="module"></script>
     <!-- Script for importing and displaying posts-->
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
@@ -87,8 +88,8 @@
                     forumPostsSection.appendChild(postElement);
                 });
             } catch (error) {
+                // Handle errors if they occur
                 console.error("Error fetching data:", error);
-                // Handle error
             }
         });
     </script>
