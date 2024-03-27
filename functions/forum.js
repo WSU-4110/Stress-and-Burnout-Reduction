@@ -14,8 +14,8 @@ export async function getAllPosts({ env }) {
 };
 
 // Function to fetch and filter posts with type 1
-async function displayForumPosts() {
-  const posts = await getAllPosts({ env }); // Assuming env is defined elsewhere
+async function displayForumPosts({ env }) {
+  const posts = await getAllPosts({ env });
 
   // Filter posts with type 1
   const filteredPosts = posts.filter(post => post.type === 1);
@@ -33,8 +33,16 @@ async function displayForumPosts() {
   });
 }
 
-// Call the function to display forum posts when the webpage loads
-window.onload = displayForumPosts;
+// Check if the request is a GET request to /forum route and call displayForumPosts
+export async function onRequestGet({ env }) {
+  try {
+    // Call displayForumPosts
+    await displayForumPosts({ env });
+  } catch (error) {
+    console.error("Error:", error);
+    // Error handling
+  }
+}
 
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
