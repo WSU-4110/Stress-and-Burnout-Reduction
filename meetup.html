@@ -58,7 +58,7 @@
         </form>
     </div>
 
-    <!-- Section for displaying forum posts -->
+    <!-- Section for displaying meetup forum posts -->
     <h2>Meetup Posts</h2>
 
     <section id="meetup=forum-posts">
@@ -73,6 +73,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
+
+    <!-- Section for retrieving and displaying meetup forum posts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            //Fetch all meetup posts
+            const response = await fetch('/get-all-posts');
+            const allPosts = await response.json();
+            
+            //Get the section where meetup posts will be displayed
+            const meetupPostsSection = document.getElementById('meetup-forum-posts');
+            
+            //Iterate over each meetup post and display type 2 posts only
+            allPosts.forEach(post => {
+                if (post.type === 2) {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('post');
+        
+                    //Create HTML structure for each type 2 (meetup) post
+                    postElement.innerHTML = `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <p>Type: Meetup</p>
+                        <p>Location: ${post.location}</p>
+                        <p>Meeting Date: ${post.date}</p>
+                        <hr>
+                    `;
+        
+                    //Append the meetup post element to the meetup posts section
+                    meetupPostsSection.appendChild(postElement);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 </html>
