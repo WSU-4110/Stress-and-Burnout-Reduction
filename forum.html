@@ -67,22 +67,26 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="forumFormatting.js"></script>
 
     <!-- Script for retrieving and displaying posts from KV namespace -->
-    <script src="forumFormatting.js"></script>
+    
     <script>
+        //Importing relevant function
+        import { getAllPosts } from './functions/forum.js'; 
+
         document.addEventListener('DOMContentLoaded', async function () {
             try {
-                // Fetch all posts
-                const response = await fetch('/get-all-posts');
+                // Call the getAllPosts function to retrieve posts
+                const allPosts = await getAllPosts({});
+
+                // Log the retrieved JSON data to the console
+                console.log('Retrieved JSON data:', allPosts);
     
                 // Check if the response is successful (status code 200)
                 if (!response.ok) {
                     throw new Error('Failed to fetch posts');
                 }
-    
-                // Parse the response as JSON
-                const allPosts = await response.json();
 
                 // Log the retrieved JSON data to the console
                 console.log('Retrieved JSON data:', allPosts);
@@ -109,12 +113,8 @@
                     }
                 });
             } catch (error) {
-                // Fetch all posts
-                const response = await fetch('/get-all-posts');
-                // Log the retrieved JSON data to the console
-                console.log('Retrieved JSON data:', allPosts);
+                // Handle the error and display error message to user
                 console.error('Error fetching posts:', error.message);
-                // Handle the error, e.g., display an error message to the user
             }
         });
     </script>
