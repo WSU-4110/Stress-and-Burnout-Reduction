@@ -90,11 +90,6 @@ li {
     color: black;
 }
 
-/* CSS to change font color of Quill editor to white */
-.ql-editor {
-    color: white;
-}
-
 /* styling to keep nav bar scrolling with website*/
 .fixed-header {
     position: fixed;
