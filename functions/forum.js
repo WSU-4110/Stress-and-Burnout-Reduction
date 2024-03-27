@@ -1,46 +1,35 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Function for retreiving post data from regular forum KV worker
-export async function getAllPosts({ env }) {
-  const allKeys = await env.COOLFROG_FORUM.list();
-  const allPosts = [];
-
-  for (const key of allKeys.keys) {
-    const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-    allPosts.push(post);
-  }
-
-  return allPosts;
-};
-
-// Function to fetch and filter posts with type 1
-async function displayForumPosts({ env }) {
-  const posts = await getAllPosts({ env });
-
-  // Filter posts with type 1
-  const filteredPosts = posts.filter(post => post.type === 1);
-
-  // Render filtered posts on the webpage
-  const forumPostsContainer = document.getElementById('forum-posts');
-  filteredPosts.forEach(post => {
-      const postElement = document.createElement('div');
-      postElement.classList.add('forum-post');
-      postElement.innerHTML = `
-          <h3>${post.title}</h3>
-          <p>${post.content}</p>
-      `;
-      forumPostsContainer.appendChild(postElement);
-  });
-}
-
-// Check if the request is a GET request to /forum route and call displayForumPosts
-export async function onRequestGet({ env }) {
+// Function for displaying posts in forum.html and meetup.html
+export async function onRequestGet({ request, env }) {
   try {
-    // Call displayForumPosts
-    await displayForumPosts({ env });
+    const allKeys = await env.COOLFROG_FORUM.list();
+    const allPosts = [];
+
+    for (const key of allKeys.keys) {
+      const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+      allPosts.push(post);
+    }
+
+    const posts = allPosts;
+
+    // Filter posts with type 1
+    const filteredPosts = posts.filter(post => post.type === 1);
+
+    // Render filtered posts on the webpage
+    const forumPostsContainer = document.getElementById('forum-posts');
+    filteredPosts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('forum-post');
+        postElement.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+        `;
+        forumPostsContainer.appendChild(postElement);
+    });
   } catch (error) {
+    // Error handling for if errors occur
     console.error("Error:", error);
-    // Error handling
   }
 }
 
