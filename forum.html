@@ -68,54 +68,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
-
-    <!-- Importing forum.js script -->
-    <script src="./functions/forum.js"></script>
-    <!-- Script for retrieving and displaying posts from KV namespace -->
-    <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            try {
-                // Call the getAllPosts function to retrieve posts
-                const allPosts = await getAllPosts({});
-
-                // Log the retrieved JSON data to the console
-                console.log('Retrieved JSON data:', allPosts);
-    
-                // Check if the response is successful (status code 200)
-                if (!response.ok) {
-                    throw new Error('Failed to fetch posts');
-                }
-
-                // Log the retrieved JSON data to the console
-                console.log('Retrieved JSON data:', allPosts);
-                
-                // Get the section where forum posts will be displayed
-                const forumPostsSection = document.getElementById('forum-posts');
-                
-                // Iterate over each post and display type 1 posts only
-                allPosts.forEach(post => {
-                    if (post.type === 1) {
-                        const postElement = document.createElement('div');
-                        postElement.classList.add('post');
-        
-                        // Create HTML structure for each type 1 post
-                        postElement.innerHTML = `
-                            <h3>${post.title}</h3>
-                            <p>${post.content}</p>
-                            <p>Type: Regular</p>
-                            <hr>
-                        `;
-        
-                        // Append the post element to the forum posts section
-                        forumPostsSection.appendChild(postElement);
-                    }
-                });
-            } catch (error) {
-                // Handle the error and display error message to user
-                console.error('Error fetching posts:', error.message);
-            }
-        });
-    </script>
 </body>
 
 </html>

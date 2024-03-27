@@ -13,6 +13,40 @@ export async function getAllPosts({ env }) {
   return allPosts;
 };
 
+// Function to load and display posts
+async function loadPosts() {
+  try {
+      const allPosts = await getAllPosts({}); // Call getAllPosts function to retrieve posts
+
+      // Get the section where forum posts will be displayed
+      const forumPostsSection = document.getElementById('forum-posts');
+
+      // Iterate over each post and display type 1 posts only
+      allPosts.forEach(post => {
+          if (post.type === 1) {
+              const postElement = document.createElement('div');
+              postElement.classList.add('post');
+
+              // Create HTML structure for each type 1 post
+              postElement.innerHTML = `
+                  <h3>${post.title}</h3>
+                  <p>${post.content}</p>
+                  <p>Type: Regular</p>
+                  <hr>
+              `;
+
+              // Append the post element to the forum posts section
+              forumPostsSection.appendChild(postElement);
+          }
+      });
+  } catch (error) {
+      console.error('Error fetching posts:', error.message);
+  }
+}
+
+// Call loadPosts function when DOM content is loaded
+document.addEventListener('DOMContentLoaded', loadPosts);
+
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
