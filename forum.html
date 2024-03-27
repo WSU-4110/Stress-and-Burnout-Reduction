@@ -70,12 +70,12 @@
     <script src="forumFormatting.js"></script>
     
     <!-- Script for importing and displaying posts-->
-    <script src="getForumPosts.js" type="module">
+    <script src="functions/forum" type="module"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', async function () {
             try {
                 // Fetch forum posts directly from getAllPosts function
                 const allPosts = await getAllPosts({});
-                console.log(allPosts);
                 const forumPostsSection = document.getElementById('forum-posts');
                 allPosts.forEach(post => {
                     const postElement = document.createElement('div');
