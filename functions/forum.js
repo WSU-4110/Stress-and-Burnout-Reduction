@@ -1,17 +1,51 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// Function for retreiving post data from regular forum KV worker
-export async function getAllPosts({ env }) {
-  const allKeys = await env.COOLFROG_FORUM.list();
-  const allPosts = [];
+// Function for displaying posts in forum.html and meetup.html
+export async function onRequestGet({ env }) {
+  try {
+    const allKeys = await env.COOLFROG_FORUM.list();
+    const allPosts = [];
 
-  for (const key of allKeys.keys) {
-    const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-    allPosts.push(post);
-  }
+    for (const key of allKeys.keys) {
+      const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
+      allPosts.push(post);
+    }
 
-  return allPosts;
-};
+    // Filter posts with type 1
+    const filteredType1Posts = allPosts.filter(post => post.type === 1);
+    const filteredType2Posts = allPosts.filter(post => post.type === 2);
+
+    // Render filtered posts on the general forum webpage
+    const generalForumPostsContainer = document.getElementById('general-forum-posts');
+    filteredType1Posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('general-forum-post');
+        postElement.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+        `;
+        generalForumPostsContainer.appendChild(postElement);
+    });
+
+    // Render filtered posts on the meetup forum webpage
+    const meetupForumPostsContainer = document.getElementById('meetup-forum-posts');
+    filteredType2Posts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.classList.add('meetup-forum-post');
+        postElement.innerHTML = `
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+            <p><strong>Location:</strong> ${post.location}</p>
+            <p><strong>Date:</strong> ${post.date}</p>
+        `;
+        meetupForumPostsContainer.appendChild(postElement);
+    });
+
+  } catch (error) {
+    // Error handling for if errors occur
+    console.error("Error:", error);
+    }
+}
 
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
@@ -64,7 +98,7 @@ export async function onRequestPost({ request, env }) {
       return new Response('Meetup post created successfully!', {
         status: 302,
         headers: {
-          location: '/meetForum'
+          location: '/meetup'
         },
       });
     }
@@ -74,4 +108,3 @@ export async function onRequestPost({ request, env }) {
      // Error handling
   }
 };
-

@@ -123,6 +123,11 @@ nav div a {
     text-decoration: none;
 }
 
+nav div a:hover {
+    background-color: #ddd; /* Change to grey color when hovered */
+    color: black;
+}
+
 /* Styling for the post form container */
 .post-form-container {
     background-color: #333;
