@@ -1,4 +1,4 @@
-//Factory Method Pattern
+// Factory Method Pattern
 // Factory function to create a new sound item
 function createSoundItem(sound) {
   const soundItem = document.createElement("div");
@@ -28,17 +28,46 @@ function createSoundItem(sound) {
     a.click();
   });
 
-   
  
   soundItem.appendChild(icon);
   soundItem.appendChild(audio);
   soundItem.appendChild(title);
- 
+  
   return soundItem;
- }
- 
- // Array of sound objects
- const sounds = [
+}
+
+// Function to filter sounds by a specific category
+function filterSoundsByCategory(sounds, category) {
+  return sounds.filter(sound => sound.category === category);
+}
+
+// Function to sort sounds alphabetically by name
+function sortSoundsAlphabetically(sounds) {
+  return sounds.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Function to shuffle the order of sounds
+function shuffleSounds(sounds) {
+  return sounds.sort(() => Math.random() - 0.5);
+}
+
+// Function to get the total number of sounds
+function getTotalNumberOfSounds(sounds) {
+  return sounds.length;
+}
+
+// Function to check if a specific sound exists in the array
+function checkSoundExistence(sounds, soundName) {
+  return sounds.some(sound => sound.name === soundName);
+}
+
+// Function to get the first sound item in the array
+function getFirstSoundItem(sounds) {
+  return sounds[0];
+}
+
+// Array of sound objects
+const sounds = [
   { iconSrc: "Images/background.gif", audioSrc: "Sounds/Birds.mp3" },
   { iconSrc: "Images/Cat.gif", audioSrc: "Sounds/beat.mp3"  },
   { iconSrc: "Images/listen.jpg", audioSrc: "Sounds/jazz.mp3"  },
@@ -54,14 +83,13 @@ function createSoundItem(sound) {
   { iconSrc: "Images/rain.gif", audioSrc: "Sounds/sunset.mp3" },
   { iconSrc: "Images/coding.jpeg", audioSrc: "Sounds/violin.mp3" },
   { iconSrc: "Images/girl.gif", audioSrc: "Sounds/nostalgia.mp3" },
- ];
- 
- // Get the container element
- const soundsContainer = document.getElementById("soundsContainer");
- 
- // Use the factory function to create and append sound items
- sounds.forEach(sound => {
+];
+
+// Get the container element
+const soundsContainer = document.getElementById("soundsContainer");
+
+// Use the factory function to create and append sound items
+sounds.forEach(sound => {
   const soundItem = createSoundItem(sound);
   soundsContainer.appendChild(soundItem);
- });
- 
+});
