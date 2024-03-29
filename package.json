@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.9.3",
     "uuid": "^9.0.1"
-  }
+  },
+  "name": "stress-and-burnout-reduction",
+  "description": "Group Members:\r Deboshree Chowdhury,\r Ali Mehaidli,\r Jesse Naser,\r Carlos Nunez,\r Noah Mousseau",
+  "version": "1.0.0",
+  "main": "article_library.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
