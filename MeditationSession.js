@@ -1,4 +1,4 @@
- // Selecting elements
+// Selecting elements
 const timerDisplay = document.getElementById('timer');
 const startButton = document.getElementById('start');
 const pauseButton = document.getElementById('pause');
@@ -166,3 +166,52 @@ searchInput.addEventListener('input', function() {
         });
     }
 });
+
+
+/// Selecting elements
+const commentInput = document.getElementById('commentInput');
+const submitCommentBtn = document.getElementById('submitComment');
+const commentsContainer = document.getElementById('commentsContainer');
+
+// Load comments from local storage when the page loads
+window.addEventListener('load', function() {
+    loadComments();
+});
+
+// Event listener for submitting a comment
+submitCommentBtn.addEventListener('click', function() {
+    const commentText = commentInput.value.trim();
+    if (commentText !== '') {
+        addComment(commentText);
+        saveCommentsToLocalStorage();
+        commentInput.value = ''; // Clear the input field after submitting
+    }
+});
+
+// Function to add a new comment to the comments container
+function addComment(commentText) {
+    const commentElement = document.createElement('div');
+    commentElement.classList.add('comment');
+    commentElement.innerHTML = `<i>${commentText}</i>`;
+    commentsContainer.appendChild(commentElement);
+}
+
+// Function to save comments to local storage
+function saveCommentsToLocalStorage() {
+    const comments = [];
+    commentsContainer.querySelectorAll('.comment').forEach(comment => {
+        comments.push(comment.textContent);
+    });
+    localStorage.setItem('sessionComments', JSON.stringify(comments));
+}
+
+// Function to load comments from local storage
+function loadComments() {
+    const savedComments = localStorage.getItem('sessionComments');
+    if (savedComments) {
+        const comments = JSON.parse(savedComments);
+        comments.forEach(comment => {
+            addComment(comment);
+        });
+    }
+}
