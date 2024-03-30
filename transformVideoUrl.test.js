@@ -1,3 +1,5 @@
+import { VideoModal } from './videopage';
+
 describe('VideoModal - transformVideoUrl', () => {
   it('transforms URL correctly', () => {
     const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');

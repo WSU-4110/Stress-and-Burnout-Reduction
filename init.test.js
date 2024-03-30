@@ -1,3 +1,5 @@
+import { VideoModal } from './videopage';
+
 describe('VideoModal - init', () => {
   it('calls methods to attach event listeners', () => {
     // Setup

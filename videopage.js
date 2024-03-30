@@ -59,6 +59,8 @@ class VideoModal {
     }
 }
 
+export {VideoModal};
+
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
 

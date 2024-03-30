@@ -1,3 +1,5 @@
+import { VideoModal } from './videopage';
+
 describe('VideoModal - closeModal', () => {
   it('hides modal and clears videoFrame src', () => {
     const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');

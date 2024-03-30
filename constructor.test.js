@@ -1,3 +1,5 @@
+import { VideoModal } from './videopage';
+
 describe('VideoModal - constructor', () => {
   beforeEach(() => {
     // Mock DOM elements

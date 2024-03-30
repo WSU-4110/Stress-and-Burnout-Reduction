@@ -1,3 +1,5 @@
+import { VideoModal } from './videopage';
+
 describe('VideoModal - openModal', () => {
   it('sets videoFrame src and displays modal', () => {
     const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
