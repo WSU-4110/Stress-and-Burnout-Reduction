@@ -8,52 +8,46 @@ app.use(express.json());
 // Setup MySQL connection
 const pool = mysql.createPool({
   host: 'localhost',
-  user: 'Cnlos',
+  user: 'root',
   database: 'stressandburnoutreduction',
-  password: 'Milkmoney2003withMySql!',
+  password: 'Milkmoney2003withSql!',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
 });
 
 // Endpoint for liking videos
-app.post('/videos/:videoId/like', async (req, res) => {
-  const { videoId } = req.params;
-  const { userId } = req.body;
-
-  try {
-    const [result] = await pool.query(
-      'INSERT INTO likes (video_id, user_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE like_id=LAST_INSERT_ID(like_id)',
-      [videoId, userId]
-    );
-    res.status(200).json({ message: 'Video liked successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+app.post('/like', (req, res) => {
+  const { videoId, userId } = req.body;
+  const query = 'INSERT INTO likes (video_id, user_id) VALUES (?, ?)';
+  pool.query(query, [videoId, userId], (err, result) => {
+    if (err) throw err;
+    res.send('Video liked!');
+  });
 });
 
 // Endpoint for unliking videos
-app.delete('/videos/:videoId/like', async (req, res) => {
-  const { videoId } = req.params;
-  const { userId } = req.body;
-
-  try {
-    const [result] = await pool.query(
-      'DELETE FROM likes WHERE video_id = ? AND user_id = ?',
-      [videoId, userId]
-    );
-    if (result.affectedRows > 0) {
-      res.status(200).json({ message: 'Like removed successfully' });
-    } else {
-      res.status(404).json({ message: 'Like not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+app.post('/unlike', (req, res) => {
+  const { videoId, userId } = req.body;
+  const query = 'DELETE FROM likes WHERE video_id = ? AND user_id = ?';
+  pool.query(query, [videoId, userId], (err, result) => {
+    if (err) throw err;
+    res.send('Video unliked!');
+  });
 });
 
+// Sorting videos by likes
+app.get('/videos', (req, res) => {
+  const query = 'SELECT * FROM videos ORDER BY likes DESC';
+  pool.query(query, (err, rows) => {
+    if (err) throw err;
+    res.json(rows);
+  });
+});
+
+
 // Start the server
-const PORT = process.env.PORT || 3300;
+const PORT = process.env.PORT || 3309;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
