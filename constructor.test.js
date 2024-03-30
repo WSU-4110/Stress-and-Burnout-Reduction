@@ -1,4 +1,4 @@
-import { VideoModal } from './videopage';
+const { VideoModal } = require('./videopage');
 
 describe('VideoModal - constructor', () => {
   beforeEach(() => {
