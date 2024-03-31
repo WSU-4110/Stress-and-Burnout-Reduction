@@ -1,42 +1,27 @@
-// Import the formatTime function
-const { formatTime } = require('../MeditationSession');
+// formatTime.test.js
+const { formatTime } = require('./MeditationSession');
 
-// Describe the test suite for the formatTime function
+// Mock the DOM environment
+const { JSDOM } = require('jsdom');
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
+global.document = dom.window.document;
+global.window = dom.window;
+
+// Your test suites and cases
 describe('formatTime', () => {
-    // Test case: Format time less than a minute
-    test('formats time less than a minute correctly', () => {
-        // Arrange
-        const timeInSeconds = 30;
-
-        // Act
-        const formattedTime = formatTime(timeInSeconds);
-
-        // Assert
-        expect(formattedTime).toBe('00:30');
+    test('formats time correctly', () => {
+        expect(formatTime(70)).toBe('01:10');
+        expect(formatTime(3600)).toBe('60:00');
+        expect(formatTime(65)).toBe('01:05');
+        expect(formatTime(5)).toBe('00:05');
     });
 
-    // Test case: Format time exactly one minute
-    test('formats time exactly one minute correctly', () => {
-        // Arrange
-        const timeInSeconds = 60;
-
-        // Act
-        const formattedTime = formatTime(timeInSeconds);
-
-        // Assert
-        expect(formattedTime).toBe('01:00');
+    test('handles negative time', () => {
+        expect(formatTime(-70)).toBe('00:00');
     });
 
-    // Test case: Format time greater than one minute
-    test('formats time greater than one minute correctly', () => {
-        // Arrange
-        const timeInSeconds = 123;
-
-        // Act
-        const formattedTime = formatTime(timeInSeconds);
-
-        // Assert
-        expect(formattedTime).toBe('02:03');
+    test('handles large time values', () => {
+        expect(formatTime(9999999)).toBe('166666:39');
     });
 
     // Add more test cases as needed
