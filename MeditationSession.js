@@ -215,3 +215,11 @@ function loadComments() {
         });
     }
 }
+
+module.exports = {
+    formatTime,
+    updateTimer,
+    startTimer,
+    pauseTimer,
+    resetTimer,
+};
