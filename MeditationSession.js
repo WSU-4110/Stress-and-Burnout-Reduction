@@ -49,29 +49,11 @@ function resetTimer() {
 }
 
 // Session bookmarks
-function manipulateBookmarkSession(sessionName, action) {
+function bookmarkSession(sessionName) {
     const bookmark = document.createElement('li');
     bookmark.textContent = sessionName;
-
-    if (action === 'add') {
-        bookmarkList.appendChild(bookmark);
-    } else if (action === 'remove') {
-        const bookmarkItems = bookmarkList.querySelectorAll('li');
-        bookmarkItems.forEach(item => {
-            if (item.textContent === sessionName) {
-                item.remove(); // Remove the session from the bookmarked list
-            }
-        });
-    }
+    bookmarkList.appendChild(bookmark);
     saveBookmarks(); // Save bookmarks to local storage
-}
-
-function bookmarkSession(sessionName) {
-    manipulateBookmarkSession(sessionName, 'add');
-}
-
-function unbookmarkSession(sessionName) {
-    manipulateBookmarkSession(sessionName, 'remove');
 }
 
 function saveBookmarks() {
@@ -88,13 +70,28 @@ function loadBookmarks() {
     if (savedBookmarks) {
         const bookmarks = JSON.parse(savedBookmarks);
         bookmarks.forEach(bookmark => {
-            manipulateBookmarkSession(bookmark, 'add');
+            bookmarkSession(bookmark);
         });
     }
 }
 
 // Load bookmarks when the page loads
-window.addEventListener('load', loadBookmarks);
+window.addEventListener('load', function() {
+    loadBookmarks();
+});
+
+// Function to unbookmark a session
+function unbookmarkSession(sessionName) {
+    const bookmarkItems = bookmarkList.querySelectorAll('li');
+    bookmarkItems.forEach(item => {
+        if (item.textContent === sessionName) {
+            item.remove(); // Remove the session from the bookmarked list
+            saveBookmarks(); // Save updated bookmarks to local storage
+        }
+    });
+}
+
+
 
 // Event listeners
 startButton.addEventListener('click', function() {
@@ -103,9 +100,13 @@ startButton.addEventListener('click', function() {
     }
 });
 
-pauseButton.addEventListener('click', pauseTimer);
+pauseButton.addEventListener('click', function() {
+    pauseTimer();
+});
 
-resetButton.addEventListener('click', resetTimer);
+resetButton.addEventListener('click', function() {
+    resetTimer();
+});
 
 bookmarkButton.addEventListener('click', function() {
     const sessionName = prompt('Enter session name to bookmark:');
@@ -114,6 +115,7 @@ bookmarkButton.addEventListener('click', function() {
     }
 });
 
+// Event listener for unbookmark button
 unbookmarkButton.addEventListener('click', function() {
     const sessionName = prompt('Enter session name to unbookmark:');
     if (sessionName) {
@@ -121,10 +123,12 @@ unbookmarkButton.addEventListener('click', function() {
     }
 });
 
+
 // Theme switching
 themeSwitcher.addEventListener('click', function() {
     document.body.classList.toggle('dark-theme');
 });
+
 
 // Session link functionality
 const sessionLinks = document.querySelectorAll('.session-link');
@@ -137,11 +141,13 @@ sessionLinks.forEach(link => {
     });
 });
 
-// Search functionality
 const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
 const sessions = document.querySelectorAll('.session');
 
-function filterSessions(searchQuery) {
+searchButton.addEventListener('click', function() {
+    const searchQuery = searchInput.value.toLowerCase().trim();
+
     sessions.forEach(session => {
         const sessionTitle = session.querySelector('h3').textContent.toLowerCase();
         if (sessionTitle.includes(searchQuery)) {
@@ -150,35 +156,39 @@ function filterSessions(searchQuery) {
             session.style.display = 'none';
         }
     });
-}
+});
 
+// Reset the search when the input field is cleared
 searchInput.addEventListener('input', function() {
-    const searchQuery = searchInput.value.toLowerCase().trim();
-    if (searchQuery === '') {
+    if (searchInput.value.trim() === '') {
         sessions.forEach(session => {
             session.style.display = 'block';
         });
-    } else {
-        filterSessions(searchQuery);
     }
 });
 
-// Comments functionality
+
+/// Selecting elements
 const commentInput = document.getElementById('commentInput');
 const submitCommentBtn = document.getElementById('submitComment');
 const commentsContainer = document.getElementById('commentsContainer');
 
-window.addEventListener('load', loadComments);
+// Load comments from local storage when the page loads
+window.addEventListener('load', function() {
+    loadComments();
+});
 
+// Event listener for submitting a comment
 submitCommentBtn.addEventListener('click', function() {
     const commentText = commentInput.value.trim();
     if (commentText !== '') {
         addComment(commentText);
-        saveComments();
-        commentInput.value = '';
+        saveCommentsToLocalStorage();
+        commentInput.value = ''; // Clear the input field after submitting
     }
 });
 
+// Function to add a new comment to the comments container
 function addComment(commentText) {
     const commentElement = document.createElement('div');
     commentElement.classList.add('comment');
@@ -186,7 +196,8 @@ function addComment(commentText) {
     commentsContainer.appendChild(commentElement);
 }
 
-function saveComments() {
+// Function to save comments to local storage
+function saveCommentsToLocalStorage() {
     const comments = [];
     commentsContainer.querySelectorAll('.comment').forEach(comment => {
         comments.push(comment.textContent);
@@ -194,6 +205,7 @@ function saveComments() {
     localStorage.setItem('sessionComments', JSON.stringify(comments));
 }
 
+// Function to load comments from local storage
 function loadComments() {
     const savedComments = localStorage.getItem('sessionComments');
     if (savedComments) {
@@ -203,13 +215,3 @@ function loadComments() {
         });
     }
 }
-
-module.exports = {
-    formatTime,
-    updateTimer,
-    startTimer,
-    pauseTimer,
-    resetTimer,
-    bookmarkSession,
-    unbookmarkSession,
-};
