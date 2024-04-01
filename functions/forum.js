@@ -6,12 +6,7 @@ export async function onRequestGet({ env }) {
     const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
 
-    for (const key of allKeys.keys) {
-      const post = await env.COOLFROG_FORUM.get(key.name, { type: 'json' });
-      allPosts.push(post);
-    }
-
-    console.log(allPosts);
+    console.log(allKeys);
   } catch (error) {
     // Error handling for if errors occur
     console.error("Error:", error);
