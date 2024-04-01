@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relaxation Sound Library</title>
     <link rel="stylesheet" href="relaxation-sounds.css">
+
+    <style>
+        @import url(indexStyles.css);
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
     
 </head>
 

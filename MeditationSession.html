@@ -4,6 +4,28 @@
     <meta charset="UTF-8">
     <title>Meditation Sessions</title>
     <link rel="stylesheet" href="MeditationSession.css">
+
+    <style>
+        @import url(indexStyles.css);
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 <body>
     <div class="tabs">

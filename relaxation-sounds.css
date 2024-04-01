@@ -1,5 +1,4 @@
 body {
-    background-image: url('giphy.gif');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -15,6 +14,10 @@ h1 {
     padding:  20px  0;
     color: rgb(241,  241,  241);
     background-color: rgba(0,  0,  0,  0.5);
+}
+
+p {
+    
 }
 
 .page-description {
@@ -41,8 +44,8 @@ h1 {
 
 
 nav {
-    background-color: #efeaea;
-    color: white;
+    background-color: black;
+    color: darkgray;
     padding:  20px;
     text-align: center;
 }
@@ -50,10 +53,14 @@ nav {
 nav a {
     padding:  15px  30px;
     font-size:  18px;
-    color: rgb(131,  65,  65);
+    color: #a1a1a1;
     text-decoration: none;
     margin:  0  10px;
     display: inline-block;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 nav a:hover {

@@ -11,41 +11,15 @@ export async function onRequestGet({ env }) {
       allPosts.push(post);
     }
 
-    // Filter posts with type 1
-    const filteredType1Posts = allPosts.filter(post => post.type === 1);
-    const filteredType2Posts = allPosts.filter(post => post.type === 2);
-
-    // Render filtered posts on the general forum webpage
-    const generalForumPostsContainer = document.getElementById('general-forum-posts');
-    filteredType1Posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('general-forum-post');
-        postElement.innerHTML = `
-            <h3>${post.title}</h3>
-            <p>${post.content}</p>
-        `;
-        generalForumPostsContainer.appendChild(postElement);
-    });
-
-    // Render filtered posts on the meetup forum webpage
-    const meetupForumPostsContainer = document.getElementById('meetup-forum-posts');
-    filteredType2Posts.forEach(post => {
-        const postElement = document.createElement('div');
-        postElement.classList.add('meetup-forum-post');
-        postElement.innerHTML = `
-            <h3>${post.title}</h3>
-            <p>${post.content}</p>
-            <p><strong>Location:</strong> ${post.location}</p>
-            <p><strong>Date:</strong> ${post.date}</p>
-        `;
-        meetupForumPostsContainer.appendChild(postElement);
-    });
-
+    console.log(allPosts);
   } catch (error) {
     // Error handling for if errors occur
     console.error("Error:", error);
     }
 }
+
+// Call get function when webpage loads:
+window.onload = onRequestGet;
 
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
