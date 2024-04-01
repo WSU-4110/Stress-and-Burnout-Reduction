@@ -56,6 +56,7 @@ export async function onRequestPost({ request, env }) {
      const postContent = formData.get('postContent');
      const postLocation = formData.get('postLocation');
      const postMeetingDate = formData.get('postMeetingDate');
+     const postMeetingTime = formData.get('postMeetingTime');
  
     if (postLocation == null && postMeetingDate == null) {
       const post = JSON.stringify({
@@ -85,6 +86,7 @@ export async function onRequestPost({ request, env }) {
         content: postContent,
         location: postLocation,
         date: postMeetingDate,
+        time: postMeetingTime,
         type: 2, // Signifies a meetup post
       });
 
