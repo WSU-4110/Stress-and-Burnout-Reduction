@@ -18,9 +18,6 @@ export async function onRequestGet({ env }) {
     }
 }
 
-// Call get function when webpage loads:
-window.onload = onRequestGet;
-
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
