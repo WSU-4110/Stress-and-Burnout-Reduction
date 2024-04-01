@@ -11,9 +11,6 @@ const sessionLinks = document.querySelectorAll('.session-link');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 const sessions = document.querySelectorAll('.session');
-const commentInput = document.getElementById('commentInput');
-const submitCommentBtn = document.getElementById('submitComment');
-const commentsContainer = document.getElementById('commentsContainer');
 
 let timerInterval;
 let startTime;
@@ -183,7 +180,7 @@ if (searchInput) {
     });
 }
 
-// Event listeners
+// Event listeners for comments
 sessions.forEach((session, index) => {
     const submitCommentBtn = document.getElementById(`submitComment${index + 1}`);
     const commentInput = document.getElementById(`commentInput${index + 1}`);
@@ -199,6 +196,19 @@ sessions.forEach((session, index) => {
             }
         });
     }
+
+    // Right-click event listener for comments
+    commentsContainer.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        const clickedComment = event.target.closest('.comment');
+        if (clickedComment) {
+            const confirmDelete = confirm('Delete this comment?');
+            if (confirmDelete) {
+                clickedComment.remove();
+                saveCommentsToLocalStorage(index + 1);
+            }
+        }
+    });
 });
 
 // Function to add a new comment to the comments container
