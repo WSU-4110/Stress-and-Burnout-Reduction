@@ -222,6 +222,14 @@ function loadComments() {
         });
     }
 }
+// Exporting functions
 module.exports = {
-    formatTime
+    formatTime,
+    bookmarkSession,
+    saveBookmarks,
+    loadBookmarks,
+    unbookmarkSession,
+    addComment,
+    saveCommentsToLocalStorage,
+    loadComments
 };
