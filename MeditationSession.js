@@ -183,53 +183,55 @@ if (searchInput) {
     });
 }
 
-// Event listener for submitting a comment
-if (submitCommentBtn) {
-    submitCommentBtn.addEventListener('click', function() {
-        const commentText = commentInput.value.trim();
-        if (commentText !== '') {
-            addComment(commentText);
-            saveCommentsToLocalStorage();
-            commentInput.value = ''; // Clear the input field after submitting
-        }
-    });
-}
+// Event listeners
+sessions.forEach((session, index) => {
+    const submitCommentBtn = document.getElementById(`submitComment${index + 1}`);
+    const commentInput = document.getElementById(`commentInput${index + 1}`);
+    const commentsContainer = document.getElementById(`commentsContainer${index + 1}`);
+
+    if (submitCommentBtn) {
+        submitCommentBtn.addEventListener('click', function() {
+            const commentText = commentInput.value.trim();
+            if (commentText !== '') {
+                addComment(commentText, commentsContainer);
+                saveCommentsToLocalStorage(index + 1);
+                commentInput.value = ''; // Clear the input field after submitting
+            }
+        });
+    }
+});
 
 // Function to add a new comment to the comments container
-function addComment(commentText) {
+function addComment(commentText, container) {
     const commentElement = document.createElement('div');
     commentElement.classList.add('comment');
     commentElement.innerHTML = `<i>${commentText}</i>`;
-    commentsContainer.appendChild(commentElement);
+    container.appendChild(commentElement);
 }
 
 // Function to save comments to local storage
-function saveCommentsToLocalStorage() {
+function saveCommentsToLocalStorage(sessionIndex) {
     const comments = [];
+    const commentsContainer = document.getElementById(`commentsContainer${sessionIndex}`);
     commentsContainer.querySelectorAll('.comment').forEach(comment => {
         comments.push(comment.textContent);
     });
-    localStorage.setItem('sessionComments', JSON.stringify(comments));
+    localStorage.setItem(`sessionComments${sessionIndex}`, JSON.stringify(comments));
 }
 
 // Function to load comments from local storage
-function loadComments() {
-    const savedComments = localStorage.getItem('sessionComments');
+function loadComments(sessionIndex) {
+    const savedComments = localStorage.getItem(`sessionComments${sessionIndex}`);
+    const commentsContainer = document.getElementById(`commentsContainer${sessionIndex}`);
     if (savedComments) {
         const comments = JSON.parse(savedComments);
         comments.forEach(comment => {
-            addComment(comment);
+            addComment(comment, commentsContainer);
         });
     }
 }
-// Exporting functions
-module.exports = {
-    formatTime,
-    bookmarkSession,
-    saveBookmarks,
-    loadBookmarks,
-    unbookmarkSession,
-    addComment,
-    saveCommentsToLocalStorage,
-    loadComments
-};
+
+// Load comments when the page loads
+sessions.forEach((session, index) => {
+    loadComments(index + 1);
+});
