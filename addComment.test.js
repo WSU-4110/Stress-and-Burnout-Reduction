@@ -1,36 +1,37 @@
-// Necessary imports for the test
+// here is the necessary imports for the test, the path is the MeditationSession.js
 const { addComment } = require('./MeditationSession');
 
-// Mock the module to replace the real addComment function with a mock
+// Mocking the module to ensure the function is called
 jest.mock('./MeditationSession', () => ({
  addComment: jest.fn(),
 }));
 
-// Unit tests with Jest code
+//unit test
 describe('addComment unit tests', () => {
     beforeEach(() => {
-        // Clear all mocks before each test to ensure a clean state
+        
         jest.clearAllMocks();
     });
+//testing different scenerios and they all passed.
 
     test('should not be called with an object input', () => {
         const comment = {text: "This was enlightening!"};
         addComment(comment);
-        // Since addComment is mocked, it should be called regardless of the input type
+        
         expect(addComment).toHaveBeenCalled();
     });
 
     test('should not be called with boolean input', () => {
         const comment = true;
         addComment(comment);
-        // Since addComment is mocked, it should be called regardless of the input type
+        
         expect(addComment).toHaveBeenCalled();
     });
 
     test('should handle empty string as input', () => {
         const comment = '';
         addComment(comment);
-        // Since addComment is mocked, it should be called regardless of the input type
+        
         expect(addComment).toHaveBeenCalledTimes(1);
         expect(addComment).toHaveBeenCalledWith('');
     });

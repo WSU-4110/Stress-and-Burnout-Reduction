@@ -1,13 +1,13 @@
-// Necessary imports
+// Necessary imports for the jest
 const { jest: jestGlobal } = require('@jest/globals');
 
-// Globals setup for the test environment
+// seting up the Globals for the test environment
 let timerInterval;
 let elapsedTime;
 let isTimerRunning;
 const updateTimer = jestGlobal.fn();
 
-// Function to be tested
+//  unit test for resetTimer function
 function resetTimer() {
     clearInterval(timerInterval);
     elapsedTime = 0;
@@ -15,7 +15,7 @@ function resetTimer() {
     updateTimer();
 }
 
-// Unit tests using Jest
+// Unit tests using Jest with some test scenerios and they all passed.
 describe('resetTimer functionality tests', () => {
     beforeEach(() => {
         jestGlobal.useFakeTimers();
