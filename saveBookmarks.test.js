@@ -1,32 +1,38 @@
+//javascript
+// Necessary imports for Jest and the functionality
 const { saveBookmarks } = require('./MeditationSession');
+const { JSDOM } = require('jsdom');
+jest.mock('jest-localstorage-mock');
+const { TextEncoder } = require('text-encoding');
+global.TextEncoder = TextEncoder;
 
-describe('saveBookmarks function', () => {
-  it('should save bookmarks to localStorage', () => {
-    // Mocking bookmarkList and localStorage
-    const bookmarkList = document.createElement('ul');
-    document.body.appendChild(bookmarkList);
+describe('Unit tests for the saveBookmarks function', () => {
+  let document, bookmarkList;
 
-    // Adding some bookmark items
-    const bookmarkItems = ['Bookmark 1', 'Bookmark 2', 'Bookmark 3'];
+  beforeEach(() => {
+    // Mocking a JSDOM instance and the localStorage before each test
+    const jsdom = new JSDOM('<!doctype html><html><body><div id="bookmarks"><ul id="bookmark-list"></ul></div></body></html>');
+    document = jsdom.window.document;
+    global.localStorage = require('jest-localstorage-mock');
+    bookmarkList = document.getElementById('bookmark-list');
+    localStorage.clear();
+  });
+
+  it('should save a list of string bookmarks', () => {
+    const bookmarkItems = ['Bookmark 1', 'Bookmark 2'];
     bookmarkItems.forEach(itemText => {
       const li = document.createElement('li');
       li.textContent = itemText;
       bookmarkList.appendChild(li);
     });
+    saveBookmarks(bookmarkList);
+    const savedBookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    expect(savedBookmarks).toEqual(bookmarkItems);
+  });
 
-    // Mocking localStorage.setItem
-    global.localStorage.setItem = jest.fn();
-
-    // Calling the function
-    saveBookmarks();
-
-    // Retrieving the bookmarks saved in localStorage
-    const savedBookmarks = JSON.parse(global.localStorage.setItem.mock.calls[0][1]);
-
-    // Expectations
-    expect(savedBookmarks).toHaveLength(3);
-    expect(savedBookmarks).toContain('Bookmark 1');
-    expect(savedBookmarks).toContain('Bookmark 2');
-    expect(savedBookmarks).toContain('Bookmark 3');
+  it('should not save bookmarks if the list is empty', () => {
+    saveBookmarks(bookmarkList);
+    const savedBookmarks = localStorage.getItem('bookmarks');
+    expect(savedBookmarks).toBeNull();
   });
 });
