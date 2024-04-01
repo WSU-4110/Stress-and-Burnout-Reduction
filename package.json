@@ -14,9 +14,6 @@
   "@testing-library/dom": "^9.3.4",
   
     
-  "@testing-library/jest-dom": "^6.4.2",
-  
-    
   "abab": "^2.0.6",
   
     
@@ -490,6 +487,9 @@
   
     
   "@babel/preset-react": "^7.24.1",
+  
+    
+  "@testing-library/jest-dom": "^6.4.2",
   
     
   "babel-jest": "^29.7.0",
