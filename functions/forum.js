@@ -36,6 +36,7 @@ export async function getAllPosts({ env }) {
             <h3>${post.title}</h3>
             <p>${post.content}</p>
             <p><strong>Location:</strong> ${post.location}</p>
+            <p><strong>Time:</strong> ${post.time}</p>
             <p><strong>Date:</strong> ${post.date}</p>
         `;
         meetupForumPostsContainer.appendChild(postElement);
