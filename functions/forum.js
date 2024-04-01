@@ -47,6 +47,8 @@ export async function getAllPosts({ env }) {
     }
 }
 
+document.getElementById('updatePostsButton').addEventListener('click', getAllPosts);
+
 // Function for sending post data to regular forum KV worker
 export async function onRequestPost({ request, env }) {
   try {
