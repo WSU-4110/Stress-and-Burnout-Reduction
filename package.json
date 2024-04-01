@@ -66,6 +66,7 @@
     "undici-types": "^5.26.5",
     "universalify": "^0.2.0",
     "url-parse": "^1.5.10",
+    "uuid": "^9.0.1",
     "webidl-conversions": "^7.0.0",
     "ws": "^8.16.0",
     "xmlchars": "^2.2.0"
