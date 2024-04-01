@@ -3,10 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 // Function for displaying posts in forum.html and meetup.html
 export async function onRequestGet({ env }) {
   try {
-    const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
 
-    console.log(allKeys);
   } catch (error) {
     // Error handling for if errors occur
     console.error("Error:", error);
