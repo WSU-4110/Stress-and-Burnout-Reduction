@@ -20,8 +20,11 @@ let startTime;
 let elapsedTime = 0;
 let isTimerRunning = false;
 
-// Timer functions
 function formatTime(timeInSeconds) {
+    if (typeof timeInSeconds !== 'number' || isNaN(timeInSeconds) || timeInSeconds < 0 || timeInSeconds === null || timeInSeconds === undefined) {
+        throw new Error('Invalid time');
+    }
+
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -219,3 +222,6 @@ function loadComments() {
         });
     }
 }
+module.exports = {
+    formatTime
+};
