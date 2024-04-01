@@ -200,7 +200,21 @@ function addComment(commentText) {
     const commentElement = document.createElement('div');
     commentElement.classList.add('comment');
     commentElement.innerHTML = `<i>${commentText}</i>`;
+    
+    // Adding delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', function() {
+        deleteComment(commentElement);
+    });
+    
+    commentElement.appendChild(deleteButton);
     commentsContainer.appendChild(commentElement);
+}
+// Function to delete a comment
+function deleteComment(commentElement) {
+    commentElement.remove();
+    saveCommentsToLocalStorage();
 }
 
 // Function to save comments to local storage
@@ -222,6 +236,10 @@ function loadComments() {
         });
     }
 }
+
+// Load comments when the page loads
+loadComments();
+
 // Exporting functions
 module.exports = {
     formatTime,
