@@ -6,13 +6,13 @@ jest.mock('./MeditationSession', () => ({
  addComment: jest.fn(),
 }));
 
-//unit test
+//unit testing
 describe('addComment unit tests', () => {
     beforeEach(() => {
         
         jest.clearAllMocks();
     });
-//testing different scenerios and they all passed.
+//testing different scenerios and they all passed successfully
 
     test('should not be called with an object input', () => {
         const comment = {text: "This was enlightening!"};

@@ -1,12 +1,14 @@
-// All necessary imports here for unit test by jest
+//mock jest
 jest.mock('./MeditationSession', () => ({
     deleteComment: jest.fn(),
     saveCommentsToLocalStorage: jest.fn(),
    }));
+   //mocking the module to ensure the function is called
+
    //unit test for deleteComment function 
    const { deleteComment, saveCommentsToLocalStorage } = require('./MeditationSession');//path from MeditationSession.js
    
-   // unit tests with some scenerios and they all passed.
+   // unit tests with some scenerios and they all passed successfully
    describe('deleteComment functionality', () => {
     beforeEach(() => {
        document.body.innerHTML = `
@@ -15,7 +17,7 @@ jest.mock('./MeditationSession', () => ({
          </div>
        `;
        localStorage.clear();
-       jest.clearAllMocks(); // Clear all mocks before each test
+       jest.clearAllMocks(); 
     });
    
     test('should delete a comment from the DOM', () => {
@@ -26,7 +28,7 @@ jest.mock('./MeditationSession', () => ({
          commentElement.remove();
        });
    
-       deleteComment(commentElement); // Perform deletion
+       deleteComment(commentElement); 
    
        // After deletion, the element should not be found
        expect(document.getElementById('testComment')).toBeNull();

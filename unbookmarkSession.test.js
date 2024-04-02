@@ -1,11 +1,11 @@
-// Necessary imports for jest unit test
+// Necessary imports for jest unit testing
 const { unbookmarkSession, saveBookmarks } = require('./MeditationSession');
 
 const { fireEvent } = require("@testing-library/dom");
 require('@testing-library/jest-dom');
 jest.mock("@testing-library/dom");
 
-//unit tests for unbookmarkSession function and it passed.
+//unit tests for unbookmarkSession function and it passed successfully.
 describe("Tests for unbookmarkSession functionality", () => {
   
   let bookmarkList;

@@ -1,9 +1,9 @@
 
 //unit testing for formatTime function. i have done several tests for different scenerios and all of them passed.
-const { formatTime } = require('./MeditationSession');//path is from MeditationSession.js
+const { formatTime } = require('./MeditationSession');
 const { test, expect } = require('@jest/globals');
 
-// unit testing for Positive cases
+// unit testing for Positive scenerios and it passed successfully
 test('formats time correctly for 0 seconds', () => {
     const timeInSeconds = 0;
     const formattedTime = formatTime(timeInSeconds);
@@ -40,7 +40,7 @@ test('formats time correctly for hours and minutes and seconds', () => {
     expect(formattedTime).toBe('61:05');
 });
 
-// unit testing for Negative cases
+// unit testing for Negative scenerios and passed successfully
 test('throws an error for negative inputs', () => {
     const timeInSeconds = -10;
     expect(() => formatTime(timeInSeconds)).toThrow('Invalid time');
@@ -61,7 +61,7 @@ test('throws an error for undefined input', () => {
     expect(() => formatTime(timeInSeconds)).toThrow('Invalid time');
 });
 
-// now for  Edge cases
+// now for  Edge cases and passed successfully
 test('formats time correctly for large numbers', () => {
     const timeInSeconds = 86400; // 24 hours
     const formattedTime = formatTime(timeInSeconds);
