@@ -65,7 +65,7 @@ export async function onRequestPost({ request, env }) {
 };
 
 // Function for displaying posts in forum.html and meetup.html
-export async function onRequestGet({ env }) {
+export async function getAllPosts({ env }) {
   try {
     const allKeys = await env.COOLFROG_FORUM.list();
     const allPosts = [];
