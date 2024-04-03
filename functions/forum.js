@@ -1,5 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 
+// Main driver for code
+export async function onRequestPost({ request, env }) {
+  sendPost({ request, env });
+  getAllPosts({ env });
+};
+
 // Function for displaying posts in forum.html and meetup.html
 export async function getAllPosts({ env }) {
   try {
@@ -48,66 +54,66 @@ export async function getAllPosts({ env }) {
     }
 }
 
-// Function for sending post data to regular forum KV worker
-export async function onRequestPost({ request, env }) {
+// Function for sending posts and data to forum KV worker
+export async function sendPost({ request, env }) {
   try {
-     // Request body contains the form data
-     const formData = await request.formData();
-     const postTitle = formData.get('postTitle');
-     const postContent = formData.get('postContent');
-     const postLocation = formData.get('postLocation');
-     const postMeetingDate = formData.get('postMeetingDate');
-     const postMeetingTime = formData.get('postMeetingTime');
+    // Request body contains the form data
+    const formData = await request.formData();
+    const postTitle = formData.get('postTitle');
+    const postContent = formData.get('postContent');
+    const postLocation = formData.get('postLocation');
+    const postMeetingDate = formData.get('postMeetingDate');
+    const postMeetingTime = formData.get('postMeetingTime');
+
+   if (postLocation == null && postMeetingDate == null) {
+     const post = JSON.stringify({
+       title: postTitle,
+       content: postContent,
+       type: 1, // Signifies a regular post
+     });
+     
+     // Generate a unique ID for the post
+     const uniqueId = uuidv4();
+     
+     // Store the post in the KV namespace
+     await env.COOLFROG_FORUM.put(uniqueId, post);
+     
+     // After storing the post, redirect to the regular forum
+     return new Response('Forum post created successfully!', {
+       status: 302,
+       headers: {
+         location: '/forum'
+       },
+     });
+
+   } else {
+     // Create a meetup post object
+     const post = JSON.stringify({
+       title: postTitle,
+       content: postContent,
+       location: postLocation,
+       date: postMeetingDate,
+       time: postMeetingTime,
+       type: 2, // Signifies a meetup post
+     });
+
+     // Generate a unique ID for the post
+     const uniqueId = uuidv4();
  
-    if (postLocation == null && postMeetingDate == null) {
-      const post = JSON.stringify({
-        title: postTitle,
-        content: postContent,
-        type: 1, // Signifies a regular post
-      });
-      
-      // Generate a unique ID for the post
-      const uniqueId = uuidv4();
-      
-      // Store the post in the KV namespace
-      await env.COOLFROG_FORUM.put(uniqueId, post);
-      
-      // After storing the post, redirect to the regular forum
-      return new Response('Forum post created successfully!', {
-        status: 302,
-        headers: {
-          location: '/forum'
-        },
-      });
+     // Store the post in the KV namespace
+     await env.COOLFROG_FORUM.put(uniqueId, post);
 
-    } else {
-      // Create a meetup post object
-      const post = JSON.stringify({
-        title: postTitle,
-        content: postContent,
-        location: postLocation,
-        date: postMeetingDate,
-        time: postMeetingTime,
-        type: 2, // Signifies a meetup post
-      });
+     // After storing the post, redirect to the meetup forum
+     return new Response('Meetup post created successfully!', {
+       status: 302,
+       headers: {
+         location: '/meetup'
+       },
+     });
+   }
 
-      // Generate a unique ID for the post
-      const uniqueId = uuidv4();
-  
-      // Store the post in the KV namespace
-      await env.COOLFROG_FORUM.put(uniqueId, post);
-
-      // After storing the post, redirect to the meetup forum
-      return new Response('Meetup post created successfully!', {
-        status: 302,
-        headers: {
-          location: '/meetup'
-        },
-      });
-    }
-
-  } catch (error) {
-     console.error("Error:", error);
-     // Error handling
-  }
-};
+ } catch (error) {
+    console.error("Error:", error);
+    // Error handling
+ }
+}
