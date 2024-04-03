@@ -24,6 +24,9 @@ export async function onRequestPost({ request, env }) {
      // Store the post in the KV namespace
      await env.COOLFROG_FORUM.put(uniqueId, post);
      
+     const allKeys = await env.COOLFROG_FORUM.list();
+     console.log(allKeys);
+
      // After storing the post, redirect to the regular forum
      return new Response('Forum post created successfully!', {
        status: 302,
