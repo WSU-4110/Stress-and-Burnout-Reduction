@@ -28,12 +28,14 @@ export async function onRequestPost({ request, env }) {
      console.log(allKeys);
 
      // After storing the post, redirect to the regular forum
+     /*
      return new Response('Forum post created successfully!', {
        status: 302,
        headers: {
          location: '/forum'
        },
      });
+     */
 
    } else {
      // Create a meetup post object
