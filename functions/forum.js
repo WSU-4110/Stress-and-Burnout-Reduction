@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 // Main driver for code
 export async function onRequestPost({ request, env }) {
   sendPost({ request, env });
-  getAllPosts({ env });
 };
 
 // Function for displaying posts in forum.html and meetup.html
