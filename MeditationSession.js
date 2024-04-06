@@ -1,164 +1,169 @@
-const timerDisplay = document.getElementById('timer');
-const startButton = document.getElementById('start');
-const pauseButton = document.getElementById('pause');
-const resetButton = document.getElementById('reset');
-const bookmarkButton = document.getElementById('bookmark');
-const unbookmarkButton = document.getElementById('unbookmark');
-const themeSwitcher = document.getElementById('themeSwitcher');
-const bookmarksContainer = document.getElementById('bookmarks');
-const bookmarkList = document.getElementById('bookmark-list');
-const sessionLinks = document.querySelectorAll('.session-link');
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.getElementById('searchButton');
-const sessions = document.querySelectorAll('.session');
+class Timer {
+    constructor(timerDisplayId, startButtonId, pauseButtonId, resetButtonId) {
+        this.timerDisplay = document.getElementById(timerDisplayId);
+        this.startButton = document.getElementById(startButtonId);
+        this.pauseButton = document.getElementById(pauseButtonId);
+        this.resetButton = document.getElementById(resetButtonId);
 
-let timerInterval;
-let startTime;
-let elapsedTime = 0;
-let isTimerRunning = false;
+        this.timerInterval = null;
+        this.startTime = null;
+        this.elapsedTime = 0;
+        this.isTimerRunning = false;
 
-function formatTime(timeInSeconds) {
-    if (typeof timeInSeconds !== 'number' || isNaN(timeInSeconds) || timeInSeconds < 0 || timeInSeconds === null || timeInSeconds === undefined) {
-        throw new Error('Invalid time');
+        this.startButton.addEventListener('click', this.start.bind(this));
+        this.pauseButton.addEventListener('click', this.pause.bind(this));
+        this.resetButton.addEventListener('click', this.reset.bind(this));
     }
 
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function updateTimer() {
-    const currentTime = Math.floor((Date.now() - startTime + elapsedTime) / 1000);
-    timerDisplay.textContent = formatTime(currentTime);
-}
-
-function startTimer() {
-    startTime = Date.now() - elapsedTime; // Update start time when starting
-    timerInterval = setInterval(updateTimer, 1000);
-    isTimerRunning = true;
-}
-
-function pauseTimer() {
-    clearInterval(timerInterval);
-    if (isTimerRunning) {
-        elapsedTime = Date.now() - startTime;
-        isTimerRunning = false;
-    }
-}
-
-function resetTimer() {
-    clearInterval(timerInterval);
-    elapsedTime = 0;
-    startTime = Date.now(); // Reset start time as well
-    updateTimer(); // Update timer display to show 00:00
-    isTimerRunning = false;
-}
-
-// Session bookmarks
-function bookmarkSession(sessionName) {
-    const bookmark = document.createElement('li');
-    bookmark.textContent = sessionName;
-    bookmarkList.appendChild(bookmark);
-    saveBookmarks(); // Save bookmarks to local storage
-}
-
-function saveBookmarks() {
-    const bookmarks = [];
-    const bookmarkItems = bookmarkList.querySelectorAll('li');
-    bookmarkItems.forEach(item => {
-        bookmarks.push(item.textContent);
-    });
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-}
-
-function loadBookmarks() {
-    const savedBookmarks = localStorage.getItem('bookmarks');
-    if (savedBookmarks) {
-        const bookmarks = JSON.parse(savedBookmarks);
-        bookmarks.forEach(bookmark => {
-            bookmarkSession(bookmark);
-        });
-    }
-}
-
-// Load bookmarks when the page loads
-window.addEventListener('load', function() {
-    loadBookmarks();
-});
-
-// Function to unbookmark a session
-function unbookmarkSession(sessionName) {
-    const bookmarkItems = bookmarkList.querySelectorAll('li');
-    bookmarkItems.forEach(item => {
-        if (item.textContent === sessionName) {
-            item.remove(); // Remove the session from the bookmarked list
-            saveBookmarks(); // Save updated bookmarks to local storage
+    start() {
+        if (!this.isTimerRunning) {
+            this.startTime = Date.now() - this.elapsedTime;
+            this.timerInterval = setInterval(this.updateTimer.bind(this), 1000);
+            this.isTimerRunning = true;
         }
-    });
-}
+    }
 
-// Event listeners
-if (startButton) {
-    startButton.addEventListener('click', function() {
-        if (!isTimerRunning) {
-            startTimer();
+    pause() {
+        clearInterval(this.timerInterval);
+        this.elapsedTime = Date.now() - this.startTime;
+        this.isTimerRunning = false;
+    }
+
+    reset() {
+        clearInterval(this.timerInterval);
+        this.elapsedTime = 0;
+        this.startTime = null; // Resetting start time to null
+        this.timerDisplay.textContent = '00:00'; // Resetting timer display to 00:00
+        this.isTimerRunning = false;
+    }
+
+    updateTimer() {
+        const currentTime = Math.floor((Date.now() - (this.startTime || 0) + this.elapsedTime) / 1000); // Ensuring startTime is not null
+        this.timerDisplay.textContent = this.formatTime(currentTime);
+    }
+
+    formatTime(timeInSeconds) {
+        if (typeof timeInSeconds !== 'number' || isNaN(timeInSeconds) || timeInSeconds < 0 || timeInSeconds === null || timeInSeconds === undefined) {
+            throw new Error('Invalid time');
         }
-    });
+
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = Math.floor(timeInSeconds % 60);
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
 }
 
-if (pauseButton) {
-    pauseButton.addEventListener('click', function() {
-        pauseTimer();
-    });
-}
+// Usage
+const timer = new Timer('timer', 'start', 'pause', 'reset');
 
-if (resetButton) {
-    resetButton.addEventListener('click', function() {
-        resetTimer();
-    });
-}
+class BookmarkManager {
+    constructor(bookmarkButtonId, unbookmarkButtonId, bookmarkListId) {
+        this.bookmarkButton = document.getElementById(bookmarkButtonId);
+        this.unbookmarkButton = document.getElementById(unbookmarkButtonId);
+        this.bookmarkList = document.getElementById(bookmarkListId);
 
-if (bookmarkButton) {
-    bookmarkButton.addEventListener('click', function() {
+        // Check if elements exist before adding event listeners
+        if (this.bookmarkButton) {
+            this.bookmarkButton.addEventListener('click', this.bookmarkSession.bind(this));
+        }
+        if (this.unbookmarkButton) {
+            this.unbookmarkButton.addEventListener('click', this.unbookmarkSession.bind(this));
+        }
+
+        // Load bookmarks when the object is instantiated
+        this.loadBookmarks();
+    }
+
+    bookmarkSession() {
         const sessionName = prompt('Enter session name to bookmark:');
         if (sessionName) {
-            bookmarkSession(sessionName);
+            this.addBookmark(sessionName);
+            this.saveBookmarks();
         }
-    });
-}
+    }
 
-if (unbookmarkButton) {
-    unbookmarkButton.addEventListener('click', function() {
+    unbookmarkSession() {
         const sessionName = prompt('Enter session name to unbookmark:');
         if (sessionName) {
-            unbookmarkSession(sessionName);
+            this.removeBookmark(sessionName);
+            this.saveBookmarks();
         }
-    });
-}
+    }
 
-if (themeSwitcher) {
-    themeSwitcher.addEventListener('click', function() {
-        document.body.classList.toggle('dark-theme');
-    });
-}
+    addBookmark(sessionName) {
+        const bookmark = document.createElement('li');
+        bookmark.textContent = sessionName;
+        this.bookmarkList.appendChild(bookmark);
+    }
 
-// Event listener for session links
-if (sessionLinks) {
-    sessionLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            const session = link.closest('.session');
-            document.querySelectorAll('.session').forEach(s => s.classList.remove('active'));
-            session.classList.add('active');
+    removeBookmark(sessionName) {
+        const bookmarkItems = this.bookmarkList.querySelectorAll('li');
+        bookmarkItems.forEach(item => {
+            if (item.textContent === sessionName) {
+                item.remove();
+            }
         });
-    });
+    }
+
+    saveBookmarks() {
+        const bookmarks = [];
+        const bookmarkItems = this.bookmarkList.querySelectorAll('li');
+        bookmarkItems.forEach(item => {
+            bookmarks.push(item.textContent);
+        });
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    }
+
+    loadBookmarks() {
+        const savedBookmarks = localStorage.getItem('bookmarks');
+        if (savedBookmarks) {
+            const bookmarks = JSON.parse(savedBookmarks);
+            bookmarks.forEach(bookmark => {
+                this.addBookmark(bookmark);
+            });
+        }
+    }
 }
 
-if (searchButton) {
-    searchButton.addEventListener('click', function() {
-        const searchQuery = searchInput.value.toLowerCase().trim();
+// Instantiate the BookmarkManager object
+const bookmarkManager = new BookmarkManager('bookmark', 'unbookmark', 'bookmark-list');
 
-        sessions.forEach(session => {
+class ThemeController {
+    constructor(themeSwitcherId) {
+        this.themeSwitcher = document.getElementById(themeSwitcherId);
+        if (this.themeSwitcher) {
+            this.themeSwitcher.addEventListener('click', this.toggleTheme.bind(this));
+        }
+    }
+
+    toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+    }
+}
+
+// Instantiate the ThemeController object
+const themeController = new ThemeController('themeSwitcher');
+
+class Search {
+    constructor(searchInputId, searchButtonId, sessionClass) {
+        this.searchInput = document.getElementById(searchInputId);
+        this.searchButton = document.getElementById(searchButtonId);
+        this.sessions = document.querySelectorAll(`.${sessionClass}`);
+        this.originalSessions = Array.from(this.sessions); // Store original sessions
+
+        // Check if elements exist before adding event listeners
+        if (this.searchButton) {
+            this.searchButton.addEventListener('click', this.search.bind(this));
+        }
+        if (this.searchInput) {
+            this.searchInput.addEventListener('input', this.handleInputChange.bind(this));
+        }
+    }
+
+    search() {
+        const searchQuery = this.searchInput.value.toLowerCase().trim();
+
+        this.sessions.forEach(session => {
             const sessionTitle = session.querySelector('h3').textContent.toLowerCase();
             if (sessionTitle.includes(searchQuery)) {
                 session.style.display = 'block';
@@ -166,82 +171,117 @@ if (searchButton) {
                 session.style.display = 'none';
             }
         });
-    });
-}
+    }
 
-// Reset the search when the input field is cleared
-if (searchInput) {
-    searchInput.addEventListener('input', function() {
-        if (searchInput.value.trim() === '') {
-            sessions.forEach(session => {
+    handleInputChange() {
+        const searchQuery = this.searchInput.value.trim();
+
+        if (searchQuery === '') {
+            // If search query is empty, show all original sessions
+            this.originalSessions.forEach(session => {
                 session.style.display = 'block';
             });
+        } else {
+            // If there's a search query, call the search method to filter sessions
+            this.search();
         }
-    });
-}
-
-// Event listeners for comments
-sessions.forEach((session, index) => {
-    const submitCommentBtn = document.getElementById(`submitComment${index + 1}`);
-    const commentInput = document.getElementById(`commentInput${index + 1}`);
-    const commentsContainer = document.getElementById(`commentsContainer${index + 1}`);
-
-    if (submitCommentBtn) {
-        submitCommentBtn.addEventListener('click', function() {
-            const commentText = commentInput.value.trim();
-            if (commentText !== '') {
-                addComment(commentText, commentsContainer);
-                saveCommentsToLocalStorage(index + 1);
-                commentInput.value = ''; // Clear the input field after submitting
-            }
-        });
-    }
-
-    // Right-click event listener for comments
-    commentsContainer.addEventListener('contextmenu', function(event) {
-        event.preventDefault();
-        const clickedComment = event.target.closest('.comment');
-        if (clickedComment) {
-            const confirmDelete = confirm('Delete this comment?');
-            if (confirmDelete) {
-                clickedComment.remove();
-                saveCommentsToLocalStorage(index + 1);
-            }
-        }
-    });
-});
-
-// Function to add a new comment to the comments container
-function addComment(commentText, container) {
-    const commentElement = document.createElement('div');
-    commentElement.classList.add('comment');
-    commentElement.innerHTML = `<i>${commentText}</i>`;
-    container.appendChild(commentElement);
-}
-
-// Function to save comments to local storage
-function saveCommentsToLocalStorage(sessionIndex) {
-    const comments = [];
-    const commentsContainer = document.getElementById(`commentsContainer${sessionIndex}`);
-    commentsContainer.querySelectorAll('.comment').forEach(comment => {
-        comments.push(comment.textContent);
-    });
-    localStorage.setItem(`sessionComments${sessionIndex}`, JSON.stringify(comments));
-}
-
-// Function to load comments from local storage
-function loadComments(sessionIndex) {
-    const savedComments = localStorage.getItem(`sessionComments${sessionIndex}`);
-    const commentsContainer = document.getElementById(`commentsContainer${sessionIndex}`);
-    if (savedComments) {
-        const comments = JSON.parse(savedComments);
-        comments.forEach(comment => {
-            addComment(comment, commentsContainer);
-        });
     }
 }
 
-// Load comments when the page loads
-sessions.forEach((session, index) => {
-    loadComments(index + 1);
-});
+// Instantiate the Search object
+const search = new Search('searchInput', 'searchButton', 'session');
+
+
+class CommentManager {
+    constructor() {
+        this.initializeCommentSections();
+        this.bindSubmitButtons();
+        window.addEventListener('load', this.loadComments.bind(this));
+    }
+
+    initializeCommentSections() {
+        const sessions = document.querySelectorAll('.session');
+        sessions.forEach((session, index) => {
+            const commentInput = session.querySelector(`#commentInput${index + 1}`);
+            const submitButton = session.querySelector(`#submitComment${index + 1}`);
+            const commentsContainer = session.querySelector(`#commentsContainer${index + 1}`);
+
+            submitButton.addEventListener('click', () => {
+                this.addComment(commentInput, commentsContainer);
+            });
+        });
+    }
+
+    addComment(commentInput, commentsContainer) {
+        const commentText = commentInput.value.trim();
+
+        if (commentText !== '') {
+            const commentElement = document.createElement('div');
+            commentElement.classList.add('comment');
+            commentElement.innerHTML = `<i>${commentText}</i>`;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                commentElement.remove();
+                this.saveCommentsToLocalStorage();
+            });
+
+            commentElement.appendChild(deleteButton);
+            commentsContainer.appendChild(commentElement);
+            this.saveCommentsToLocalStorage();
+            commentInput.value = '';
+        }
+    }
+
+    saveCommentsToLocalStorage() {
+        const sessions = document.querySelectorAll('.session');
+        const comments = [];
+
+        sessions.forEach((session, index) => {
+            const commentsContainer = session.querySelector(`#commentsContainer${index + 1}`);
+            commentsContainer.querySelectorAll('.comment').forEach(comment => {
+                comments.push(comment.textContent);
+            });
+        });
+
+        localStorage.setItem('sessionComments', JSON.stringify(comments));
+    }
+
+    loadComments() {
+        const savedComments = localStorage.getItem('sessionComments');
+
+        if (savedComments) {
+            const comments = JSON.parse(savedComments);
+
+            const sessions = document.querySelectorAll('.session');
+            let commentIndex = 0;
+
+            sessions.forEach((session, index) => {
+                const commentsContainer = session.querySelector(`#commentsContainer${index + 1}`);
+                commentsContainer.innerHTML = ''; // Clear existing comments
+
+                for (let i = commentIndex; i < comments.length; i++) {
+                    const commentElement = document.createElement('div');
+                    commentElement.classList.add('comment');
+                    commentElement.innerHTML = `<i>${comments[i]}</i>`;
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.addEventListener('click', () => {
+                        commentElement.remove();
+                        this.saveCommentsToLocalStorage();
+                    });
+
+                    commentElement.appendChild(deleteButton);
+                    commentsContainer.appendChild(commentElement);
+
+                    commentIndex++;
+                }
+            });
+        }
+    }
+}
+
+const commentManager = new CommentManager();
+
