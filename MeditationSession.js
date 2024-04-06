@@ -53,6 +53,8 @@ class Timer {
     }
 }
 
+// Usage
+const timer = new Timer('timer', 'start', 'pause', 'reset');
 
 class BookmarkManager {
     constructor(bookmarkButtonId, unbookmarkButtonId, bookmarkListId) {
@@ -60,20 +62,47 @@ class BookmarkManager {
         this.unbookmarkButton = document.getElementById(unbookmarkButtonId);
         this.bookmarkList = document.getElementById(bookmarkListId);
 
-        this.bookmarkButton.addEventListener('click', this.bookmarkSession.bind(this));
-        this.unbookmarkButton.addEventListener('click', this.unbookmarkSession.bind(this));
+        // Check if elements exist before adding event listeners
+        if (this.bookmarkButton) {
+            this.bookmarkButton.addEventListener('click', this.bookmarkSession.bind(this));
+        }
+        if (this.unbookmarkButton) {
+            this.unbookmarkButton.addEventListener('click', this.unbookmarkSession.bind(this));
+        }
 
+        // Load bookmarks when the object is instantiated
         this.loadBookmarks();
     }
 
     bookmarkSession() {
         const sessionName = prompt('Enter session name to bookmark:');
         if (sessionName) {
-            const bookmark = document.createElement('li');
-            bookmark.textContent = sessionName;
-            this.bookmarkList.appendChild(bookmark);
+            this.addBookmark(sessionName);
             this.saveBookmarks();
         }
+    }
+
+    unbookmarkSession() {
+        const sessionName = prompt('Enter session name to unbookmark:');
+        if (sessionName) {
+            this.removeBookmark(sessionName);
+            this.saveBookmarks();
+        }
+    }
+
+    addBookmark(sessionName) {
+        const bookmark = document.createElement('li');
+        bookmark.textContent = sessionName;
+        this.bookmarkList.appendChild(bookmark);
+    }
+
+    removeBookmark(sessionName) {
+        const bookmarkItems = this.bookmarkList.querySelectorAll('li');
+        bookmarkItems.forEach(item => {
+            if (item.textContent === sessionName) {
+                item.remove();
+            }
+        });
     }
 
     saveBookmarks() {
@@ -90,35 +119,30 @@ class BookmarkManager {
         if (savedBookmarks) {
             const bookmarks = JSON.parse(savedBookmarks);
             bookmarks.forEach(bookmark => {
-                this.bookmarkSession(bookmark);
-            });
-        }
-    }
-
-    unbookmarkSession() {
-        const sessionName = prompt('Enter session name to unbookmark:');
-        if (sessionName) {
-            const bookmarkItems = this.bookmarkList.querySelectorAll('li');
-            bookmarkItems.forEach(item => {
-                if (item.textContent === sessionName) {
-                    item.remove();
-                    this.saveBookmarks();
-                }
+                this.addBookmark(bookmark);
             });
         }
     }
 }
 
+// Instantiate the BookmarkManager object
+const bookmarkManager = new BookmarkManager('bookmark', 'unbookmark', 'bookmark-list');
+
 class ThemeController {
     constructor(themeSwitcherId) {
         this.themeSwitcher = document.getElementById(themeSwitcherId);
-        this.themeSwitcher.addEventListener('click', this.toggleTheme.bind(this));
+        if (this.themeSwitcher) {
+            this.themeSwitcher.addEventListener('click', this.toggleTheme.bind(this));
+        }
     }
 
     toggleTheme() {
         document.body.classList.toggle('dark-theme');
     }
 }
+
+// Instantiate the ThemeController object
+const themeController = new ThemeController('themeSwitcher');
 
 class Search {
     constructor(searchInputId, searchButtonId, sessionClass) {
@@ -127,8 +151,13 @@ class Search {
         this.sessions = document.querySelectorAll(`.${sessionClass}`);
         this.originalSessions = Array.from(this.sessions); // Store original sessions
 
-        this.searchButton.addEventListener('click', this.search.bind(this));
-        this.searchInput.addEventListener('input', this.handleInputChange.bind(this));
+        // Check if elements exist before adding event listeners
+        if (this.searchButton) {
+            this.searchButton.addEventListener('click', this.search.bind(this));
+        }
+        if (this.searchInput) {
+            this.searchInput.addEventListener('input', this.handleInputChange.bind(this));
+        }
     }
 
     search() {
@@ -158,6 +187,9 @@ class Search {
         }
     }
 }
+
+// Instantiate the Search object
+const search = new Search('searchInput', 'searchButton', 'session');
 
 
 class CommentManager {
@@ -253,8 +285,3 @@ class CommentManager {
 
 const commentManager = new CommentManager();
 
-// Usage
-const timer = new Timer('timer', 'start', 'pause', 'reset');
-const bookmarkManager = new BookmarkManager('bookmark', 'unbookmark', 'bookmark-list');
-const themeController = new ThemeController('themeSwitcher');
-const search = new Search('searchInput', 'searchButton', 'session');
