@@ -136,3 +136,8 @@ nav div a {
     text-transform: uppercase;
     text-decoration: none;
 }
+
+/* Add styling for rated stars */
+.star.rated {
+    color: gold; /* Change the color of rated stars */
+}
