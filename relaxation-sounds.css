@@ -12,40 +12,47 @@ h1 {
     text-align: center;
     margin-top:  0%;
     padding:  20px  0;
-    color: rgb(241,  241,  241);
-    background-color: rgba(0,  0,  0,  0.5);
+    color: rgb(225, 216, 216);
+    background-color: rgba(165, 116, 116, 0.5);
 }
 
-p {
-    
-}
+
 
 .page-description {
     
-    background-color: rgba(236, 231, 231, 0.8);
+    background-color: rgba(234, 221, 221, 0.8);
     padding: 20px;
     margin: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease;
 }
-
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 .page-description h1 {
     text-align: center ;
-    color: #f7eff3;
+    color: #191919;
+    font-weight: bold;
     
 }
 
 .page-description p {
     text-align: justify;
-    color: #0f0f0f;
+    color: #090909;
     line-height: 1.6;
    
 }
 
 
 nav {
-    background-color: black;
-    color: darkgray;
+    background-color: rgb(20, 15, 15);
+    color: rgb(28, 27, 27);
     padding:  20px;
     text-align: center;
 }
