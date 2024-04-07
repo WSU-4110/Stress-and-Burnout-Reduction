@@ -73,8 +73,8 @@ main {
 
 .image-container {
     position: absolute;
-    top: 20px; /* Adjust the top position as needed */
-    left: 20px;
+    top: 100px; /* Adjust the top position as needed */
+    left: 50px;
     margin-right: 22px;
     z-index: 1; /* Ensure the image appears on top of other content */
     width: 160px; /* Adjust the width of the image container */
@@ -85,6 +85,8 @@ main {
 .image-container img {
     width: 100%; /* Make the image fill its container */
     height: auto; /* Maintain the aspect ratio */
+   
+
 }
 
 /* styling for user login and sign up buttons*/
