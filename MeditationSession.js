@@ -1,14 +1,18 @@
 class Timer {
-    constructor(timerDisplayId, startButtonId, pauseButtonId, resetButtonId) {
+    constructor(timerDisplayId, startButtonId, pauseButtonId, resetButtonId, userId) {
         this.timerDisplay = document.getElementById(timerDisplayId);
         this.startButton = document.getElementById(startButtonId);
         this.pauseButton = document.getElementById(pauseButtonId);
         this.resetButton = document.getElementById(resetButtonId);
+        this.userId = userId;
 
         this.timerInterval = null;
         this.startTime = null;
         this.elapsedTime = 0;
         this.isTimerRunning = false;
+
+        // Load timer settings when the object is instantiated
+        this.loadTimerSettings();
 
         this.startButton.addEventListener('click', this.start.bind(this));
         this.pauseButton.addEventListener('click', this.pause.bind(this));
@@ -20,6 +24,8 @@ class Timer {
             this.startTime = Date.now() - this.elapsedTime;
             this.timerInterval = setInterval(this.updateTimer.bind(this), 1000);
             this.isTimerRunning = true;
+            // Save timer settings when the timer starts
+            this.saveTimerSettings();
         }
     }
 
@@ -27,18 +33,22 @@ class Timer {
         clearInterval(this.timerInterval);
         this.elapsedTime = Date.now() - this.startTime;
         this.isTimerRunning = false;
+        // Save timer settings when the timer pauses
+        this.saveTimerSettings();
     }
 
     reset() {
         clearInterval(this.timerInterval);
         this.elapsedTime = 0;
-        this.startTime = null; // Resetting start time to null
-        this.timerDisplay.textContent = '00:00'; // Resetting timer display to 00:00
+        this.startTime = null;
+        this.timerDisplay.textContent = '00:00';
         this.isTimerRunning = false;
+        // Save timer settings when the timer resets
+        this.saveTimerSettings();
     }
 
     updateTimer() {
-        const currentTime = Math.floor((Date.now() - (this.startTime || 0) + this.elapsedTime) / 1000); // Ensuring startTime is not null
+        const currentTime = Math.floor((Date.now() - (this.startTime || 0) + this.elapsedTime) / 1000);
         this.timerDisplay.textContent = this.formatTime(currentTime);
     }
 
@@ -51,16 +61,42 @@ class Timer {
         const seconds = Math.floor(timeInSeconds % 60);
         return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
+
+    saveTimerSettings() {
+        localStorage.setItem(`timerSettings_${this.userId}`, JSON.stringify({
+            startTime: this.startTime,
+            elapsedTime: this.elapsedTime,
+            isTimerRunning: this.isTimerRunning
+        }));
+    }
+
+    loadTimerSettings() {
+        const timerSettings = JSON.parse(localStorage.getItem(`timerSettings_${this.userId}`));
+        if (timerSettings) {
+            this.startTime = timerSettings.startTime;
+            this.elapsedTime = timerSettings.elapsedTime;
+            this.isTimerRunning = timerSettings.isTimerRunning;
+            // If timer was running, restart it
+            if (this.isTimerRunning) {
+                this.start();
+            }
+        }
+    }
 }
 
-// Usage
-const timer = new Timer('timer', 'start', 'pause', 'reset');
+// Usage (simulated user ID, replace with actual user ID)
+const userId = 'user123';
+const timer = new Timer('timer', 'start', 'pause', 'reset', userId);
+
+// Simulated user authentication
+localStorage.setItem('currentUser', userId);
 
 class BookmarkManager {
-    constructor(bookmarkButtonId, unbookmarkButtonId, bookmarkListId) {
+    constructor(bookmarkButtonId, unbookmarkButtonId, bookmarkListId, userId) {
         this.bookmarkButton = document.getElementById(bookmarkButtonId);
         this.unbookmarkButton = document.getElementById(unbookmarkButtonId);
         this.bookmarkList = document.getElementById(bookmarkListId);
+        this.userId = userId;
 
         // Check if elements exist before adding event listeners
         if (this.bookmarkButton) {
@@ -111,11 +147,11 @@ class BookmarkManager {
         bookmarkItems.forEach(item => {
             bookmarks.push(item.textContent);
         });
-        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        localStorage.setItem(`bookmarks_${this.userId}`, JSON.stringify(bookmarks));
     }
 
     loadBookmarks() {
-        const savedBookmarks = localStorage.getItem('bookmarks');
+        const savedBookmarks = localStorage.getItem(`bookmarks_${this.userId}`);
         if (savedBookmarks) {
             const bookmarks = JSON.parse(savedBookmarks);
             bookmarks.forEach(bookmark => {
@@ -126,7 +162,7 @@ class BookmarkManager {
 }
 
 // Instantiate the BookmarkManager object
-const bookmarkManager = new BookmarkManager('bookmark', 'unbookmark', 'bookmark-list');
+const bookmarkManager = new BookmarkManager('bookmark', 'unbookmark', 'bookmark-list', userId);
 
 class ThemeController {
     constructor(themeSwitcherId) {
@@ -193,7 +229,8 @@ const search = new Search('searchInput', 'searchButton', 'session');
 
 
 class CommentManager {
-    constructor() {
+    constructor(userId) {
+        this.userId = userId;
         this.initializeCommentSections();
         this.bindSubmitButtons();
         window.addEventListener('load', this.loadComments.bind(this));
@@ -245,11 +282,11 @@ class CommentManager {
             });
         });
 
-        localStorage.setItem('sessionComments', JSON.stringify(comments));
+        localStorage.setItem(`sessionComments_${this.userId}`, JSON.stringify(comments));
     }
 
     loadComments() {
-        const savedComments = localStorage.getItem('sessionComments');
+        const savedComments = localStorage.getItem(`sessionComments_${this.userId}`);
 
         if (savedComments) {
             const comments = JSON.parse(savedComments);
@@ -283,5 +320,7 @@ class CommentManager {
     }
 }
 
-const commentManager = new CommentManager();
-
+const currentUser = localStorage.getItem('currentUser');
+if (currentUser) {
+    const commentManager = new CommentManager(currentUser);
+}
