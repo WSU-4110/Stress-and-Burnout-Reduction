@@ -1,25 +1,23 @@
+
 body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
-    height:  100vh;
-    margin:  0;
-    padding:  0;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
     text-align: center;
-    margin-top:  0%;
-    padding:  20px  0;
+    margin-top: 0%;
+    padding: 20px 0;
     color: rgb(225, 216, 216);
     background-color: rgba(165, 116, 116, 0.5);
 }
 
-
-
 .page-description {
-    
     background-color: rgba(234, 221, 221, 0.8);
     padding: 20px;
     margin: 20px;
@@ -27,42 +25,31 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease;
 }
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
+
 .page-description h1 {
-    text-align: center ;
+    text-align: center;
     color: #191919;
     font-weight: bold;
-    
 }
 
 .page-description p {
     text-align: justify;
     color: #090909;
     line-height: 1.6;
-   
 }
-
 
 nav {
     background-color: rgb(20, 15, 15);
     color: rgb(28, 27, 27);
-    padding:  20px;
+    padding: 20px;
     text-align: center;
 }
 
 nav a {
-    padding:  15px  30px;
-    font-size:  18px;
+    padding: 15px 30px;
     color: #a1a1a1;
     text-decoration: none;
-    margin:  0  10px;
+    margin: 0 10px;
     display: inline-block;
     font-size: 14px;
     letter-spacing: 2px;
@@ -72,24 +59,24 @@ nav a {
 
 nav a:hover {
     background-color: #4CAF50;
-    color: rgb(59,  3,  3);
+    color: rgb(59, 3, 3);
 }
 
 #soundsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top:  20px;
+    margin-top: 20px;
 }
 
+
 .sound-item {
-    
-    width:  200px;
-    height:  200px;
-    padding:  10px;
-    margin:  10px;
+    width: 290px;
+    height: 290px;
+    padding: 10px;
+    margin: 10px;
     background-color: #9e9a9a27;
-    box-shadow:  0  2px  4px rgba(0, 0, 0, 0.685);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.685);
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -98,38 +85,60 @@ nav a:hover {
 }
 
 .sound-item img {
-    
-    width: 100px; 
-    height: 100px;
-    object-fit: cover; 
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
 }
 
 .sound-item h2 {
-    font-size:  16px;
-    margin-top:  10px;
+    font-size: 16px;
+    margin-top: 10px;
 }
 
 .sound-audio {
     width: 100%;
-    margin-top: 10px; 
-    opacity: 0.6; /* Adjust the opacity value as needed */
-  }
-  
-  .search-container {
+    margin-top: 10px;
+    opacity: 0.6; 
+}
+
+
+.search-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Set the height of the container to the full viewport height */
+    height: 100vh; 
 }
 
 .search-input {
-    width: 300px; /* Adjust the width as needed */
+    width: 300px; 
     padding: 10px;
 }
 
+
 .download-btn {
     background-color: transparent;
-    border: none;
-    color: rgba(141, 93, 177, 0.733); /* Change the color as needed */
-    cursor: pointer;
+    color: rgba(230, 230, 246, 0.575); 
+    border: 2px solid rgba(182, 182, 194, 0.454); 
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+
+.download-btn:hover {
+    background-color: rgba(55, 55, 65, 0.484);
+    color: rgba(141, 93, 177, 0.952);
+}
+
+.loop-btn {
+    background-color: transparent;
+    color: rgba(230, 230, 246, 0.575); 
+    border: 2px solid rgba(182, 182, 194, 0.454); 
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 10px;
+}
+
+.loop-btn:hover {
+    background-color: rgba(181, 181, 214, 0.484); 
+    color: white; 
 }
