@@ -5,33 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relaxation Sound Library</title>
     <link rel="stylesheet" href="relaxation-sounds.css">
-    
-</head>
 
+    <style>
+        @import url(indexStyles.css);
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const header = document.querySelector('.fixed-header');
+
+            // Function to add or remove the 'fixed' class based on scroll position
+            function toggleFixedHeader() {
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed');
+                } else {
+                    header.classList.remove('fixed');
+                }
+            }
+
+            // Listen for the scroll event and call the toggleFixedHeader function
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
     
 </head>
 <body>
-    <nav>
-        
-        <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
-        <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
-        <a href="meetup.html" class="btn btn-primary mr-2 mb-2">Meetup Forum</a>
-        <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
-        <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
-        <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
-        <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
-        <a href="MeditationSession.html" class="btn btn-primary mr-2 mb-2">Meditation Sessions</a>
-        <a href="timersPage.html" class="btn btn-primary mr-2 mb-2">Timers</a>
+   <nav>
+        <a href="index.html">Home</a>
+        <a href="forum.html">Forum</a>
+        <a href="meetup.html">Meetup Forum</a>
+        <a href="videopage.html">Video Library</a>
+        <a href="article_library.html">Article Library</a>
+        <a href="DailyInteractive/dailyInteractive.html">Daily Interactive</a>
+        <a href="MeditationSession.html">Meditation Sessions</a>
+        <a href="timersPage.html">Timers</a>
+        <a href="WellnessChallenges.html"class="btn btn-primary mr-2 mb-2">Wellness Challenges</a>
+        <a href="dashboard.html">Progress Dashboard</a>
     </nav>
+
+
     <div class="page-description">
         <h1>Relaxation Sound Library</h1>
         <p>Welcome to our Relaxation Sound Library!</p>
-       </p> "Relaxation is not a luxury; it's a necessity for a healthy mind and body."</p>
+        <p>"Relaxation is not a luxury; it's a necessity for a healthy mind and body."</p>
         <p>Immerse yourself in a collection of soothing sounds carefully curated to help you relax, focus, and unwind. From gentle raindrops to calming piano melodies, explore our selection and find the perfect sound to create your peaceful atmosphere.</p>
     </div>
     
-    <div id="soundsContainer"></div>
+    <input type="text" id="searchInput" placeholder="Search ">
+    <div id="soundsContainer">
+        
+    </div>
+    
 
+
+    
     <footer>
         <p><small>Meditation+&copy;</small></p>
     </footer>

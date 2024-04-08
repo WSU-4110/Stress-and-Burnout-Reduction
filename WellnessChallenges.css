@@ -1,0 +1,27 @@
+
+body {
+    background-color: #050505; 
+    color: #f5ecec;
+    position: center;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    text-decoration: none;
+    color: #fff; 
+    background-color: #0a0b0a; 
+    border: 1px solid #6d716d; 
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: #89918a; 
+}

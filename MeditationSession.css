@@ -1,70 +1,94 @@
+/* Light theme styles */
+:root {
+    --background-color: #fff;
+    --text-color: #000;
+}
+
 body {
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: rgba(194, 173, 173, 0.8); }
-
-
-header {
-    background-color: rgba(184, 173, 173, 0.8); /* Semi-transparent white background */
-    padding: 10px;
 }
 
-.nav-tabs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#timer {
+    font-size: 2em;
+    margin-bottom: 1em;
 }
 
-.tab {
-    padding: 10px 20px;
-    margin: 0 5px;
-    text-decoration: none;
-    color: #333;
-    border-radius: 5px;
-    background-color: #dbe0e5; /* Blue background color */
-    transition: background-color 0.3s ease;
+button {
+    margin-right: 10px;
 }
 
-.tab:hover {
-    background-color: #c2d5ea; /* Darker blue on hover */
-}
-
-.active-tab {
-    background-color: #0b1117; /* Darker blue for active tab */
-    color: #fff; /* White text for active tab */
-}
-
-h2 {
-    text-align: center; /* Center the title */
-    color: #0d0d0d; /* Set the title color to blue */
-    margin-top: 20px; /* Add some space above the title */
-}
-.youtube-tab {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-right: 10px; /* Add space between each tab */
-    text-decoration: none;
-    color: #333;
-    border-radius: 5px;
-    background-color: #dbe0e5; /* Blue background color */
-    transition: background-color 0.3s ease;
-}
-
-.youtube-tab:hover {
-    background-color: #c2d5ea; /* Darker blue on hover */
+.session {
+    margin-bottom: 20px;
 }
 
 .session-description {
-    background-color: #f0f0f0; /* Light gray background color */
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 10px; /* Add space above each session box */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 700px;
+    margin-bottom: 10px;
 }
 
-.session-description p {
-    margin: 0; /* Remove default margin for paragraphs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background-color: rgb(139, 133, 140);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px 5px 0 0;
+    margin-right: 10px;
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.tab-btn:hover {
+    background-color: #57595b;
+}
+
+.tab-btn.active {
+    background-color: #448383;
+}
+
+.tab-btn:not(.active) {
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn:last-child {
+    margin-right: 0;
+}
+
+/* Dark theme styles */
+body.dark-theme {
+    --background-color: #000;
+    --text-color: #fff;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.comment {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+}
+
+.comment i {
+    font-style: italic;
 }
 
