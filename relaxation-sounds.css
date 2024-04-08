@@ -115,4 +115,21 @@ nav a:hover {
     opacity: 0.6; /* Adjust the opacity value as needed */
   }
   
- 
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Set the height of the container to the full viewport height */
+}
+
+.search-input {
+    width: 300px; /* Adjust the width as needed */
+    padding: 10px;
+}
+
+.download-btn {
+    background-color: transparent;
+    border: none;
+    color: rgba(141, 93, 177, 0.733); /* Change the color as needed */
+    cursor: pointer;
+}

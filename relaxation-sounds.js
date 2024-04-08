@@ -74,3 +74,40 @@ function createSoundItem(sound) {
       });
   });
 });
+
+
+function createSoundItem(sound) {
+  const soundItem = document.createElement("div");
+  soundItem.classList.add("sound-item");
+
+  const icon = document.createElement("img");
+  icon.src = sound.iconSrc;
+  icon.alt = sound.name; 
+  icon.classList.add("sound-icon");
+
+  const audio = document.createElement("audio");
+  audio.src = sound.audioSrc;
+  audio.controls = true; 
+  audio.classList.add("sound-audio");
+
+  const title = document.createElement("h2");
+  title.textContent = sound.name; 
+
+  const downloadBtn = document.createElement("button");
+  downloadBtn.textContent = "Download";
+  downloadBtn.classList.add("download-btn");
+  downloadBtn.addEventListener('click', function() {
+      // Create a temporary anchor element
+      const link = document.createElement('a');
+      link.href = sound.audioSrc;
+      link.download = sound.name + ".mp3";
+      link.click();
+  });
+
+  soundItem.appendChild(icon);
+  soundItem.appendChild(audio);
+  soundItem.appendChild(title);
+  soundItem.appendChild(downloadBtn);
+
+  return soundItem;
+}
