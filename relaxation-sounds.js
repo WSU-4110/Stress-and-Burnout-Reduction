@@ -52,3 +52,25 @@ function createSoundItem(sound) {
   soundsContainer.appendChild(soundItem);
  });
  
+ 
+ document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('searchInput');
+  const soundsContainer = document.getElementById('soundsContainer');
+  const soundItems = soundsContainer.querySelectorAll('.sound-item');
+
+  searchInput.addEventListener('input', function () {
+      const searchTerm = searchInput.value.trim().toLowerCase();
+
+      // Filter sound items based on the first 1-3 words
+      soundItems.forEach(soundItem => {
+          const title = soundItem.querySelector('h2').textContent.toLowerCase();
+          const firstWords = title.split(' ').slice(0, 3).join(' ');
+
+          if (firstWords.includes(searchTerm)) {
+              soundItem.style.display = 'block';
+          } else {
+              soundItem.style.display = 'none';
+          }
+      });
+  });
+});

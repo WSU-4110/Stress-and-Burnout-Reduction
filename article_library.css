@@ -21,7 +21,7 @@ body {
 
 
 header {
-    background-color: white; /* Header background color */
+    background-color: rgb(238, 214, 214); /* Header background color */
     color: black; /* Header text color */
     padding: 20px; /* Add padding for better readability */
     text-align: center;
@@ -37,7 +37,7 @@ main {
 }
 
 .article {
-    background-color: #fff; /* Article box background color */
+    background-color: #1a1919; /* Article box background color */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
     border-radius: 8px; /* Rounded corners */
     padding: 20px;
@@ -119,7 +119,7 @@ nav div {
 }
 
 nav a:hover {
-    background-color: #ddd;
+    background-color: #0b0a0a;
     color: black;
 }
 
