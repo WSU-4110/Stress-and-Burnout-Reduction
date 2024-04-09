@@ -10,6 +10,13 @@ body {
     font-family: Arial, sans-serif;
 }
 
+title{
+    color: white;
+    position :center;
+}
+
+
+
 #timer {
     font-size: 2em;
     margin-bottom: 1em;
