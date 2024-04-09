@@ -1,13 +1,13 @@
 body {
     background-color: #050505;
     color: #f5ecec;
-    position: center;
+    text-align:  center;
 }
 
 .tabs {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .tab-btn {
@@ -26,48 +26,51 @@ body {
 }
 
 
-/* Container for challenges */
+
 .challenges-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    /* Center align the boxes horizontally */
-    align-items: flex-start;
-    /* Align items at the top */
+    justify-content: center; /* Horizontally center the items */
+    align-items: center; /* Vertically center the items */
     margin-top: 20px;
-    /* Adjust as needed */
+    padding: 0 20px; 
+    margin: 0 auto; /* Center the container horizontally */
 }
 
 
-/* Style for individual challenge boxes */
+
+
 .challenge {
-    width: calc(30% - 20px);
-    /* Adjust width to fit three boxes in a row with spacing between */
-    background-color: #f0f0f0;
-    /* Example background color */
+    width: calc(70% - 100px);
+    background-color: #868781;
     padding: 20px;
-    /* Adjust padding as needed */
-    margin: 10px;
-    /* Adjust margin between boxes */
+    margin: 10px 20px;
     border-radius: 10px;
-    /* Rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Box shadow for a subtle effect */
-}
+    text-align: center;
 
+}
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .challenge {
+        width: calc(50% - 40px);
+        /* Adjusted width for smaller screens */
+    }
+}
 
 /* Title of the challenge */
 .challenge h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: #333;
+    color: #0a0a0a;
 }
 
 /* Description of the challenge */
 .challenge p {
     font-size: 1rem;
     line-height: 1.5;
-    color: #666;
+    color: #1e1c1c;
+    font-weight: bold;
 }
 
 /* Hover effect */
@@ -78,16 +81,13 @@ body {
 
 
 
-/* Container for the entire page content */
 .page-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Center content horizontally */
     min-height: 100vh;
-    /* Ensure the container takes up the full height of the viewport */
     padding-top: 50px;
-    /* Add some space at the top */
+    
 }
 
 /* Container for the title */
