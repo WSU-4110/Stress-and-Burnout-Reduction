@@ -25,3 +25,67 @@ body {
 .tab-btn:hover {
     background-color: #89918a; 
 }
+
+
+
+.challenge-container {
+    display: flex; /* Use flexbox */
+    flex-wrap: wrap; /* Allow wrapping to next line */
+    justify-content: space-around; /* Center items horizontally */
+    gap: 20px; /* Add some spacing between challenges */
+}
+
+/* Individual challenge box */
+.challenge {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Set width of each challenge */
+    margin-bottom: 20px;
+    flex: 1; /* Allow challenges to grow equally within the container */
+}
+
+/* Title of the challenge */
+.challenge h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Description of the challenge */
+.challenge p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Hover effect */
+.challenge:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+
+
+/* Container for the entire page content */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    min-height: 100vh; /* Ensure the container takes up the full height of the viewport */
+    padding-top: 50px; /* Add some space at the top */
+}
+
+/* Container for the title */
+.title-container {
+    margin-bottom: 20px; /* Add some space below the title */
+}
+
+/* Title */
+.title {
+    font-size: 2rem;
+    color: #f7f4f4;
+}
+
+/* Your existing styling for tabs and challenges can go here */
