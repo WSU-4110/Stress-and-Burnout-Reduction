@@ -1,6 +1,5 @@
-
 body {
-    background-color: #050505; 
+    background-color: #050505;
     color: #f5ecec;
     position: center;
 }
@@ -15,36 +14,47 @@ body {
     padding: 10px 20px;
     margin: 0 10px;
     text-decoration: none;
-    color: #fff; 
-    background-color: #0a0b0a; 
-    border: 1px solid #6d716d; 
+    color: #fff;
+    background-color: #0a0b0a;
+    border: 1px solid #6d716d;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
 .tab-btn:hover {
-    background-color: #89918a; 
+    background-color: #89918a;
 }
 
 
-
-.challenge-container {
-    display: flex; /* Use flexbox */
-    flex-wrap: wrap; /* Allow wrapping to next line */
-    justify-content: space-around; /* Center items horizontally */
-    gap: 20px; /* Add some spacing between challenges */
+/* Container for challenges */
+.challenges-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Center align the boxes horizontally */
+    align-items: flex-start;
+    /* Align items at the top */
+    margin-top: 20px;
+    /* Adjust as needed */
 }
 
-/* Individual challenge box */
+
+/* Style for individual challenge boxes */
 .challenge {
+    width: calc(30% - 20px);
+    /* Adjust width to fit three boxes in a row with spacing between */
     background-color: #f0f0f0;
-    border-radius: 10px;
+    /* Example background color */
     padding: 20px;
+    /* Adjust padding as needed */
+    margin: 10px;
+    /* Adjust margin between boxes */
+    border-radius: 10px;
+    /* Rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Set width of each challenge */
-    margin-bottom: 20px;
-    flex: 1; /* Allow challenges to grow equally within the container */
+    /* Box shadow for a subtle effect */
 }
+
 
 /* Title of the challenge */
 .challenge h2 {
@@ -72,20 +82,47 @@ body {
 .page-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center content horizontally */
-    min-height: 100vh; /* Ensure the container takes up the full height of the viewport */
-    padding-top: 50px; /* Add some space at the top */
+    align-items: center;
+    /* Center content horizontally */
+    min-height: 100vh;
+    /* Ensure the container takes up the full height of the viewport */
+    padding-top: 50px;
+    /* Add some space at the top */
 }
 
 /* Container for the title */
 .title-container {
-    margin-bottom: 20px; /* Add some space below the title */
+    margin-bottom: 20px;
+    /* Add some space below the title */
 }
 
 /* Title */
 .title {
     font-size: 2rem;
     color: #f7f4f4;
+    text-align: center;
 }
 
-/* Your existing styling for tabs and challenges can go here */
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer-display {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.timer-btn {
+    padding: 8px 16px;
+    border: none;
+    background-color: #1d1e1f;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.timer-btn:hover {
+    background-color: #0056b3;
+}
