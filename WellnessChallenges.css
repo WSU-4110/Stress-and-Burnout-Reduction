@@ -1,6 +1,5 @@
-
 body {
-    background-color: #050505; 
+    background-color: #050505;
     color: #f5ecec;
     position: center;
 }
@@ -15,13 +14,115 @@ body {
     padding: 10px 20px;
     margin: 0 10px;
     text-decoration: none;
-    color: #fff; 
-    background-color: #0a0b0a; 
-    border: 1px solid #6d716d; 
+    color: #fff;
+    background-color: #0a0b0a;
+    border: 1px solid #6d716d;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
 .tab-btn:hover {
-    background-color: #89918a; 
+    background-color: #89918a;
+}
+
+
+/* Container for challenges */
+.challenges-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Center align the boxes horizontally */
+    align-items: flex-start;
+    /* Align items at the top */
+    margin-top: 20px;
+    /* Adjust as needed */
+}
+
+
+/* Style for individual challenge boxes */
+.challenge {
+    width: calc(30% - 20px);
+    /* Adjust width to fit three boxes in a row with spacing between */
+    background-color: #f0f0f0;
+    /* Example background color */
+    padding: 20px;
+    /* Adjust padding as needed */
+    margin: 10px;
+    /* Adjust margin between boxes */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Box shadow for a subtle effect */
+}
+
+
+/* Title of the challenge */
+.challenge h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Description of the challenge */
+.challenge p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+/* Hover effect */
+.challenge:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+
+
+/* Container for the entire page content */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content horizontally */
+    min-height: 100vh;
+    /* Ensure the container takes up the full height of the viewport */
+    padding-top: 50px;
+    /* Add some space at the top */
+}
+
+/* Container for the title */
+.title-container {
+    margin-bottom: 20px;
+    /* Add some space below the title */
+}
+
+/* Title */
+.title {
+    font-size: 2rem;
+    color: #f7f4f4;
+    text-align: center;
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer-display {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.timer-btn {
+    padding: 8px 16px;
+    border: none;
+    background-color: #1d1e1f;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.timer-btn:hover {
+    background-color: #0056b3;
 }
