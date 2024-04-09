@@ -7,6 +7,26 @@ body, html {
 }
 
 
+.like-btn {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.like-btn:hover {
+  background-color: #0056b3; /* Darken the button on hover */
+}
+
+.like-btn.liked {
+  background-color: #28a745; /* Bootstrap success color */
+}
+
+
 .library-title {
     text-align: center;
     margin-top: 20px;

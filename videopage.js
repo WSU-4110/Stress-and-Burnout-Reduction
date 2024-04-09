@@ -57,10 +57,44 @@ class VideoModal {
         this.modal.style.display = "none"; 
         this.videoFrame.src = ""; 
     }
+
+    attachLikeButtonEvents() {
+        const likeButtons = document.querySelectorAll('.like-btn');
+        likeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent triggering card click events
+                this.handleLikeButtonClick(e.target);
+            });
+        });
+    }
+
+    handleLikeButtonClick(button) {
+        const videoId = button.closest('.video-card').getAttribute('data-video-id');
+        const isLiked = button.classList.contains('liked');
+        const action = isLiked ? 'unlike' : 'like';
+        const url = `/videos/${videoId}/${action}`; 
+    
+        fetch(url, { method: 'POST' }) 
+            .then(response => response.json())
+            .then(data => {
+                const likeCountElement = button.nextElementSibling;
+                likeCountElement.textContent = `${data.likes} Likes`;
+                button.classList.toggle('liked', !isLiked);
+    
+                // Update the button's icon and text based on the liked/unliked state
+                if (!isLiked) {
+                    button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
+                } else {
+                    button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }    
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+    videoModal.attachLikeButtonEvents(); // Attach like button events after DOM is loaded
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');
@@ -82,5 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+    videoModal.attachLikeButtonEvents(); // Attach like button events after DOM is loaded
 });
 
