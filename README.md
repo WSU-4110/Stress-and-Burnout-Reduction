@@ -12,3 +12,4 @@ The Project uses:
 * Javascript for scripting and programming site behavior
 * CSS for formatting and style guides
 * HTML for webpage creation
+* Github actions for continuous integration testing
