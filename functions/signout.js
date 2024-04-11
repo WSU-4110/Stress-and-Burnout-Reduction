@@ -51,7 +51,7 @@ export async function onRequest({ request, env }) {
   }
 }
 
-function redirectToLogin(message) {
+export function redirectToLogin(message) {
   return new Response(
     `<html>
       <head>

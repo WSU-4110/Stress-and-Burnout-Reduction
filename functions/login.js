@@ -60,7 +60,7 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-function responseForRetry(message) {
+export function responseForRetry(message) {
   const retryResponseHTML = `
       <html>
         <head>

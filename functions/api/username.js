@@ -19,7 +19,7 @@ export async function onRequestGet({ request, env }) {
   }
 }
 
-function getSessionIdFromRequest(request) {
+export function getSessionIdFromRequest(request) {
   const cookieHeader = request.headers.get('Cookie');
   if (!cookieHeader) return null;
   
