@@ -226,12 +226,39 @@ class SaturdayContent extends DayContent {
 
 class SundayContent extends DayContent {
     setupContent() {
-    const content = `
-        <div class="day-checker">
-            <p>sunday</p>
-        </div>
-    `;
-    document.querySelector('#item2').innerHTML = content;
+        const content = `
+            <div class="interactive-box" style="text-align: center;">
+                <button id="make-ok-button" style="padding: 10px 20px; font-size: 20px; background-color: #DDD; border: none; box-shadow: 0px 2px 5px rgba(0,0,0,0.2);">Make everything OK</button>
+                <div id="loading-bar-container" style="display: none; margin-top: 20px; width: 100%; background-color: #ccc;">
+                    <div id="loading-bar" style="height: 20px; width: 0%; background-color: #4CAF50;"></div>
+                </div>
+                <p id="ok-message" style="display: none; color: green; margin-top: 20px;">Everything is now OK!</p>
+            </div>
+        `;
+        document.querySelector('#item2').innerHTML = content;
+        
+        document.getElementById('make-ok-button').addEventListener('click', () => {
+            this.startLoading();
+        });
+    }
+    
+    startLoading() {
+        const button = document.getElementById('make-ok-button');
+        button.disabled = true;
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        loadingBarContainer.style.display = 'block';
+        
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                button.disabled = false;
+                document.getElementById('ok-message').style.display = 'block';
+            } else {
+                width++;
+                document.getElementById('loading-bar').style.width = `${width}%`;
+            }
+        }, 30);
     }
 }
 
@@ -239,13 +266,13 @@ class SundayContent extends DayContent {
 class ContentFactory {
     static createContent(dayOfWeek) {
         switch(dayOfWeek) {
+            case 0: return new SundayContent();
             case 1: return new MondayContent();
             case 2: return new TuesdayContent();
             case 3: return new WednesdayContent();
             case 4: return new ThursdayContent();
             case 5: return new FridayContent();
             case 6: return new SaturdayContent();
-            case 0: return new SundayContent();
             default: throw new Error("Invalid day of week");
         }
     }
@@ -257,4 +284,12 @@ document.addEventListener('DOMContentLoaded', function() {
     contentCreator.setupContent();
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     document.querySelector('#item1 h1').textContent = dayNames[dayOfWeek];
+    document.getElementById('day-select').value = dayOfWeek;
+
+    document.getElementById('day-select').addEventListener('change', function() {
+        const selectedDay = parseInt(this.value, 10);
+        const selectedContentCreator = ContentFactory.createContent(selectedDay);
+        selectedContentCreator.setupContent();
+        document.querySelector('#item1 h1').textContent = dayNames[selectedDay];
+    });
 });
