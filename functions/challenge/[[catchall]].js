@@ -5,7 +5,7 @@ export async function onRequestGet({ request, env }) {
     const sessionCookie = getSessionCookie(request);
     let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_CHALLENGES.get(sessionCookie)))) {
         return unauthorizedResponse();
     }
     
@@ -21,10 +21,11 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
     const url = new URL(request.url);
+    const formData = await request.formData();
     const sessionCookie = getSessionCookie(request);
     let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_CHALLENGES.get(sessionCookie)))) {
         return unauthorizedResponse();
     }
 
@@ -34,11 +35,10 @@ export async function onRequestPost({ request, env }) {
     } else if (url.pathname.startsWith("/challenge/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
         return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname.startsWith("/challenge/topic/") && url.pathname.endsWith('/respond')) {
-        const formData = await request.formData();
+    } else if (url.pathname.startsWith("/challenge/topic/") && url.pathname.endsWith('/update-status')) {
         const topicId = url.pathname.split('/')[3];
         const status = formData.get('status');
-        return handleChallengeAction(topicId, status, session.username, env);
+        return updatePostStatus(status, topicId, session.username, env);
     }
 
     return new Response("Bad Request", { status: 400 });
@@ -46,7 +46,6 @@ export async function onRequestPost({ request, env }) {
 
 async function renderForumsPage(username, env) {
     let topics = await fetchTopics(env);
-    
     const topicsHtml = topics.map(topic => `
         <tr>
             <td style="width: 70%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
@@ -54,7 +53,7 @@ async function renderForumsPage(username, env) {
             <td style="width: 10%;">${username === topic.username ? `<form action="/challenge/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
         </tr>
     `).join('');
-  
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -63,69 +62,30 @@ async function renderForumsPage(username, env) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Forum Page</title>
-    <style>
-        body {
-            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
-        }
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function toggleFixedHeader() {
-                const header = document.querySelector('.fixed-header');
-                if (window.scrollY > header.offsetTop) {
-                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
-                } else {
-                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
-                }
-            }
-            window.addEventListener('scroll', toggleFixedHeader);
-        });
-    </script>
+            <style>
+                body { padding-top: 80px; }
+                .fixed-header { position: fixed; top: 0; width: 100%; z-index: 1000; }
+                .navbar-brand img { height: 40px; }
+            </style>
         </head>
         <body>
-    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <img src="/coolfrog.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
-					<li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
-    <div class="container mt-5">
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-            </div>
-        </div>
-            <div class="container mt-4">
+            <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    <a class="navbar-brand" href="/"><img src="/logo.png" alt="logo"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="/challenge">Forums</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            <div class="container mt-5">
                 <h1>Forum Topics</h1>
                 <table class="table table-striped">
                     <thead>
@@ -142,70 +102,42 @@ async function renderForumsPage(username, env) {
                     <button type="submit" class="btn btn-primary">Add Topic</button>
                 </form>
             </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const leftButton = document.getElementById('leftButton');
-            const rightButton = document.getElementById('rightButton');
-
-            fetch('/api/username').then(response => response.json()).then(data => {
-                if (data.username) {
-                    leftButton.textContent = 'Account';
-                    leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = 'Sign Out of ' + data.username;
-                    rightButton.onclick = function () { window.location.href = '/signout'; };
-                } else {
-                    leftButton.textContent = 'Sign Up';
-                    leftButton.onclick = function () { window.location.href = '/signup'; };
-                    rightButton.textContent = 'Login';
-                    rightButton.onclick = function () { window.location.href = '/login'; };
-                }
-            }).catch(error => {
-                console.error("Error fetching username:", error);
-                leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function () { window.location.href = '/signup'; };
-                rightButton.textContent = 'Login';
-                rightButton.onclick = function () { window.location.href = '/login'; };
-            });
-        });
-    </script>
         </body>
         </html>
     `;
-  
+
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
 async function renderTopicPage(topicId, username, env) {
     let topic = (await fetchTopicById(topicId, env))[0];
-    let myPost = await fetchPostByUserInTopic(topicId, username, env);
+    let posts = await fetchPostsForTopic(topicId, env);
 
-    const postHtml = myPost ? `
+    const challengeHtml = posts.length ? '' : `<button class="btn btn-success">Accept the Challenge</button>`;
+    const postsHtml = posts.map(post => `
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>@${myPost.username}</span>
-                ${myPost.status === 'active' ? `
+                <span>${post.title}</span>
                 <div>
-                    <form action="/challenge/topic/${topicId}/respond" method="post" class="mb-0">
+                    ${username === post.username && post.status === 'active' ? `
+                    <form action="/challenge/topic/${topicId}/update-status" method="post">
                         <input type="hidden" name="status" value="completed">
                         <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
                     </form>
-                    <form action="/challenge/topic/${topicId}/respond" method="post" class="mb-0">
+                    <form action="/challenge/topic/${topicId}/update-status" method="post">
                         <input type="hidden" name="status" value="abandoned">
                         <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
-                    </form>
-                </div>` : ''}
+                    </form>` : ''}
+                </div>
             </div>
             <div class="card-body">
-                <h5 class="card-title">${myPost.username} has ${myPost.status} the challenge</h5>
+                <h5 class="card-title">${post.status}</h5>
             </div>
             <div class="card-footer text-muted">
-                ${new Date(myPost.post_date).toLocaleString()}
+                ${new Date(post.post_date).toLocaleString()}
             </div>
-        </div>` : `
-        <form method="post" action="/challenge/topic/${topicId}/respond">
-            <input type="hidden" name="status" value="active">
-            <button type="submit" class="btn btn-success">Accept the Challenge</button>
-        </form>`;
+        </div>
+    `).join('');
 
     const pageHtml = `
         <!DOCTYPE html>
@@ -214,145 +146,85 @@ async function renderTopicPage(topicId, username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Posts in ${topic.title}</title>
+            <title>${topic.title}</title>
             <style>
-                body {
-                    padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
-                }
-                .fixed-header {
-                    position: fixed;
-                    top: 0;
-                    width: 100%;
-                    z-index: 1000;
-                }
-                .navbar-brand img {
-                    height: 40px;
-                }
+                body { padding-top: 80px; }
+                .fixed-header { position: fixed; top: 0; width: 100%; z-index: 1000; }
+                .navbar-brand img { height: 40px; }
             </style>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    function toggleFixedHeader() {
-                        const header = document.querySelector('.fixed-header');
-                        if (window.scrollY > header.offsetTop) {
-                            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
-                        } else {
-                            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
-                        }
-                    }
-                    window.addEventListener('scroll', toggleFixedHeader);
-                });
-            </script>
         </head>
         <body>
-    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <img src="/coolfrog.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
-                </ul>
+            <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container">
+                    <a class="navbar-brand" href="/"><img src="/logo.png" alt="logo"></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="/challenge">Forums</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+            <div class="container mt-5">
+                <h1>${topic.title}</h1>
+                <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
+                ${challengeHtml}
+                ${postsHtml}
             </div>
-        </div>
-    </header>
-    <div class="container mt-5">
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-            </div>
-        </div>
-        <div class="container mt-5">
-            <h1>${topic.title}</h1>
-            <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
-            ${postHtml}
-        </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const leftButton = document.getElementById('leftButton');
-                const rightButton = document.getElementById('rightButton');
-
-                fetch('/api/username').then(response => response.json()).then(data => {
-                    if (data.username) {
-                        leftButton.textContent = 'Account';
-                        leftButton.onclick = function () { window.location.href = '/account'; };
-                        rightButton.textContent = 'Sign Out of ' + data.username;
-                        rightButton.onclick = function () { window.location.href = '/signout'; };
-                    } else {
-                        leftButton.textContent = 'Sign Up';
-                        leftButton.onclick = function () { window.location.href = '/signup'; };
-                        rightButton.textContent = 'Login';
-                        rightButton.onclick = function () { window.location.href = '/login'; };
-                    }
-                }).catch(error => {
-                    console.error("Error fetching username:", error);
-                    leftButton.textContent = 'Sign Up';
-                    leftButton.onclick = function () { window.location.href = '/signup'; };
-                    rightButton.textContent = 'Login';
-                    rightButton.onclick = function () { window.location.href = '/login'; };
-                });
-            });
-        </script>
-    </body>
-    </html>
+        </body>
+        </html>
     `;
 
-    return new Response(pageHtml, { headers: { 'Content-Type': 'text/html' } });
+    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
-async function handleChallengeAction(topicId, status, username, env) {
-    let existingPost = await fetchPostByUserInTopic(topicId, username, env);
-    if (existingPost) {
-        // If post exists, just update the status and post date
-        const updateStmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET status = ?, post_date = ? WHERE id = ?");
-        await updateStmt.bind(status, new Date().toISOString(), existingPost.id).run();
+async function updatePostStatus(status, topicId, username, env) {
+    const existingPost = await fetchPostsForTopic(topicId, env);
+    if (existingPost.length === 0) {
+        // Create new post
+        await addPost(status, topicId, username, env);
     } else {
-        // Create a new post
-        const insertStmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, topic_id, username, status, post_date) VALUES (?, ?, ?, ?, ?)");
-        await insertStmt.bind(uuidv4(), topicId, username, status, new Date().toISOString()).run();
+        // Update existing post status and date
+        const stmt = env.COOLFROG_FORUM.prepare("UPDATE posts SET status=?, post_date=DATETIME('now') WHERE topic_id=? AND username=?");
+        await stmt.bind(status, topicId, username).run();
     }
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
-async function fetchPostByUserInTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, username, status, post_date FROM posts WHERE topic_id = ? AND username = ?");
-    return (await stmt.bind(topicId, username).all()).results[0];
-}
-
-async function addTopic(title, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO topics (id, title, username) VALUES (?, ?, ?)");
-    await stmt.bind(uuidv4(), title, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': '/challenge' } });
+async function addPost(status, topicId, username, env) {
+    const title = `${username} has ${status === 'active'
+        ? `accepted the challenge`
+        : status === 'completed'
+            ? `completed the challenge`
+            : `abandoned the challenge`}`;
+    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO posts (id, title, status, topic_id, username, post_date) VALUES (?, ?, ?, ?, ?, DATETIME('now'))");
+    await stmt.bind(uuidv4(), title, status, topicId, username).run();
+    return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
 async function deleteTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
     await stmt.bind(topicId, username).run();
     return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, username FROM topics ORDER BY title");
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics ORDER BY title");
     return (await stmt.all()).results;
 }
 
 async function fetchTopicById(topicId, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, username FROM topics WHERE id = ?");
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics WHERE id = ?");
+    return (await stmt.bind(topicId).all()).results;
+}
+
+async function fetchPostsForTopic(topicId, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, status, username, post_date FROM posts WHERE topic_id = ? AND status NOT IN ('completed', 'abandoned') ORDER BY post_date DESC");
     return (await stmt.bind(topicId).all()).results;
 }
 
@@ -364,5 +236,5 @@ function getSessionCookie(request) {
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+    return new Response("Unauthorized - Please log in.", { status: 403, headers: {'Content-Type': 'text/plain'} });
 }
