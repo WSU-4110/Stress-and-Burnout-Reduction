@@ -53,8 +53,8 @@ async function renderChallengesPage(username, env) {
 
     let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
         <tr>
-            <td style="width: 60%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
-            <td style="width: 40%;">
+            <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
+            <td style="width: 30%;">
                 <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
                     <input type="hidden" name="post_id" value="${post.id}">
                     <button type="submit" class="btn btn-success btn-sm">Complete</button>
@@ -205,19 +205,17 @@ async function deleteTopic(topicId, username, env) {
 }
 
 async function acceptChallenge(topicId, username, env) {
-    const topic = (await fetchTopicById(topicId, env))[0];
     const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, topic_id, username, title, status, post_date) VALUES (?, ?, ?, ?, ?, ?)");
     const now = new Date().toISOString();
-    const title = `${topic.title} - ${username} has accepted the challenge`;
+    const title = `${username} has accepted the challenge`;
     await stmt.bind(uuidv4(), topicId, username, title, 'active', now).run();
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
 async function updateChallengeStatus(postId, newStatus, username, env) {
-    const post = (await fetchPostById(postId, env))[0];
     const updateStmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET title = ?, status = ?, post_date = ? WHERE id = ? AND username = ?");
     const now = new Date().toISOString();
-    const title = `${post.title.split(' - ')[0]} - ${username} has ${newStatus} the challenge`;
+    const title = `${username} has ${newStatus} the challenge`;
     await updateStmt.bind(title, newStatus, now, postId, username).run();
     return new Response(null, { status: 204 });
 }
@@ -240,11 +238,6 @@ async function fetchPostsForTopic(topicId, env) {
 async function fetchPostsForUser(username, env) {
     const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, title, status FROM posts WHERE username = ? ORDER BY post_date DESC");
     return (await stmt.bind(username).all()).results;
-}
-
-async function fetchPostById(postId, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, title, status FROM posts WHERE id = ?");
-    return (await stmt.bind(postId).all()).results;
 }
 
 function getSessionCookie(request) {
