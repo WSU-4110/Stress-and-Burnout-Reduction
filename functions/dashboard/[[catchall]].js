@@ -71,18 +71,22 @@ async function renderDashboardPage(username, env) {
 
 async function generateChallengeHtml(challenge, username, env) {
     const userPosts = await fetchPostsForUserInTopic(username, challenge.id, env);
-    let actionHtml = `<form method="POST" action="/challenge/topic/${challenge.id}/accept-challenge">
-        <button type="submit" class="btn btn-success">Accept Challenge</button>
-    </form>`;
+    let actionHtml;
 
-    if (userPosts.length > 0) {
+    if (userPosts.length === 0) {
+        actionHtml = `<form method="POST" action="/challenge/topic/${challenge.id}/accept-challenge">
+            <button type="submit" class="btn btn-success">Accept Challenge</button>
+        </form>`;
+    } else {
         const userPost = userPosts[0];
         if (userPost.status === 'active') {
             actionHtml = `
-                <form action="/challenge/topic/${userPost.topic_id}/complete-challenge" method="post">
+                <form action="/challenge/topic/${userPost.topic_id}/complete-challenge" method="POST" style="display:inline-block;">
+                    <input type="hidden" name="post_id" value="${userPost.id}">
                     <button type="submit" class="btn btn-success">Complete</button>
                 </form>
-                <form action="/challenge/topic/${userPost.topic_id}/abandon-challenge" method="post">
+                <form action="/challenge/topic/${userPost.topic_id}/abandon-challenge" method="POST" style="display:inline-block;">
+                    <input type="hidden" name="post_id" value="${userPost.id}">
                     <button type="submit" class="btn btn-danger">Abandon</button>
                 </form>
             `;
