@@ -163,7 +163,7 @@ class FridayContent extends DayContent {
         const environments = {
             'summary-night': { gif: 'https://i.pinimg.com/originals/de/b0/f1/deb0f1f0a7ca99c0d39a2c3b586efcf9.gif', sound: 'summary-night.mp3' },
             'garden': { gif: 'https://i.makeagif.com/media/8-22-2015/3nioqS.gif', sound: 'garden.mp3' },
-            'cafe': { gif: 'https://i.makeagif.com/media/2-24-2023/Jx32nB.gif', sound: 'cafe.mp3' }
+            'cafe': { gif: 'https://i.makeagif.com/media/2-24-2023/Jx32nB.gif', sound: 'https://cdn.coolfrog.net/cafe.mp3' }
         };
     
         const environmentData = environments[environment];
