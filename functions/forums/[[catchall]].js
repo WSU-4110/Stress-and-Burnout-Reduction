@@ -54,8 +54,8 @@ async function renderForumsPage(username, env) {
 const topicsHtml = topics.map(topic => `
     <tr>
         <td style="width: 70%;"><a href="/forums/topic/${topic.id}">${topic.title}</a></td>
-        <td style="width: 15%;">${topic.username}</td>
-        <td style="width: 15%;">${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+        <td style="width: 20%;">${topic.username}</td>
+        <td style="width: 10%;">${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
     </tr>
 `).join('');
   
