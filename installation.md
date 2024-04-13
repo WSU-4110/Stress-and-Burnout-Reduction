@@ -210,7 +210,41 @@ COOLFROG_CHALLENGES	coolfrog-challenges
 https://dash.cloudflare.com/<account-id>/pages/view/<sub-domain>
 ```
 
-## Warnings for future developers
+## Map to a custom domain.
+
+- Navigate to the **Custom domains** tab and add "www.coolfrog.net" for the custom domain.
+
+```
+This domain is an example, but it is our canonical domain. Replace it with yours.
+```
+
+## Setup Cloudflare R2 (Object Storage)
+
+- Since Cloudflare pages cannot build files over 25 MB, we must move them to a CDN.
+
+- Navigate to the **R2** tab in the sidebar.
+
+```
+https://dash.cloudflare.com/<account-id>/r2/overview
+```
+
+- Create a bucket called "coolfrog".
+
+- Download and mirror our large files and upload them to your bucket. Helpful tools: wget or [curl](https://curl.se)
+
+```
+https://cdn.coolfrog.net/cafe.mp3
+```
+
+- Naviage to the *Settings* tab in the bucket.
+
+- Connect the bucket to a **Custom Domain**, in this case our canonical CDN URL is:
+
+```
+cdn.coolfrog.net	
+```
+
+## Warnings for Future Developers:
 
 #### If you have defined any npm packages, you must declare them in "package.json" in the root directory.
 
