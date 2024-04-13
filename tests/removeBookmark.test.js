@@ -1,12 +1,12 @@
 //unit test for removebookmark method
 
 
-jest.mock('./MeditationSession', () => ({
+jest.mock('../MeditationSession', () => ({
     removeBookmark: jest.fn()
 }));
 
 // Importing the removeBookmark function
-const { removeBookmark } = require('./MeditationSession');
+const { removeBookmark } = require('../MeditationSession');
 
 describe('removeBookmark function', () => {
     beforeEach(() => {
