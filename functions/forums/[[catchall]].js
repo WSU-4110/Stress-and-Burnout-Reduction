@@ -81,6 +81,19 @@ async function renderForumsPage(username, env) {
             height: 40px;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
         </head>
         <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
@@ -205,6 +218,19 @@ async function renderTopicPage(topicId, username, env) {
             height: 40px;
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
         </head>
         <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
