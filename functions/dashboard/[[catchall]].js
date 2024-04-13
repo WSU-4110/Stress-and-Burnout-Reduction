@@ -73,12 +73,15 @@ async function generateChallengeHtml(challenge, username, env) {
     const userPosts = await fetchPostsForUserInTopic(username, challenge.id, env);
     let actionHtml;
 
-    if (userPosts.length === 0) {
-        actionHtml = `<form method="POST" action="/challenge/topic/${challenge.id}/accept-challenge">
-            <button type="submit" class="btn btn-success">Accept Challenge</button>
-        </form>`;
-    } else {
-        const userPost = userPosts[0];
+    // Default action for users who have not yet accepted or whose last action has been abandoned
+    actionHtml = `<form method="POST" action="/challenge/topic/${challenge.id}/accept-challenge">
+        <button type="submit" class="btn btn-success">Accept Challenge</button>
+    </form>`;
+
+    // If there are user posts, evaluate the latest post's status
+    if (userPosts.length > 0) {
+        const userPost = userPosts[0]; // Assume the latest post is relevant
+
         if (userPost.status === 'active') {
             actionHtml = `
                 <form action="/challenge/topic/${userPost.topic_id}/complete-challenge" method="POST" style="display:inline-block;">
