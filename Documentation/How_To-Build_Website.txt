@@ -1,6 +1,33 @@
 1. Create a "Cloudflare Pages" project and connect a Git repository to it.
 
-2. Ensure the following settings are set for the project to successfully build.
+2. Create a Cloudflare D1 database called "coolfrog-forum".
+
+Run the following SQL:
+
+```sql
+CREATE TABLE topics
+(
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    username TEXT NOT NULL,
+    created_at TIMESTAMP
+        DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts
+(
+    id TEXT PRIMARY KEY,
+    topic_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    post_date TIMESTAMP
+        DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
+);
+```
+
+3. Ensure the following settings are set for the project to successfully build.
 
 Custom domains:
 coolfrog.net
@@ -23,10 +50,14 @@ Variable name		KV namespace
 COOLFROG_EMAILS		coolfrog.emails
 COOLFROG_SESSIONS	coolfrog.sessions
 COOLFROG_USERS		coolfrog.users
-COOLFROG_FORUM		coolfrog.forum
 
-3. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
+D1 database bindings:
+Variable name		D1 database
+--------------------------------------------
+COOLFROG_FORUM		coolfrog-forum
 
-4. If you have defined any node.js APIs, you must use the "node:" prefix. (Do not do this for npm packages).
+4. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
+
+5. If you have defined any node.js APIs, you must use the "node:" prefix. (Do not do this for npm packages).
 	DO THIS ---->	import { pbkdf2Sync } from 'node:crypto';
 	NOT THIS ---->	import { pbkdf2Sync } from 'crypto';
