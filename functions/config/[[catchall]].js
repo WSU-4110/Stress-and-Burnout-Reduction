@@ -36,9 +36,17 @@ export async function onRequestPost({ request, env }) {
         const pronouns = formData.get('pronouns').trim();
         const givenNames = formData.get('given_names').trim();
         const lastName = formData.get('last_name').trim();
+
+        if (!givenNames || !lastName) {
+            return new Response("Both Given Names and Last Name are required.", { status: 400 });
+        }
+
         return updateProfile(pronouns, givenNames, lastName, session.username, env);
     } else if (url.pathname.startsWith("/config/add-email")) {
         const email = formData.get('email').trim();
+        if (await env.COOLFROG_EMAILS.get(email)) {
+            return new Response("This email is already in use.", { status: 400 });
+        }
         return addEmail(email, session.username, env);
     } else if (url.pathname.startsWith("/config/remove-email/")) {
         const email = url.pathname.split('/')[3];
@@ -101,11 +109,11 @@ async function renderProfilePage(username, env) {
                     </div>
                     <div class="mb-3">
                         <label for="given_names" class="form-label">Given Names</label>
-                        <input type="text" class="form-control" id="given_names" name="given_names" value="${user.given_names}">
+                        <input type="text" class="form-control" id="given_names" name="given_names" value="${user.given_names}" required>
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="${user.last_name}">
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="${user.last_name}" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
                 </form>
@@ -126,7 +134,7 @@ async function renderEmailsPage(username, env) {
             <td>${email.verified ? 'Verified' : 'Not Verified'}</td>
             <td>
                 <form action="/config/remove-email/${email.email}" method="post">
-                    <button type="submit" class="btn btn-danger">Remove</button>
+                    <button type="submit" class="btn btn-danger" ${user.emails.length <= 1 ? "disabled" : ""}>Remove</button>
                 </form>
             </td>
         </tr>
@@ -236,7 +244,10 @@ async function addEmail(email, username, env) {
 }
 
 async function removeEmail(email, username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+     let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+    if (user.emails.length <= 1) {
+        return new Response("Cannot remove the last email. At least one email must be associated with the account.", { status: 400 });
+    }
     user.emails = user.emails.filter(e => e.email !== email);
     await env.COOLFROG_USERS.put(username, JSON.stringify(user));
     await env.COOLFROG_EMAILS.delete(email);
