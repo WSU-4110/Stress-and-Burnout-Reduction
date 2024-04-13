@@ -55,13 +55,13 @@ let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(pos
     <tr>
         <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.topic_title}</a></td>
         <td style="width: 30%;">
-            <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
+            <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post" style="display: inline-block; margin-right: 10px;">
                 <input type="hidden" name="post_id" value="${post.id}">
-                <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
             </form>
-            <form action="/challenge/topic/${post.topic_id}/abandon-challenge" method="post">
+            <form action="/challenge/topic/${post.topic_id}/abandon-challenge" method="post" style="display: inline-block;">
                 <input type="hidden" name="post_id" value="${post.id}">
-                <button type="submit" class="btn btn-danger btn-sm">Abandon</button>
+                <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
             </form>
         </td>
     </tr>
