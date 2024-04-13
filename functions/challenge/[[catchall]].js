@@ -53,7 +53,7 @@ async function renderChallengesPage(username, env) {
 
     let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
         <tr>
-            <td style="width: 60%;"><a href="/challenge/topic/${post.topic_id}">${topic.title}</a></td>
+            <td style="width: 60%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
             <td style="width: 40%;">
                 <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
                     <input type="hidden" name="post_id" value="${post.id}">
@@ -69,7 +69,7 @@ async function renderChallengesPage(username, env) {
 
     let completedTasksHtml = userPosts.filter(post => post.status === 'completed').map(post => `
         <tr>
-            <td style="width: 60%;"><a href="/challenge/topic/${post.topic_id}">${topic.title}</a></td>
+            <td style="width: 60%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
             <td style="width: 40%;">Completed</td>
         </tr>`
     ).join('');
