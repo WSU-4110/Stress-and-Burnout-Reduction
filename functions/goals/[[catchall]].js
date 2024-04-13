@@ -1,10 +1,18 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
+  const sessionCookie = getSessionCookie(request);
+  let session;
+
+  if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    return unauthorizedResponse();
+  }
 
   const view = url.searchParams.get('view') || 'default';
   const categoryId = url.searchParams.get('category_id');
   const selectedDate = url.searchParams.get('date') || new Date().toISOString().split('T')[0];
-  const page = await renderPage(view, categoryId, selectedDate, env);
+  const page = await renderPage(view, categoryId, selectedDate, env, session.username);
   
   return new Response(page, { headers: { 'Content-Type': 'text/html' } });
 }
@@ -12,18 +20,24 @@ export async function onRequestGet({ request, env }) {
 export async function onRequestPost({ request, env }) {
   const url = new URL(request.url);
   const formData = await request.formData();
+  const sessionCookie = getSessionCookie(request);
+  let session;
+
+  if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    return unauthorizedResponse();
+  }
 
   try {
     if (url.pathname.endsWith('/add-task')) {
-      await addTask(formData, env);
+      await addTask(formData, env, session.username);
     } else if (url.pathname.includes('/update-task/')) {
       const id = url.pathname.split('/').pop();
-      await updateTask(id, formData, env);
+      await updateTask(id, formData, env, session.username);
     } else if (url.pathname.endsWith('/add-category')) {
-      await addCategory(formData, env);
+      await addCategory(formData, env, session.username);
     } else if (url.pathname.includes('/update-category/')) {
       const id = url.pathname.split('/').pop();
-      await updateCategory(id, formData, env);
+      await updateCategory(id, formData, env, session.username);
     }
     return new Response(null, { status: 303, headers: { 'Location': url.origin + '/goals' } });
   } catch (e) {
@@ -33,17 +47,23 @@ export async function onRequestPost({ request, env }) {
 
 export async function onRequestDelete({ request, env }) {
   const url = new URL(request.url);
+  const sessionCookie = getSessionCookie(request);
+  let session;
+
+  if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    return unauthorizedResponse();
+  }
 
   try {
     if (url.pathname.includes('/delete-task/')) {
       const id = url.pathname.split('/').pop();
-      await deleteTask(id, env);
+      await deleteTask(id, env, session.username);
     } else if (url.pathname.includes('/delete-category/')) {
       const id = url.pathname.split('/').pop();
-      await deleteCategory(id, env);
+      await deleteCategory(id, env, session.username);
     } else if (url.pathname.includes('/reset-category/')) {
       const id = url.pathname.split('/').pop();
-      await resetCategory(id, env);
+      await resetCategory(id, env, session.username);
     }
     return new Response(null, { status: 204 });
   } catch (e) {
@@ -51,49 +71,45 @@ export async function onRequestDelete({ request, env }) {
   }
 }
 
-async function renderPage(view, categoryId, selectedDate, env) {
-  const tasks = await getTasks(view, categoryId, selectedDate, env);
-  const categories = await getAllCategories(env);
+async function renderPage(view, categoryId, selectedDate, env, username) {
+  const tasks = await getTasks(view, categoryId, selectedDate, env, username);
+  const categories = await getAllCategories(env, username);
 
   let categoriesOptions = '<option value="">None</option>';
   categories.forEach(category => {
     categoriesOptions += `<option value="${category.id}">${category.name}</option>`;
   });
 
-  let tasksRows = tasks
-    .map(task => {
-      return `
-          <tr>
-              <td><input type="text" class="form-control" value="${task.description}" name="description" form="update-form-${task.id}" required/></td>
-              <td><input type="datetime-local" class="form-control" value="${task.due_date}" name="due_date" form="update-form-${task.id}" required/></td>
-              <td><select class="form-select" form="update-form-${task.id}" name="category_id">${categoriesOptions.replace(`value="${task.category_id}"`, `value="${task.category_id}" selected`)}</select></td>
-              <td><input type="number" class="form-control" min="1" max="4" value="${task.priority_level || ''}" name="priority_level" form="update-form-${task.id}"/></td>
-              <td><select class="form-select" form="update-form-${task.id}" name="status" required>
-                  <option value="active" ${task.status === 'active' ? 'selected' : ''}>Active</option>
-                  <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
-              </select></td>
-              <td><button class="btn btn-info" form="update-form-${task.id}" type="submit">Update</button></td>
-              <td><button class="btn btn-danger" onclick="deleteTask(${task.id})">Delete</button></td>
-          </tr>
-          <form id="update-form-${task.id}" method="post" action="/goals/update-task/${task.id}" style="display:none;"></form>
-      `;
-    })
-    .join('');
+  let tasksRows = tasks.map(task => {
+    return `
+        <tr>
+            <td><input type="text" class="form-control" value="${task.description}" name="description" form="update-form-${task.id}" required/></td>
+            <td><input type="datetime-local" class="form-control" value="${task.due_date}" name="due_date" form="update-form-${task.id}" required/></td>
+            <td><select class="form-select" form="update-form-${task.id}" name="category_id">${categoriesOptions.replace(`value="${task.category_id}"`, `value="${task.category_id}" selected`)}</select></td>
+            <td><input type="number" class="form-control" min="1" max="4" value="${task.priority_level || ''}" name="priority_level" form="update-form-${task.id}"/></td>
+            <td><select class="form-select" form="update-form-${task.id}" name="status" required>
+                <option value="active" ${task.status === 'active' ? 'selected' : ''}>Active</option>
+                <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+            </select></td>
+            <td><button class="btn btn-info" form="update-form-${task.id}" type="submit">Update</button></td>
+            <td><button class="btn btn-danger" onclick="deleteTask(${task.id})">Delete</button></td>
+        </tr>
+        <form id="update-form-${task.id}" method="post" action="/goals/update-task/${task.id}" style="display:none;"></form>
+    `;
+  }).join('');
 
-  let categoriesRows = categories
-    .map(category => {
-      return `<tr>
-          <td><input type="text" class="form-control" value="${category.name}" name="name" form="update-category-form-${category.id}" required/></td>
-          <td>
-              <button class="btn btn-success" form="update-category-form-${category.id}" type="submit">Update</button>
-              <button class="btn btn-secondary" onclick="setView('category', ${category.id})" class="${view === 'category' && category.id === categoryId ? 'btn-danger' : 'btn-primary'} view-btn">Sort By</button>
-              <button class="btn btn-warning" onclick="resetCategory(${category.id})">Reset</button>
-              <button class="btn btn-danger" onclick="deleteCategory(${category.id})">Delete</button>
-          </td>
-          <form id="update-category-form-${category.id}" method="post" action="/goals/update-category/${category.id}" style="display:none;"></form>
-      </tr>`;
-    })
-    .join('');
+  let categoriesRows = categories.map(category => {
+    return `<tr>
+        <td><input type="text" class="form-control" value="${category.name}" name="name" form="update-category-form-${category.id}" required/></td>
+        <td>
+            <button class="btn btn-success" form="update-category-form-${category.id}" type="submit">Update</button>
+            <button class="btn btn-secondary" onclick="setView('category', ${category.id})" class="${view === 'category' && category.id === categoryId ? 'btn-danger' : 'btn-primary'} view-btn">Sort By</button>
+            <button class="btn btn-warning" onclick="resetCategory(${category.id})">Reset</button>
+            <button class="btn btn-danger" onclick="deleteCategory(${category.id})">Delete</button>
+        </td>
+        <form id="update-category-form-${category.id}" method="post" action="/goals/update-category/${category.id}" style="display:none;"></form>
+    </tr>`;
+  }).join('');
 
   return `
 <!DOCTYPE html>
@@ -248,77 +264,93 @@ async function renderPage(view, categoryId, selectedDate, env) {
 </html>`;
 }
 
-async function getTasks(view, categoryId, selectedDate, env) {
+async function getTasks(view, categoryId, selectedDate, env, username) {
   let stmt;
-  const today = new Date().toISOString().split('T')[0];  // Keeping only the date part, time is ignored
+  const today = new Date().toISOString().split('T')[0];
+
   if (view === 'default') {
-    // Modify the query to compare only the date parts; time is irrelevant for the comparison
-    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE DATE(due_date) <= ? AND status = 'active' ORDER BY priority_level IS NULL, priority_level`);
-    return (await stmt.bind(today).all()).results;
-  } else if (view === 'category' && categoryId) {
-    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE category_id = ? ORDER BY priority_level IS NULL, priority_level, due_date`);
-    return (await stmt.bind(categoryId).all()).results;
-  } else if (view === 'completed' && selectedDate) {
-    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE status = 'completed' AND DATE(due_date) = ? ORDER BY due_date`);
-    return (await stmt.bind(selectedDate).all()).results;
-  } else {  // 'everything' view and others default to showing all tasks
-    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks ORDER BY due_date, priority_level`);
-    return (await stmt.all()).results;
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE DATE(due_date) <= ? AND status = 'active' AND username = ? ORDER BY priority_level IS NULL, priority_level`);
+    return (await stmt.bind(today, username).all()).results;
   }
+  if (view === 'category' && categoryId) {
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE category_id = ? AND username = ? ORDER BY priority_level IS NULL, priority_level, due_date`);
+    return (await stmt.bind(categoryId, username).all()).results;
+  }
+  if (view === 'completed' && selectedDate) {
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE status = 'completed' AND DATE(due_date) = ? AND username = ? ORDER BY due_date`);
+    return (await stmt.bind(selectedDate, username).all()).results;
+  }
+  
+  // Default to 'everything' view
+  stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE username = ? ORDER BY due_date, priority_level`);
+  return (await stmt.bind(username).all()).results;
 }
 
-async function getAllCategories(env) {
-  const stmt = env.COOLFROG_GOALS.prepare('SELECT * FROM categories ORDER BY name');
-  return (await stmt.all()).results;
+async function getAllCategories(env, username) {
+  const stmt = env.COOLFROG_GOALS.prepare('SELECT * FROM categories WHERE username = ? ORDER BY name');
+  return (await stmt.bind(username).all()).results;
 }
 
-async function addTask(formData, env) {
+async function addTask(formData, env, username) {
   const description = formData.get('description');
   const due_date = formData.get('due_date');
   const category_id = formData.get('category_id') || null;
   const priority_level = formData.get('priority_level') || null;
   const status = formData.get('status');
-  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO tasks (description, due_date, category_id, priority_level, status) VALUES (?, ?, ?, ?, ?)');
-  await stmt.bind(description, due_date, category_id, priority_level, status).run();
+  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO tasks (description, due_date, category_id, priority_level, status, username) VALUES (?, ?, ?, ?, ?, ?)');
+  await stmt.bind(description, due_date, category_id, priority_level, status, username).run();
 }
 
-async function addCategory(formData, env) {
+async function addCategory(formData, env, username) {
   const name = formData.get('name');
-  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO categories (name) VALUES (?)');
-  await stmt.bind(name).run();
+  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO categories (name, username) VALUES (?, ?)');
+  await stmt.bind(name, username).run();
 }
 
-async function deleteTask(id, env) {
-  const stmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE id = ?`);
-  await stmt.bind(id).run();
+async function deleteTask(id, env, username) {
+  const stmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE id = ? AND username = ?`);
+  await stmt.bind(id, username).run();
 }
 
-async function updateTask(id, formData, env) {
+async function updateTask(id, formData, env, username) {
   const description = formData.get('description');
   const due_date = formData.get('due_date');
   const category_id = formData.get('category_id') || null;
   const priority_level = formData.get('priority_level') || null;
   const status = formData.get('status');
-  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE tasks SET description = ?, due_date = ?, category_id = ?, priority_level = ?, status = ? WHERE id = ?`);
-  await stmt.bind(description, due_date, category_id, priority_level, status, id).run();
+  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE tasks SET description = ?, due_date = ?, category_id = ?, priority_level = ?, status = ? WHERE id = ? AND username = ?`);
+  await stmt.bind(description, due_date, category_id, priority_level, status, id, username).run();
 }
 
-async function updateCategory(id, formData, env) {
+async function updateCategory(id, formData, env, username) {
   const name = formData.get('name');
-  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE categories SET name = ? WHERE id = ?`);
-  await stmt.bind(name, id).run();
+  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE categories SET name = ? WHERE id = ? AND username = ?`);
+  await stmt.bind(name, id, username).run();
 }
 
-async function resetCategory(id, env) {
-  const stmt = env.COOLFROG_GOALS.prepare('UPDATE tasks SET category_id = NULL WHERE category_id = ?');
-  await stmt.bind(id).run();
+async function resetCategory(id, env, username) {
+  // This function nullifies the category_id in tasks, impacting only those associated with a particular category for the signed-in user
+  const stmt = env.COOLFROG_GOALS.prepare('UPDATE tasks SET category_id = NULL WHERE category_id = ? AND username = ?');
+  await stmt.bind(id, username).run();
 }
 
-async function deleteCategory(id, env) {
-  // Delete tasks in the category first
-  const deleteTasksStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE category_id = ?`);
-  await deleteTasksStmt.bind(id).run();
-  // Then delete the category
-  const deleteCategoryStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM categories WHERE id = ?`);
-  await deleteCategoryStmt.bind(id).run();
+async function deleteCategory(id, env, username) {
+  // Before deleting the category, optionally (if needed for application logic) delete or reset associated tasks
+  const deleteTasksStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE category_id = ? AND username = ?`);
+  await deleteTasksStmt.bind(id, username).run();
+
+  // Then delete the category itself, ensuring the operation is scoped to this user
+  const deleteCategoryStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM categories WHERE id = ? AND username = ?`);
+  await deleteCategoryStmt.bind(id, username).run();
+}
+
+function getSessionCookie(request) {
+  const cookieHeader = request.headers.get('Cookie');
+  if (!cookieHeader) return null;
+  const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+  return Object.fromEntries(cookies)['session-id'];
+}
+
+function unauthorizedResponse() {
+  return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
 }
