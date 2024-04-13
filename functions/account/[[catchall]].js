@@ -62,6 +62,14 @@ async function renderAccountPage(username, env) {
                     </tr>
                 </tbody>
             </table>
+			
+			<div class="mt-4">
+                <a href="/challenge" class="btn btn-primary btn-lg btn-block">User Created Challenges</a>
+                <a href="/config" class="btn btn-secondary btn-lg btn-block">Account Config</a>
+                <a href="/leaderboard" class="btn btn-info btn-lg btn-block">Login Streak Leaderboard</a>
+                <a href="/goals" class="btn btn-success btn-lg btn-block">Goal Tracker</a>
+            </div>
+			
         </div>
         </body>
         </html>
