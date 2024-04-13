@@ -142,7 +142,7 @@ async function renderForumsPage(username, env) {
                 if (data.username) {
                     leftButton.textContent = 'Account';
                     leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.textContent = 'Sign Out of ${data.username}';
                     rightButton.onclick = function () { window.location.href = '/signout'; };
                 } else {
                     leftButton.textContent = 'Sign Up';
@@ -270,7 +270,7 @@ async function renderTopicPage(topicId, username, env) {
                 if (data.username) {
                     leftButton.textContent = 'Account';
                     leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.textContent = 'Sign Out of ${data.username}';
                     rightButton.onclick = function () { window.location.href = '/signout'; };
                 } else {
                     leftButton.textContent = 'Sign Up';
