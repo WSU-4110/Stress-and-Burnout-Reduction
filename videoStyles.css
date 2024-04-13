@@ -6,7 +6,6 @@ body, html {
   background-color: black;
 }
 
-
 .like-btn {
   background-color: #000000; /* Bootstrap primary color */
   color: white;
@@ -26,65 +25,11 @@ body, html {
   background-color: #28a745; /* Bootstrap success color */
 }
 
-
 .library-title {
     text-align: center;
     margin-top: 20px;
     font-size: 28px;
     color: white;
-}
-
-
-/* Navigation bar styles */
-.navbar {
-  background-color: black;
-  overflow: hidden;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  font-family: Arial; 
-  margin: 0 auto; /* Center the navbar horizontally */
-  text-align: center; /* Center the text inside navbar */
-}
-
-.navbar a {
-  text-align: center;
-    height: 65px;
-    line-height: 65px;
-    padding: 10px 15px;
-    color: #a1a1a1;
-    background-color: black;
-    font-size: 14px;
-    letter-spacing: 2px;
-    font-weight: 400;
-    text-transform: uppercase;
-    text-decoration: none;
-}
-
-.navbar a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-/* styling for user login and sign up buttons*/
-.user-button-container {
-  text-align: right;
-  padding-right: 20px;
-  padding-top: 80px;
-}
-
-.user-button-container button {
-  color: #a1a1a1;
-  background-color: black;
-  border: 1px solid #a1a1a1;
-  font-family: 'Arial', sans-serif; 
-  font-size: 16px; 
-  padding: 10px 20px; 
-}
-
-.user-button-container button:hover {
-  background-color: #a1a1a1;
-  color: black;
 }
 
 /* Main content container */
