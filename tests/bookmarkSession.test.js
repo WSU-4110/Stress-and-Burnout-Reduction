@@ -1,12 +1,12 @@
 //unit test for bookmarkSession method
 // Mocking the required file and methods
 
-jest.mock('./MeditationSession', () => ({
+jest.mock('../MeditationSession', () => ({
     unbookmarkSession: jest.fn()
 }));
 
 
-const { unbookmarkSession } = require('./MeditationSession');
+const { unbookmarkSession } = require('../MeditationSession');
 
 describe('unbookmarkSession function', () => {
     test('should call unbookmarkSession function', () => {
