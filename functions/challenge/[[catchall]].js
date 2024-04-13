@@ -51,28 +51,29 @@ async function renderChallengesPage(username, env) {
     let topics = await fetchTopics(env);
     let userPosts = await fetchPostsForUser(username, env);
 
-    let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
-        <tr>
-            <td style="width: 60%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
-            <td style="width: 40%;">
-                <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
-                    <input type="hidden" name="post_id" value="${post.id}">
-                    <button type="submit" class="btn btn-success btn-sm">Complete</button>
-                </form>
-                <form action="/challenge/topic/${post.topic_id}/abandon-challenge" method="post">
-                    <input type="hidden" name="post_id" value="${post.id}">
-                    <button type="submit" class="btn btn-danger btn-sm">Abandon</button>
-                </form>
-            </td>
-        </tr>`
-    ).join('');
+let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
+    <tr>
+        <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.topic_title}</a></td>
+        <td style="width: 30%;">
+            <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
+                <input type="hidden" name="post_id" value="${post.id}">
+                <button type="submit" class="btn btn-success btn-sm">Complete</button>
+            </form>
+            <form action="/challenge/topic/${post.topic_id}/abandon-challenge" method="post">
+                <input type="hidden" name="post_id" value="${post.id}">
+                <button type="submit" class="btn btn-danger btn-sm">Abandon</button>
+            </form>
+        </td>
+    </tr>
+`).join('');
 
-    let completedTasksHtml = userPosts.filter(post => post.status === 'completed').map(post => `
-        <tr>
-            <td style="width: 60%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
-            <td style="width: 40%;">Completed</td>
-        </tr>`
-    ).join('');
+let completedTasksHtml = userPosts.filter(post => post.status === 'completed').map(post => `
+    <tr>
+        <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.topic_title}</a></td>
+        <td style="width: 30%;">Completed</td>
+    </tr>
+`).join('');
+
 
     const topicsHtml = topics.map(topic => `
         <tr>
@@ -236,9 +237,16 @@ async function fetchPostsForTopic(topicId, env) {
 }
 
 async function fetchPostsForUser(username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, title, status FROM posts WHERE username = ? ORDER BY post_date DESC");
+    const stmt = env.COOLFROG_CHALLENGES.prepare(`
+        SELECT p.id, p.topic_id, p.title as post_title, t.title as topic_title, p.status 
+        FROM posts p 
+        INNER JOIN topics t ON p.topic_id = t.id 
+        WHERE p.username = ? 
+        ORDER BY p.post_date DESC
+    `);
     return (await stmt.bind(username).all()).results;
 }
+
 
 function getSessionCookie(request) {
     const cookieHeader = request.headers.get('Cookie');
