@@ -2,7 +2,6 @@
   "name": "stress-and-burnout-reduction",
   "version": "1.0.0",
   "description": "Group Members:\r Deboshree Chowdhury,\r Ali Mehaidli,\r Jesse Naser,\r Carlos Nunez,\r Noah Mousseau",
-  "main": "dashboard.js",
   "dependencies": {
     "abab": "^2.0.6",
     "acorn": "^8.11.3",
