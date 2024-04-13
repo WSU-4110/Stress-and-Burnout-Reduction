@@ -35,14 +35,9 @@ export async function onRequestPost({ request, env }) {
     } else if (url.pathname.startsWith("/challenge/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
         return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname.startsWith("/challenge/topic/") && !url.pathname.endsWith('/add-post')) {
+    } else if (url.pathname.includes('/add-post')) {
         const topicId = url.pathname.split('/')[3];
-        const status = formData.get('status');
-        return updateChallengeStatus(topicId, session.username, status, env);
-    } else if (url.pathname.endsWith('/add-post')) {
-        const topicId = url.pathname.split('/')[3];
-        const status = 'active';
-        return addPost(status, topicId, session.username, env);
+        return addPost('active', topicId, session.username, env);
     }
 
     return new Response("Bad Request", { status: 400 });
@@ -164,8 +159,8 @@ async function updateChallengeStatus(topicId, username, status, env) {
 }
 
 async function addPost(status, topicId, username, env) {
-    const postTitle = username + " has " + (status === 'active' ? 'accepted the challenge' : (status === 'completed' ? 'completed the challenge' : 'abandoned the challenge'));
-    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, title, status, topic_id, username) VALUES (?, ?, ?, ?, ?)");
+    const postTitle = username + " has accepted the challenge";
+    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts ("id", "title", "status", "topic_id", "username") VALUES (?, ?, ?, ?, ?)");
     await stmt.bind(uuidv4(), postTitle, status, topicId, username).run();
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
