@@ -93,19 +93,19 @@ async function renderForumsPage(username, env) {
 }
 
 async function addTopic(title, username, env) {
-    const stmt = env.FORUM_DB.prepare("INSERT INTO topics (title, username) VALUES (?, ?)");
+    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (title, username) VALUES (?, ?)");
     await stmt.bind(title, username).run();
     return new Response(null, { status: 303, headers: { 'Location': '/forums' } });
 }
 
 async function deleteTopic(topicId, username, env) {
-    const stmt = env.FORUM_DB.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
     await stmt.bind(topicId, username).run();
     return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
-    const stmt = env.FORUM_DB.prepare("SELECT id, title, username FROM topics");
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics");
     return (await stmt.all()).results;
 }
 
