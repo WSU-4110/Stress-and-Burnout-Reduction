@@ -1,6 +1,6 @@
 1. Create a "Cloudflare Pages" project and connect a Git repository to it.
 
-2. Create a Cloudflare D1 database called "coolfrog-forum".
+2a. Create a Cloudflare D1 database called "coolfrog-forum".
 
 Run the following SQL:
 
@@ -25,6 +25,13 @@ CREATE TABLE posts
         DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
 );
+```
+
+2b. Create a Cloudflare D1 database called "coolfrog-goals".
+
+Run the following SQL:
+
+```sql
 ```
 
 3. Ensure the following settings are set for the project to successfully build.
@@ -55,6 +62,7 @@ D1 database bindings:
 Variable name		D1 database
 --------------------------------------------
 COOLFROG_FORUM		coolfrog-forum
+COOLFROG_GOALS		coolfrog-goals
 
 4. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
 
