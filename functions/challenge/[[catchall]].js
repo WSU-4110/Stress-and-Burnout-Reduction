@@ -122,7 +122,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale-1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Challenges in ${topic.title}</title>
         </head>
@@ -152,15 +152,9 @@ async function deleteTopic(topicId, username, env) {
     return new Response(null, { status: 204 });
 }
 
-async function updateChallengeStatus(topicId, username, status, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET status = ?, post_date = CURRENT_TIMESTAMP WHERE topic_id = ? AND username = ?");
-    await stmt.bind(status, topicId, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
-}
-
 async function addPost(status, topicId, username, env) {
     const postTitle = username + " has accepted the challenge";
-    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts ("id", "title", "status", "topic_id", "username") VALUES (?, ?, ?, ?, ?)");
+    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, title, status, topic_id, username) VALUES (?, ?, ?, ?, ?)");
     await stmt.bind(uuidv4(), postTitle, status, topicId, username).run();
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
