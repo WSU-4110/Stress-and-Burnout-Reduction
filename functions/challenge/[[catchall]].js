@@ -35,7 +35,7 @@ export async function onRequestPost({ request, env }) {
     } else if (url.pathname.startsWith("/challenge/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
         return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname.includes('/add-post')) {
+    } else if (url.pathname.match(/\/challenge\/topic\/([^\/]+)\/add-post$/)) {
         const topicId = url.pathname.split('/')[3];
         return addPost('active', topicId, session.username, env);
     }
@@ -91,31 +91,21 @@ async function renderChallengePage(username, env) {
 async function renderChallengeTopicPage(topicId, username, env) {
     let topic = (await fetchTopicById(topicId, env))[0];
     let posts = await fetchPostsForTopic(topicId, env);
+    const hasActiveOrCompletedPost = posts.some(post => post.username === username && (post.status === 'active' || post.status === 'completed'));
 
     const postsHtml = posts.map(post => `
         <div class="card mb-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>${post.title}</span>
-                ${username === post.username && post.status === 'active' ? `<form action="/challenge/topic/${topicId}/update-status" method="post" class="mb-0">
-                    <input type="hidden" name="status" value="completed">
-                    <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
-                </form>
-                <form action="/challenge/topic/${topicId}/update-status" method="post" class="mb-0">
-                    <input type="hidden" name="status" value="abandoned">
-                    <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
-                </form>` : ''}
+            <div class="card-header">${post.username} has ${post.status} the challenge</div>
+            <div class="card-body">
+                ${post.status === 'active' ? `<button onclick="completeChallenge('${topicId}', '${post.id}');" class="btn btn-success">Complete Challenge</button>
+                <button onclick="abandonChallenge('${topicId}', '${post.id}');" class="btn btn-danger">Abandon Challenge</button>` : ''}
             </div>
-            <div class="card-footer text-muted">
-                ${new Date(post.post_date).toLocaleString()}
-            </div>
-        </div>
-    `).join('');
+            <div class="card-footer">${new Date(post.post_date).toLocaleString()}</div>
+        </div>`).join('');
 
-    const acceptChallengeButton = posts.find(post => post.username === username && post.status !== 'abandoned') ? '' : `
-        <form method="post" action="/challenge/topic/${topicId}/add-post">
-            <button type="submit" class="btn btn-success">Accept the Challenge</button>
-        </form>
-    `;
+    const acceptChallengeHtml = !hasActiveOrCompletedPost ? `<form method="post" action="/challenge/topic/${topicId}/add-post">
+    <button type="submit" class="btn btn-success">Accept the Challenge</button>
+    </form>` : '';
 
     const pageHtml = `
         <!DOCTYPE html>
@@ -131,7 +121,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
                 <h1>${topic.title}</h1>
                 <a href="/challenge" class="btn btn-primary mb-3">Back to Challenges</a>
                 ${postsHtml}
-                ${acceptChallengeButton}
+                ${acceptChallengeHtml}
             </div>
         </body>
         </html>
