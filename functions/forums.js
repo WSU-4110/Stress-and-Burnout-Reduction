@@ -8,7 +8,12 @@ export default {
 
 async function handleRequest(request, env, url) {
     const sessionId = getSessionIdFromRequest(request);
-    
+
+    // Ensure request is directed to /forums or its subpaths
+    if (!url.pathname.startsWith("/forums")) {
+        return new Response("Not found", { status: 404 });
+    }
+
     if (!sessionId) {
         return Response.redirect(`${url.origin}/login`, 302);
     }
@@ -18,13 +23,15 @@ async function handleRequest(request, env, url) {
         return mustSignInPage();
     }
 
-    if (request.method === 'POST') {
+    if (request.method === 'POST' && url.pathname === "/forums") {
         return await handlePostRequest(request, env);
-    } else if (request.method === 'DELETE' && url.pathname.startsWith('/delete-topic/')) {
-        const topicId = url.pathname.split('/')[2];
+    } else if (request.method === 'DELETE' && url.pathname.startsWith("/forums/delete-topic/")) {
+        const topicId = url.pathname.split('/')[3];
         return await handleDeleteTopic(topicId, env, JSON.parse(session).username);
-    } else {
+    } else if (url.pathname === "/forums") {
         return await renderForumPage(env, JSON.parse(session).username);
+    } else {
+        return new Response("Not found", { status: 404 });
     }
 }
 
@@ -38,7 +45,7 @@ async function handlePostRequest(request, env) {
         await stmt.bind(topicTitle, username).run();
     }
     
-    return Response.redirect(new URL(request.url).origin);
+    return Response.redirect(`${new URL(request.url).origin}/forums`);
 }
 
 async function handleDeleteTopic(topicId, env, username) {
@@ -61,7 +68,7 @@ function getSessionIdFromRequest(request) {
 }
 
 function mustSignInPage() {
-    return new Response(`<html><body><h1>You must be signed in to view this page.</h1></body></html>`, { headers: { 'Content-Type': 'text/html' } });
+    return new Response(`<html><body><h1>You must be signed in to view the forum.</h1></body></html>`, { headers: { 'Content-Type': 'text/html' } });
 }
 
 async function renderForumPage(env, username) {
@@ -71,7 +78,7 @@ async function renderForumPage(env, username) {
     let topicsHtml = topics.map(topic => {
         let actions = `<div>Posted by: ${topic.createdBy}</div>`;
         if (topic.createdBy === username) {
-            actions += `<button onclick="fetch('/delete-topic/${topic.id}', { method: 'DELETE' }).then(() => location.reload())">Delete</button>`;
+            actions += `<button onclick="fetch('/forums/delete-topic/${topic.id}', { method: 'DELETE' }).then(() => location.reload())">Delete</button>`;
         }
         return `<li>${topic.title} - ${actions}</li>`;
     }).join('');
@@ -87,7 +94,7 @@ async function renderForumPage(env, username) {
         <div class="container">
             <h1>Forum Topics</h1>
             <ul>${topicsHtml}</ul>
-            <form method="POST">
+            <form method="POST" action="/forums">
                 <input type="text" name="title" placeholder="New Topic Title" required/>
                 <input type="hidden" name="username" value="${username}"/>
                 <button type="submit">Add Topic</button>
