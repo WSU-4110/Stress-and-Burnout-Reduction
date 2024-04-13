@@ -43,11 +43,12 @@ async function renderDashboardPage(username, env) {
         <body>
         <div class="container mt-5">
             <h1>Dashboard</h1>
-            <table class="table table-hover">
+            <table class="table table-hover" style="table-layout: fixed;">
                 <thead>
                     <tr>
+                        <th style="width: 20%;">Challenge Type</th>
                         <th>Challenge Title</th>
-                        <th>Action</th>
+                        <th style="width: 30%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
