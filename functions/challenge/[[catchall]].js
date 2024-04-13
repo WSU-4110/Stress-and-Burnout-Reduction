@@ -92,7 +92,7 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Challenge Page</title>
+            <title>User Created Challenges</title>
     <style>
         body {
             padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
@@ -156,8 +156,8 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
             </div>
         </div>
             <div class="container mt-4">
-                <h1>Challenge Topics</h1>
-                <h2>Your Active Tasks</h2>
+                <h1>User Created Challenges</h1>
+                <h2>Your Active Challenges</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -167,7 +167,7 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
                     </thead>
                     <tbody>${activeTasksHtml}</tbody>
                 </table>
-                <h2>Your Completed Tasks</h2>
+                <h2>Your Completed Challenges</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -177,7 +177,7 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
                     </thead>
                     <tbody>${completedTasksHtml}</tbody>
                 </table>
-                <h2>All Topics</h2>
+                <h2>All Challenges</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
