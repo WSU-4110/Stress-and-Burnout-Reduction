@@ -1,14 +1,14 @@
 //using jest mock 
 //unit test for formatTime function
 
-jest.mock('./MeditationSession', () => {
+jest.mock('../MeditationSession', () => {
     return {
         formatTime: jest.fn(),
     };
 });
 //path is from MeditationSession.js
 
-const { formatTime } = require('./MeditationSession');
+const { formatTime } = require('../MeditationSession');
 
 
 //three unit test scenerios for this function, and all passed successfully.
