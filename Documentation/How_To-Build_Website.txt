@@ -99,6 +99,7 @@ Variable name		KV namespace
 COOLFROG_EMAILS		coolfrog.emails
 COOLFROG_SESSIONS	coolfrog.sessions
 COOLFROG_USERS		coolfrog.users
+COOLFROG_LEADERBOARD	coolfrog.leaderboard
 
 D1 database bindings:
 Variable name		D1 database
