@@ -242,6 +242,7 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
             </div>
         </div>
     </header>
+    <div class="container mt-5">
         <div class="row justify-content-end">
             <div class="col-auto">
                 <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
