@@ -98,8 +98,8 @@ const topicsHtml = topics.map(topic => `
         <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="coolfrog.png" alt="logo">
+            <a class="navbar-brand" href="/index.html">
+                <img src="/coolfrog.png" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,17 +107,17 @@ const topicsHtml = topics.map(topic => `
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="article_library.html">Article Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="relaxation-sounds.html">Relaxation Sounds Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="MeditationSession.html">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="timersPage.html">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Progress Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
                 </ul>
             </div>
         </div>
@@ -239,32 +239,32 @@ async function renderTopicPage(topicId, username, env) {
             </script>
         </head>
         <body>
-            <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container">
-                    <a class="navbar-brand" href="#">
-                        <img src="coolfrog.png" alt="logo">
-                    </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="forums">Forums</a></li>
-                            <li class="nav-item"><a class="nav-link" href="meetup.html">Meetup Forum</a></li>
-                            <li class="nav-item"><a class="nav-link" href="videopage.html">Video Library</a></li>
-                            <li class="nav-item"><a class="nav-link" href="article_library.html">Article Library</a></li>
-                            <li class="nav-item"><a class="nav-link" href="DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                            <li class="nav-item"><a class="nav-link" href="relaxation-sounds.html">Relaxation Sounds Library</a></li>
-                            <li class="nav-item"><a class="nav-link" href="MeditationSession.html">Meditation Sessions</a></li>
-                            <li class="nav-item"><a class="nav-link" href="timersPage.html">Timers</a></li>
-                            <li class="nav-item"><a class="nav-link" href="WellnessChallenges.html">Wellness Challenges</a></li>
-                            <li class="nav-item"><a class="nav-link" href="dashboard.html">Progress Dashboard</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </header>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <img src="/coolfrog.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
     <div class="container mt-5">
         <div class="row justify-content-end">
             <div class="col-auto">
