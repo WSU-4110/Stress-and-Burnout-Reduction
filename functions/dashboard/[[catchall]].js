@@ -43,18 +43,20 @@ async function renderDashboardPage(username, env) {
         <body>
         <div class="container mt-5">
             <h1>Dashboard</h1>
-            <table class="table table-bordered">
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Weekly Challenge</th>
-                        <th>Actions</th>
-                        <th>Daily Challenge</th>
-                        <th>Actions</th>
+                        <th>Challenge Title</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <th>Weekly Challenge</th>
                         ${weeklyHtml}
+                    </tr>
+                    <tr>
+                        <th>Daily Challenge</th>
                         ${dailyHtml}
                     </tr>
                 </tbody>
@@ -68,36 +70,26 @@ async function renderDashboardPage(username, env) {
 }
 
 async function generateChallengeHtml(challenge, username, env) {
-    let userPost = await fetchUserPostForTopic(challenge.id, username, env);
+    const userPosts = await fetchPostsForUserInTopic(username, challenge.id, env);
+    let actionHtml = `<button class="btn btn-success" onclick="location.href='/challenge/topic/${challenge.id}/accept-challenge'">Accept Challenge</button>`;
 
-    let actionHtml;
-    if (userPost) {
-        if (userPost.status === "active") {
+    if (userPosts.length > 0) {
+        const userPost = userPosts[0];
+        if (userPost.status === 'active') {
             actionHtml = `
-                <form action="/challenge/topic/${challenge.id}/complete-challenge" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
+                <form action="/challenge/topic/${userPost.topic_id}/complete-challenge" method="post" style="display:inline-block;">
+                    <button type="submit" class="btn btn-success">Complete</button>
                 </form>
-                <form action="/challenge/topic/${challenge.id}/abandon-challenge" method="post" class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
+                <form action="/challenge/topic/${userPost.topic_id}/abandon-challenge" method="post" style="display:inline-block;">
+                    <button type="submit" class="btn btn-danger">Abandon</button>
                 </form>
             `;
-        } else if (userPost.status === "completed") {
-            actionHtml = `<span>Completed</span>`;
+        } else if (userPost.status === 'completed') {
+            actionHtml = '<span>Completed</span>';
         }
-    } else {
-        actionHtml = `
-            <form method="post" action="/challenge/topic/${challenge.id}/accept-challenge">
-                <button type="submit" class="btn btn-success">Accept the Challenge</button>
-            </form>
-        `;
     }
 
     return `<td><a href="/challenge/topic/${challenge.id}">${challenge.title}</a></td><td>${actionHtml}</td>`;
-}
-
-async function fetchUserPostForTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT status FROM posts WHERE topic_id = ? AND username = ?");
-    return (await stmt.bind(topicId, username).get()).result;
 }
 
 async function getChallengesWithMostActiveMembers(env) {
@@ -110,6 +102,16 @@ async function getChallengesWithMostActiveMembers(env) {
         LIMIT 2
     `);
     return (await stmt.all()).results;
+}
+
+async function fetchPostsForUserInTopic(username, topicId, env) {
+    const stmt = env.COOLFROG_CHALLENGES.prepare(`
+        SELECT id, topic_id, username, title, status
+        FROM posts
+        WHERE username = ? AND topic_id = ?
+        ORDER BY post_date DESC
+    `);
+    return (await stmt.bind(username, topicId).all()).results;
 }
 
 function getSessionCookie(request) {
