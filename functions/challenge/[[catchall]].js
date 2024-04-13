@@ -10,9 +10,9 @@ export async function onRequestGet({ request, env }) {
     }
     
     if (url.pathname === '/challenge') {
-        return renderForumsPage(session.username, env);
+        return renderChallengePage(session.username, env);
     } else if (url.pathname.startsWith('/challenge/topic/')) {
-        const topicId = url.pathname.split('/')[4];
+        const topicId = url.pathname.split('/')[3];
         return renderTopicPage(topicId, session.username, env);
     }
 
@@ -21,7 +21,6 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
     const url = new URL(request.url);
-    const formData = await request.formData();
     const sessionCookie = getSessionCookie(request);
     let session;
 
@@ -30,34 +29,30 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (url.pathname === "/challenge/add-topic") {
-        const title = formData.get('title').trim();
+        const title = request.formData.get('title').trim();
         return addTopic(title, session.username, env);
-    } else if (url.pathname.startsWith("/challenge/delete-topic/")) {
-        const topicId = url.pathname.split('/')[4];
-        return deleteTopic(topicId, session.username, env);
     } else if (url.pathname.startsWith("/challenge/topic/") && url.pathname.endsWith('/accept-challenge')) {
-        const topicId = url.pathname.split('/')[4];
+        const topicId = url.pathname.split('/')[3];
         return acceptChallenge(topicId, session.username, env);
-    } else if (url.pathname === "/challenge/update-status") {
-        const status = formData.get('status');
-        const postId = formData.get('post_id');
-        return updatePost(status, postId, session.username, env);
+    } else if (url.pathname.startsWith("/challenge/topic/") && (url.pathname.endsWith('/complete-challenge') || url.pathname.endsWith('/abandon-challenge'))) {
+        const topicId = url.pathname.split('/')[3];
+        const newStatus = url.pathname.includes('/complete-challenge') ? 'completed' : 'abandoned';
+        return updateStatus(topicId, session.username, newStatus, env);
     }
 
     return new Response("Bad Request", { status: 400 });
 }
 
-async function renderForumsPage(username, env) {
+async function renderChallengePage(username, env) {
     let topics = await fetchTopics(env);
-    
     const topicsHtml = topics.map(topic => `
-        <tr>
-            <td style="width: 70%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
-            <td style="width: 20%;">${topic.username}</td>
-            <td style="width: 10%;">${username === topic.username ? `<form action="/challenge/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-        </tr>
+    <tr>
+        <td style="width: 70%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
+        <td style="width: 20%;">${topic.username}</td>
+        <td style="width: 10%;">${username === topic.username ? `<form action="/challenge/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+    </tr>
     `).join('');
-  
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -65,11 +60,11 @@ async function renderForumsPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Forum Page</title>
+            <title>Challenge Page</title>
         </head>
         <body>
             <div class="container mt-4">
-                <h1>Forum Topics</h1>
+                <h1>Challenge Topics</h1>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -95,35 +90,18 @@ async function renderForumsPage(username, env) {
 async function renderTopicPage(topicId, username, env) {
     let topic = (await fetchTopicById(topicId, env))[0];
     let posts = await fetchPostsForTopic(topicId, env);
-
-    // Check if the user already has a post
     let userPost = posts.find(post => post.username === username);
-    let challengeInteractionHtml = '';
-    if (!userPost) {
-        challengeInteractionHtml = `<form method="post" action="/challenge/topic/${topicId}/accept-challenge">
-            <button type="submit" class="btn btn-success">Accept Challenge</button>
-        </form>`;
-    } else {
-        challengeInteractionHtml = `
-            <form method="post" action="/challenge/update-status" class="mb-0">
-                <input type="hidden" name="post_id" value="${userPost.id}">
-                ${userPost.status === 'active' ? `
-                <button name="status" value="completed" type="submit" class="btn btn-success btn-sm">Complete</button>
-                <button name="status" value="abandoned" type="submit" class="btn btn-danger btn-sm">Abandon</button>
-                ` : ''}
-            </form>
-        `;
-    }
-
     const postsHtml = posts.map(post => `
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>@${post.username}</span>
-                ${username === post.username ? challengeInteractionHtml : ''}
+                ${username === post.username ? `<div>
+                    ${post.status === 'active' ? `<form action="/challenge/topic/${topicId}/complete-challenge" method="post" class="d-inline"><button type="submit" class="btn btn-success btn-sm">Complete Challenge</button></form>
+                    <form action="/challenge/topic/${topicId}/abandon-challenge" method="post" class="d-inline"><button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button></form>` : ''}
+                </div>` : ''}
             </div>
             <div class="card-body">
-                <h5 class="card-title">${username} has ${post.status} the challenge</h5>
-                <p class="card-text"></p>
+                <h5 class="card-title">${post.title}</h5>
             </div>
             <div class="card-footer text-muted">
                 ${new Date(post.post_date).toLocaleString()}
@@ -141,11 +119,17 @@ async function renderTopicPage(topicId, username, env) {
             <title>Posts in ${topic.title}</title>
         </head>
         <body>
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">${userPost ? userPost.status === 'abandoned' ? 'Re-Accept Challenge' : 'Challenge Accepted' : 'Accept Challenge'}</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
             <div class="container mt-5">
                 <h1>${topic.title}</h1>
                 <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
                 ${postsHtml}
-                ${challengeInteractionHtml}
             </div>
         </body>
         </html>
@@ -160,21 +144,30 @@ async function addTopic(title, username, env) {
     return new Response(null, { status: 303, headers: { 'Location': '/challenge' } });
 }
 
-async function deleteTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
-    await stmt.bind(topicId, username).run();
-    return new Response(null, { status: 204 });
-}
-
 async function acceptChallenge(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, topic_id, username, status, post_date) VALUES (?, ?, ?, ?, ?)");
-    await stmt.bind(uuidv4(), topicId, username, 'active', new Date()).run();
+    // Logic for accepting the challenge if not already accepted
+    const checkPost = env.COOLFROG_CHALLENGES.prepare("SELECT * FROM posts WHERE topic_id = ? AND username = ?");
+    const existingPost = await checkPost.bind(topicId, username).get();
+    if (existingPost) {
+        if (existingPost.status === 'abandoned') {
+            // Can accept again
+            const updatePost = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET post_date = CURRENT_TIMESTAMP, status = 'active' WHERE id = ?");
+            updatePost.bind(existingPost.id).run();
+        }
+    } else {
+        const addPost = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, title, status, topic_id, username, post_date) VALUES (?, ?, 'active', ?, ?, CURRENT_TIMESTAMP)");
+        addPost.bind(uuidv4(), `${username} has accepted the challenge`, 'active', topicId, username).run();
+    }
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
-async function updatePost(status, postId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET status = ?, post_date = ? WHERE id = ? AND username = ?");
-    await stmt.bind(status, new Date(), postId, username).run();
+async function updateStatus(topicId, username, newStatus, env) {
+    const statusTitleMap = {
+        'completed': 'has completed the challenge',
+        'abandoned': 'has abandoned the challenge'
+    };
+    const updateStmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET title = ?, status = ?, post_date = CURRENT_TIMESTAMP WHERE topic_id = ? AND username = ?");
+    updateStmt.bind(`${username} ${statusTitleMap[newStatus]}`, newStatus, topicId, username).run();
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
@@ -189,7 +182,7 @@ async function fetchTopicById(topicId, env) {
 }
 
 async function fetchPostsForTopic(topicId, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, username, status, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
+    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, status, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
     return (await stmt.bind(topicId).all()).results;
 }
 
