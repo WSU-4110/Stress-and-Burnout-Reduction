@@ -51,10 +51,10 @@ async function renderForumsPage(username, env) {
     let topics = await fetchTopics(env);
     
     const topicsHtml = topics.map(topic => `
-        <tr id="topic-${topic.id}">
+        <tr id="topic-row-${topic.id}">
             <td>${topic.title}</td>
             <td>${topic.username}</td>
-            <td>${username === topic.username ? `<button class="btn btn-danger" onClick="deleteTopic('${topic.id}')" type="button">Delete</button>` : ''}</td>
+            <td>${username === topic.username ? `<button type="button" onclick="deleteTopic('${topic.id}')" class="btn btn-danger">Delete</button>` : ''}</td>
         </tr>
     `).join('');
   
@@ -65,26 +65,25 @@ async function renderForumsPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Forum Page</title>
             <script>
-            function deleteTopic(topicId) {
-                fetch('/forums/delete-topic/' + topicId, { method: 'POST' })
-                .then(response => {
-                    if (response.ok) {
-                        // Remove the topic row from the DOM
-                        const row = document.getElementById('topic-' + topicId);
-                        if (row) {
-                            row.remove();
-                        }
-                    } else {
-                        alert('Failed to delete topic.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error deleting topic:', error);
-                });
-            }
+                function deleteTopic(id) {
+                    fetch('/forums/delete-topic/' + id, { method: 'POST' })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (response.ok) {
+                                const row = document.getElementById('topic-row-' + data.id);
+                                row.remove();
+                            } else {
+                                alert('Failed to delete topic.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting topic:', error);
+                            alert('Error deleting topic.');
+                        });
+                }
             </script>
+            <title>Forum Page</title>
         </head>
         <body>
             <div class="container mt-4">
@@ -120,7 +119,10 @@ async function addTopic(title, username, env) {
 async function deleteTopic(topicId, username, env) {
     const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
     await stmt.bind(topicId, username).run();
-    return new Response(null, { status: 204 });
+    return new Response(JSON.stringify({ id: topicId }), { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+    });
 }
 
 async function fetchTopics(env) {
