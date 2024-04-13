@@ -8,12 +8,14 @@ export async function onRequestGet({ request, env }) {
     if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
         return unauthorizedResponse();
     }
-    
+
     if (url.pathname === '/challenge') {
         return renderChallengesPage(session.username, env);
     } else if (url.pathname.startsWith('/challenge/topic/')) {
-        const topicId = url.pathname.split('/')[3];
-        return renderTopicPage(topicId, session.username, env);
+        const topicId = url.pathname.split('/challenge/topic/')[1];
+        if (topicId) {
+            return renderTopicPage(topicId, session.username, env);
+        }
     }
 
     return new Response("Resource Not Found", { status: 404 });
@@ -29,6 +31,7 @@ export async function onRequestPost({ request, env }) {
         return unauthorizedResponse();
     }
 
+    // Define routes for POST requests
     if (url.pathname === "/challenge/add-topic") {
         const title = formData.get('title').trim();
         return addTopic(title, session.username, env);
@@ -50,6 +53,7 @@ export async function onRequestPost({ request, env }) {
 
     return new Response("Bad Request", { status: 400 });
 }
+
 
 async function renderChallengesPage(username, env) {
     let topics = await fetchTopics(env);
