@@ -1,112 +1,99 @@
 import { v4 as uuidv4 } from 'uuid';
 
-async function onRequestGet({ request, env }) {
-    const sessionCookie = getSessionCookie(request);
-    let session, user;
+export async function onRequestGet({ request, env }) {
+  // Get session from cookie
+  const sessionCookie = getSessionCookie(request);
+  let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
+  if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+    return unauthorizedResponse();
+  }
+
+  // Get leaderboard data
+  const leaderboardData = await env.COOLFROG_LEADERBOARD.list();
+  const leaderboardEntries = [];
+  let topUser = null;
+
+  // Fetch each value in leaderboardData and create an array of entries
+  for (const entry of leaderboardData.keys) {
+    const username = await env.COOLFROG_LEADERBOARD.get(entry.name);
+    const userDays = parseInt(entry.name);
+    leaderboardEntries.push({ username, loginStreak: userDays });
+
+    if (!topUser || topUser.loginStreak < userDays) {
+      topUser = { username, loginStreak: userDays };
     }
+  }
 
-    user = JSON.parse(await env.COOLFROG_USERS.get(session.username));
-    if (!user) {
-        return unauthorizedResponse("User data not found.");
-    }
-
-    const leaderboardData = await getAllLeaderboardData(env);
-    const topUser = leaderboardData.sort((a, b) => b.streak - a.streak)[0];
-    
-    return generateLeaderboardPage(user, topUser, leaderboardData);
+  // Sort leaderboard by login streak
+  leaderboardEntries.sort((a, b) => b.loginStreak - a.loginStreak);
+  
+  // Render the leaderboard page
+  return renderLeaderboardPage(session.username, leaderboardEntries, topUser, env);
 }
 
 function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    return Object.fromEntries(cookies)['session-id'];
+  const cookieHeader = request.headers.get('Cookie');
+  if (!cookieHeader) return null;
+  const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+  return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse(message = "Unauthorized - Please log in.") {
-    return new Response(message, { status: 403, headers: { 'Content-Type': 'text/plain' } });
+function unauthorizedResponse() {
+  return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
 }
 
-async function getAllLeaderboardData(env) {
-    const leaderboardList = await env.COOLFROG_LEADERBOARD.list();
-    const data = await Promise.all(
-        leaderboardList.keys.map(async key => {
-            const username = await env.COOLFROG_LEADERBOARD.get(key.name);
-            return { username: username, streak: parseInt(key.name) };
-        })
-    );
-    return data;
-}
+async function renderLeaderboardPage(currentUser, leaderboardEntries, topUser, env) {
+  let currentUserRowHighlighted = '';
 
-function generateLeaderboardPage(currentUser, topUser, leaderboardData) {
-    const leaderboardHtml = leaderboardData.map(user => `
-        <tr${currentUser.username === user.username ? ' class="table-primary"' : ''}>
-            <td>${user.username}</td>
-            <td>${user.streak}</td>
-        </tr>
-    `).join('');
-
-    const pageHtml = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Leaderboard</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-            <style>
-                body {
-                    padding-top: 5rem;
-                    padding-bottom: 3rem;
-                }
-                .top-info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 2rem;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="top-info">
-                    <div>
-                        <h2 class="mb-0">Top User</h2>
-                        <p><strong>${topUser.username}</strong> with a streak of <strong>${topUser.streak} days</strong></p>
-                    </div>
-                    <div class="text-end">
-                        <h4 class="mb-0">Your Streak</h4>
-                        <p><strong>${currentUser.username}</strong>: ${currentUser.login_streak_days} days</p>
-                    </div>
-                </div>
-                <h3>Leaderboard</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>Streak</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${leaderboardHtml}
-                    </tbody>
-                </table>
-            </div>
-        </body>
-        </html>
+  const leaderboardRows = leaderboardEntries.map(entry => {
+    const isCurrentUser = entry.username === currentUser;
+    const rowClass = isCurrentUser ? 'table-primary' : '';
+    if (isCurrentUser) currentUserRowHighlighted = rowClass;
+    return `
+      <tr class="${rowClass}">
+        <td>${entry.username}</td>
+        <td>${entry.loginStreak} Days</td>
+      </tr>
     `;
+  }).join('');
 
-    return new Response(pageHtml, { headers: { 'Content-Type': 'text/html' }});
+  const pageHtml = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+      <title>Leaderboard</title>
+    </head>
+    <body>
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-9">
+            <h1>Top User: ${topUser.username}</h1>
+            <h2>Streak: ${topUser.loginStreak} Days</h2>
+          </div>
+          <div class="col-3 text-right">
+            <p>Logged in as: <strong>${currentUser}</strong></p>
+            <p>Your streak: <strong>${leaderboardEntries.find(entry => entry.username === currentUser).loginStreak} Days</strong></p>
+          </div>
+        </div>
+        <table class="table mt-3">
+          <thead class="thead-dark">
+            <tr>
+              <th>Username</th>
+              <th>Login Streak Days</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${leaderboardRows}
+          </tbody>
+        </table>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
-
-export default {
-    async fetch(request, env, ctx) {
-        if (request.method.toUpperCase() === "GET") {
-            return await onRequestGet({ request, env });
-        }
-
-        return new Response("Method Not Allowed", { status: 405 });
-    }
-};
