@@ -28,8 +28,8 @@ async function renderDashboardPage(username, env) {
         dailyChallenge = challenges[0];
     }
 
-    const weeklyHtml = weeklyChallenge ? generateChallengeHtml(weeklyChallenge, username) : '<td>No current weekly challenge</td><td></td>';
-    const dailyHtml = dailyChallenge ? generateChallengeHtml(dailyChallenge, username) : '<td>No current daily challenge</td><td></td>';
+    const weeklyHtml = weeklyChallenge ? await generateChallengeHtml(weeklyChallenge, username, env) : '<td colspan="2">No current weekly challenge</td>';
+    const dailyHtml = dailyChallenge ? await generateChallengeHtml(dailyChallenge, username, env) : '<td colspan="2">No current daily challenge</td>';
 
     const pageHtml = `
         <!DOCTYPE html>
@@ -47,7 +47,9 @@ async function renderDashboardPage(username, env) {
                 <thead>
                     <tr>
                         <th>Weekly Challenge</th>
+                        <th>Actions</th>
                         <th>Daily Challenge</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,18 +67,37 @@ async function renderDashboardPage(username, env) {
     return new Response(pageHtml, { headers: { 'Content-Type': 'text/html' } });
 }
 
-function generateChallengeHtml(challenge, username) {
-    const btnComplete = `<form action="/challenge/topic/${challenge.id}/complete-challenge" method="post">
-        <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
-    </form>`;
+async function generateChallengeHtml(challenge, username, env) {
+    let userPost = await fetchUserPostForTopic(challenge.id, username, env);
 
-    const btnAbandon = `<form action="/challenge/topic/${challenge.id}/abandon-challenge" method="post">
-        <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
-    </form>`;
+    let actionHtml;
+    if (userPost) {
+        if (userPost.status === "active") {
+            actionHtml = `
+                <form action="/challenge/topic/${challenge.id}/complete-challenge" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
+                </form>
+                <form action="/challenge/topic/${challenge.id}/abandon-challenge" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
+                </form>
+            `;
+        } else if (userPost.status === "completed") {
+            actionHtml = `<span>Completed</span>`;
+        }
+    } else {
+        actionHtml = `
+            <form method="post" action="/challenge/topic/${challenge.id}/accept-challenge">
+                <button type="submit" class="btn btn-success">Accept the Challenge</button>
+            </form>
+        `;
+    }
 
-    const actionButtons = (username === challenge.username) ? `<td>${btnComplete} ${btnAbandon}</td>` : '<td></td>';
+    return `<td><a href="/challenge/topic/${challenge.id}">${challenge.title}</a></td><td>${actionHtml}</td>`;
+}
 
-    return `<td><a href="/challenge/topic/${challenge.id}">${challenge.title}</a></td>${actionButtons}`;
+async function fetchUserPostForTopic(topicId, username, env) {
+    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT status FROM posts WHERE topic_id = ? AND username = ?");
+    return (await stmt.bind(topicId, username).get()).result;
 }
 
 async function getChallengesWithMostActiveMembers(env) {
