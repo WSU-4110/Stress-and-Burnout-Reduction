@@ -245,7 +245,7 @@ https://dash.cloudflare.com/<account-id>/r2/default/buckets/coolfrog/settings
 - Connect the bucket to a **Custom Domain**, in this case our canonical CDN URL is:
 
 ```
-cdn.coolfrog.net	
+cdn.coolfrog.net
 ```
 
 ## Warnings for Future Developers:
