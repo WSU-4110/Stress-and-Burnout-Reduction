@@ -39,6 +39,10 @@ export async function onRequestPost({ request, env }) {
         const topicId = url.pathname.split('/')[3];
         const status = formData.get('status');
         return updateChallengeStatus(topicId, session.username, status, env);
+    } else if (url.pathname.endsWith('/add-post')) {
+        const topicId = url.pathname.split('/')[3];
+        const status = 'active';
+        return addPost(status, topicId, session.username, env);
     }
 
     return new Response("Bad Request", { status: 400 });
@@ -97,9 +101,13 @@ async function renderChallengeTopicPage(topicId, username, env) {
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>${post.title}</span>
-                ${username === post.username ? `<form action="/challenge/topic/${topicId}/update-status" method="post" class="mb-0">
-                    <input type="hidden" name="status" value="${post.status === 'active' ? 'completed' : 'active'}">
-                    <button type="submit" class="btn btn-${post.status === 'active' ? 'success' : 'danger'} btn-sm">${post.status === 'active' ? 'Complete Challenge' : 'Abandon Challenge'}</button>
+                ${username === post.username && post.status === 'active' ? `<form action="/challenge/topic/${topicId}/update-status" method="post" class="mb-0">
+                    <input type="hidden" name="status" value="completed">
+                    <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
+                </form>
+                <form action="/challenge/topic/${topicId}/update-status" method="post" class="mb-0">
+                    <input type="hidden" name="status" value="abandoned">
+                    <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
                 </form>` : ''}
             </div>
             <div class="card-footer text-muted">
@@ -108,8 +116,8 @@ async function renderChallengeTopicPage(topicId, username, env) {
         </div>
     `).join('');
 
-    const acceptChallengeButton = posts.find(post => post.username === username) ? '' : `
-        <form method="post" action="/challenge/topic/${topicId}/accept-challenge">
+    const acceptChallengeButton = posts.find(post => post.username === username && post.status !== 'abandoned') ? '' : `
+        <form method="post" action="/challenge/topic/${topicId}/add-post">
             <button type="submit" class="btn btn-success">Accept the Challenge</button>
         </form>
     `;
@@ -155,6 +163,13 @@ async function updateChallengeStatus(topicId, username, status, env) {
     return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
+async function addPost(status, topicId, username, env) {
+    const postTitle = username + " has " + (status === 'active' ? 'accepted the challenge' : (status === 'completed' ? 'completed the challenge' : 'abandoned the challenge'));
+    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, title, status, topic_id, username) VALUES (?, ?, ?, ?, ?)");
+    await stmt.bind(uuidv4(), postTitle, status, topicId, username).run();
+    return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
+}
+
 async function fetchTopics(env) {
     const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, username FROM topics ORDER BY title");
     return (await stmt.all()).results;
@@ -166,7 +181,7 @@ async function fetchTopicById(topicId, env) {
 }
 
 async function fetchPostsForTopic(topicId, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, status, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
+    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, status, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
     return (await stmt.bind(topicId).all()).results;
 }
 
