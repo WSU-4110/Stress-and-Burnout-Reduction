@@ -53,8 +53,8 @@ async function renderChallengesPage(username, env) {
 
     let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
         <tr>
-            <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
-            <td style="width: 30%;">
+            <td style="width: 60%;"><a href="/challenge/topic/${post.topic_id}">${topic.title}</a></td>
+            <td style="width: 40%;">
                 <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
                     <input type="hidden" name="post_id" value="${post.id}">
                     <button type="submit" class="btn btn-success btn-sm">Complete</button>
@@ -69,8 +69,8 @@ async function renderChallengesPage(username, env) {
 
     let completedTasksHtml = userPosts.filter(post => post.status === 'completed').map(post => `
         <tr>
-            <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
-            <td style="width: 30%;">Completed</td>
+            <td style="width: 60%;"><a href="/challenge/topic/${post.topic_id}">${topic.title}</a></td>
+            <td style="width: 40%;">Completed</td>
         </tr>`
     ).join('');
 
@@ -147,7 +147,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
     const postsHtml = posts.map(post => `
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>@${post.username} - ${post.status}</span>
+                <span>@${post.username} - ${post.status} - ${post.title}</span>
                 ${(username === post.username && post.status === 'active') ? `
                 <div>
                     <form action="/challenge/topic/${topicId}/complete-challenge" method="post" class="d-inline mb-0">
