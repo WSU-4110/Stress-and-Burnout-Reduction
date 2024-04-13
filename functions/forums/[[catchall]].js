@@ -51,10 +51,10 @@ async function renderForumsPage(username, env) {
     let topics = await fetchTopics(env);
     
     const topicsHtml = topics.map(topic => `
-        <tr>
+        <tr id="topic-${topic.id}">
             <td>${topic.title}</td>
             <td>${topic.username}</td>
-            <td>${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+            <td>${username === topic.username ? `<button class="btn btn-danger" onClick="deleteTopic('${topic.id}')" type="button">Delete</button>` : ''}</td>
         </tr>
     `).join('');
   
@@ -66,6 +66,25 @@ async function renderForumsPage(username, env) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Forum Page</title>
+            <script>
+            function deleteTopic(topicId) {
+                fetch('/forums/delete-topic/' + topicId, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        // Remove the topic row from the DOM
+                        const row = document.getElementById('topic-' + topicId);
+                        if (row) {
+                            row.remove();
+                        }
+                    } else {
+                        alert('Failed to delete topic.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting topic:', error);
+                });
+            }
+            </script>
         </head>
         <body>
             <div class="container mt-4">
