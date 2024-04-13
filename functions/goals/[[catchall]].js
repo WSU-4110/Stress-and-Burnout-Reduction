@@ -253,22 +253,22 @@ async function getTasks(view, categoryId, selectedDate, env) {
   const today = new Date().toISOString().split('T')[0];  // Keeping only the date part, time is ignored
   if (view === 'default') {
     // Modify the query to compare only the date parts; time is irrelevant for the comparison
-    stmt = env.TODO_DB.prepare(`SELECT * FROM tasks WHERE DATE(due_date) <= ? AND status = 'active' ORDER BY priority_level IS NULL, priority_level`);
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE DATE(due_date) <= ? AND status = 'active' ORDER BY priority_level IS NULL, priority_level`);
     return (await stmt.bind(today).all()).results;
   } else if (view === 'category' && categoryId) {
-    stmt = env.TODO_DB.prepare(`SELECT * FROM tasks WHERE category_id = ? ORDER BY priority_level IS NULL, priority_level, due_date`);
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE category_id = ? ORDER BY priority_level IS NULL, priority_level, due_date`);
     return (await stmt.bind(categoryId).all()).results;
   } else if (view === 'completed' && selectedDate) {
-    stmt = env.TODO_DB.prepare(`SELECT * FROM tasks WHERE status = 'completed' AND DATE(due_date) = ? ORDER BY due_date`);
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks WHERE status = 'completed' AND DATE(due_date) = ? ORDER BY due_date`);
     return (await stmt.bind(selectedDate).all()).results;
   } else {  // 'everything' view and others default to showing all tasks
-    stmt = env.TODO_DB.prepare(`SELECT * FROM tasks ORDER BY due_date, priority_level`);
+    stmt = env.COOLFROG_GOALS.prepare(`SELECT * FROM tasks ORDER BY due_date, priority_level`);
     return (await stmt.all()).results;
   }
 }
 
 async function getAllCategories(env) {
-  const stmt = env.TODO_DB.prepare('SELECT * FROM categories ORDER BY name');
+  const stmt = env.COOLFROG_GOALS.prepare('SELECT * FROM categories ORDER BY name');
   return (await stmt.all()).results;
 }
 
@@ -278,18 +278,18 @@ async function addTask(formData, env) {
   const category_id = formData.get('category_id') || null;
   const priority_level = formData.get('priority_level') || null;
   const status = formData.get('status');
-  const stmt = env.TODO_DB.prepare('INSERT INTO tasks (description, due_date, category_id, priority_level, status) VALUES (?, ?, ?, ?, ?)');
+  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO tasks (description, due_date, category_id, priority_level, status) VALUES (?, ?, ?, ?, ?)');
   await stmt.bind(description, due_date, category_id, priority_level, status).run();
 }
 
 async function addCategory(formData, env) {
   const name = formData.get('name');
-  const stmt = env.TODO_DB.prepare('INSERT INTO categories (name) VALUES (?)');
+  const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO categories (name) VALUES (?)');
   await stmt.bind(name).run();
 }
 
 async function deleteTask(id, env) {
-  const stmt = env.TODO_DB.prepare(`DELETE FROM tasks WHERE id = ?`);
+  const stmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE id = ?`);
   await stmt.bind(id).run();
 }
 
@@ -299,26 +299,26 @@ async function updateTask(id, formData, env) {
   const category_id = formData.get('category_id') || null;
   const priority_level = formData.get('priority_level') || null;
   const status = formData.get('status');
-  const stmt = env.TODO_DB.prepare(`UPDATE tasks SET description = ?, due_date = ?, category_id = ?, priority_level = ?, status = ? WHERE id = ?`);
+  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE tasks SET description = ?, due_date = ?, category_id = ?, priority_level = ?, status = ? WHERE id = ?`);
   await stmt.bind(description, due_date, category_id, priority_level, status, id).run();
 }
 
 async function updateCategory(id, formData, env) {
   const name = formData.get('name');
-  const stmt = env.TODO_DB.prepare(`UPDATE categories SET name = ? WHERE id = ?`);
+  const stmt = env.COOLFROG_GOALS.prepare(`UPDATE categories SET name = ? WHERE id = ?`);
   await stmt.bind(name, id).run();
 }
 
 async function resetCategory(id, env) {
-  const stmt = env.TODO_DB.prepare('UPDATE tasks SET category_id = NULL WHERE category_id = ?');
+  const stmt = env.COOLFROG_GOALS.prepare('UPDATE tasks SET category_id = NULL WHERE category_id = ?');
   await stmt.bind(id).run();
 }
 
 async function deleteCategory(id, env) {
   // Delete tasks in the category first
-  const deleteTasksStmt = env.TODO_DB.prepare(`DELETE FROM tasks WHERE category_id = ?`);
+  const deleteTasksStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE category_id = ?`);
   await deleteTasksStmt.bind(id).run();
   // Then delete the category
-  const deleteCategoryStmt = env.TODO_DB.prepare(`DELETE FROM categories WHERE id = ?`);
+  const deleteCategoryStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM categories WHERE id = ?`);
   await deleteCategoryStmt.bind(id).run();
 }
