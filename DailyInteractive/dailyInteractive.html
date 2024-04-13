@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta information and page title -->
     <meta charset="UTF-8">
     <title>Daily Interactive</title>
+    <!-- Link to external CSS for styling -->
     <link rel="stylesheet" href="dailyInteractive.css">
 </head>
 <body>
 
+    <!-- Header section with a hero image and title -->
     <header id="home">
         <div class="hero">
-            <div class="overlay"></div>
-            <h1>Daily Interactive</h1>
+            <div class="overlay"></div> <!-- Semi-transparent overlay to enhance text contrast -->
+            <h1>Daily Interactive</h1> <!-- Main heading of the page -->
         </div>
     </header>
 
+    <!-- Navigation bar -->
     <div class="sticky-wrapper">
         <nav>
             <ul>
@@ -31,6 +35,7 @@
         </nav>
     </div>
 
+    <!-- Selector for choosing a day -->
     <div class="day-selector">
         <label for="day-select">Choose a day:</label>
         <select id="day-select">
@@ -44,16 +49,20 @@
         </select>
     </div>
     
+    <!-- Placeholder for the name of the day -->
     <section id="item1">
-        <h1>Monday</h1>
+        <h1>Monday</h1> <!-- Initially shows Monday, changes based on selection -->
     </section>
 
+    <!-- Placeholder for the interactive content of the selected day -->
     <section id="item2">
-        <h1>interactive here</h1>
+        <h1>interactive here</h1> <!-- Content changes dynamically based on JS logic -->
     </section>
 
+    <!-- External script references, including jQuery for functionality -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="dailyInteractive.js"></script>
+    <!-- Inline JavaScript for dynamic page effects -->
     <script>
         $(window).scroll(function(){
             var heroHeight = $('header').height();
