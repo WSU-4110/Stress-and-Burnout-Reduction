@@ -9,14 +9,14 @@ export async function onRequestGet({ request, env }) {
         return unauthorizedResponse();
     }
     
-    if (url.pathname === '/dashboard' || url.pathname === '/dashboard/get-weekly') {
-        return renderDashboardPage(session.username, env);
+    if (url.pathname === '/account' || url.pathname === '/account/get-weekly') {
+        return renderAccountPage(session.username, env);
     }
 
     return new Response("Resource Not Found", { status: 404 });
 }
 
-async function renderDashboardPage(username, env) {
+async function renderAccountPage(username, env) {
     let challenges = await getChallengesWithMostActiveMembers(env);
     let weeklyChallenge, dailyChallenge;
 
@@ -38,11 +38,11 @@ async function renderDashboardPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Dashboard</title>
+            <title>Account</title>
         </head>
         <body>
         <div class="container mt-5">
-            <h1>Dashboard</h1>
+            <h1>Account</h1>
             <table class="table table-hover" style="table-layout: fixed;">
                 <thead>
                     <tr>
