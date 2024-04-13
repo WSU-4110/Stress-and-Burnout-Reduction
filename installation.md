@@ -230,13 +230,17 @@ https://dash.cloudflare.com/<account-id>/r2/overview
 
 - Create a bucket called "coolfrog".
 
-- Download and mirror our large files and upload them to your bucket. Helpful tools: wget or [curl](https://curl.se)
+- Download and mirror our large files and upload them to your bucket. Helpful tools: wget or [curl](https://curl.se).
 
 ```
 https://cdn.coolfrog.net/cafe.mp3
 ```
 
 - Naviage to the *Settings* tab in the bucket.
+
+```
+https://dash.cloudflare.com/<account-id>/r2/default/buckets/coolfrog/settings
+```
 
 - Connect the bucket to a **Custom Domain**, in this case our canonical CDN URL is:
 
