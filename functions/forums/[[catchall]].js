@@ -109,6 +109,13 @@ async function renderForumsPage(username, env) {
             </div>
         </div>
     </header>
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
             <div class="container mt-4">
                 <h1>Forum Topics</h1>
                 <table class="table table-striped">
@@ -126,6 +133,32 @@ async function renderForumsPage(username, env) {
                     <button type="submit" class="btn btn-primary">Add Topic</button>
                 </form>
             </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
+        });
+    </script>
         </body>
         </html>
     `;
@@ -200,6 +233,13 @@ async function renderTopicPage(topicId, username, env) {
             </div>
         </div>
     </header>
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
             <div class="container mt-4">
                 <h1>${topic.title}</h1>
                 <a href="/forums" class="btn btn-primary mb-3">Back to Topics</a>
@@ -221,6 +261,32 @@ async function renderTopicPage(topicId, username, env) {
                     <button type="submit" class="btn btn-success">Add Post</button>
                 </form>
             </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
+        });
+    </script>
         </body>
         </html>
     `;
