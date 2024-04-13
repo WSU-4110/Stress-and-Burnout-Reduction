@@ -8,14 +8,12 @@ export async function onRequestGet({ request, env }) {
     if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
         return unauthorizedResponse();
     }
-
+    
     if (url.pathname === '/challenge') {
         return renderChallengesPage(session.username, env);
     } else if (url.pathname.startsWith('/challenge/topic/')) {
-        const topicId = url.pathname.split('/challenge/topic/')[1];
-        if (topicId) {
-            return renderTopicPage(topicId, session.username, env);
-        }
+        const topicId = url.pathname.split('/')[3];
+        return renderChallengeTopicPage(topicId, session.username, env);
     }
 
     return new Response("Resource Not Found", { status: 404 });
@@ -31,29 +29,23 @@ export async function onRequestPost({ request, env }) {
         return unauthorizedResponse();
     }
 
-    // Define routes for POST requests
     if (url.pathname === "/challenge/add-topic") {
         const title = formData.get('title').trim();
         return addTopic(title, session.username, env);
     } else if (url.pathname.startsWith("/challenge/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
         return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname === `/challenge/topic/${formData.get('topic_id')}/accept-challenge`) {
-        const topicId = formData.get('topic_id');
+    } else if (url.pathname.startsWith("/challenge/topic/") && url.pathname.endsWith('/accept-challenge')) {
+        const topicId = url.pathname.split('/')[3];
         return acceptChallenge(topicId, session.username, env);
-    } else if (url.pathname === `/challenge/topic/${formData.get('topic_id')}/complete-challenge`) {
-        const topicId = formData.get('topic_id');
-        const newStatus = 'completed';
-        return updateChallengeStatus(topicId, session.username, newStatus, env);
-    } else if (url.pathname === `/challenge/topic/${formData.get('topic_id')}/abandon-challenge`) {
-        const topicId = formData.get('topic_id');
-        const newStatus = 'abandoned';
-        return updateChallengeStatus(topicId, session.username, newStatus, env);
+    } else if (url.pathname.startsWith("/challenge/topic/") && (url.pathname.endsWith('/complete-challenge') || url.pathname.endsWith('/abandon-challenge'))) {
+        const postId = formData.get('post_id');
+        const newStatus = url.pathname.endsWith('/complete-challenge') ? 'completed' : 'abandoned';
+        return updateChallengeStatus(postId, newStatus, session.username, env);
     }
 
     return new Response("Bad Request", { status: 400 });
 }
-
 
 async function renderChallengesPage(username, env) {
     let topics = await fetchTopics(env);
@@ -100,41 +92,35 @@ async function renderChallengesPage(username, env) {
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
-async function renderTopicPage(topicId, username, env) {
+async function renderChallengeTopicPage(topicId, username, env) {
     let topic = (await fetchTopicById(topicId, env))[0];
-    let post = await fetchPostForTopicAndUser(topicId, username, env);
+    let posts = await fetchPostsForTopic(topicId, env);
+    let userPost = posts.find(p => p.username === username);
 
-    let postHtml = '';
-    if (post) {
-        postHtml = `
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>@${post.username}</span>
-                    ${(post.status === 'active') ? `<form action="/challenge/topic/${topicId}/complete-challenge" method="post" class="mb-0">
-                        <input type="hidden" name="topic_id" value="${topicId}">
+    const postsHtml = posts.map(post => `
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>@${post.username} - ${post.status}</span>
+                ${(username === post.username && post.status === 'active') ? `
+                <div>
+                    <form action="/challenge/topic/${topicId}/complete-challenge" method="post" class="d-inline mb-0">
+                        <input type="hidden" name="post_id" value="${post.id}">
                         <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
                     </form>
-                    <form action="/challenge/topic/${topicId}/abandon-challenge" method="post" class="mb-0">
-                        <input type="hidden" name="topic_id" value="${topicId}">
+                    <form action="/challenge/topic/${topicId}/abandon-challenge" method="post" class="d-inline mb-0">
+                        <input type="hidden" name="post_id" value="${post.id}">
                         <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
-                    </form>` : ''}
+                    </form>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">${username} has ${post.status} the challenge</h5>
-                </div>
-                <div class="card-footer text-muted">
-                    ${new Date(post.post_date).toLocaleString()}
-                </div>
+                ` : ''}
             </div>
-        `;
-    } else {
-        postHtml = `
-            <form method="post" action="/challenge/topic/${topicId}/accept-challenge">
-                <input type="hidden" name="topic_id" value="${topicId}">
-                <button type="submit" class="btn btn-success">Accept the Challenge</button>
-            </form>
-        `;
-    }
+        </div>
+    `).join('');
+
+    const actionButton = (!userPost || userPost.status === 'abandoned') ? 
+        `<form method="post" action="/challenge/topic/${topicId}/accept-challenge">
+            <button type="submit" class="btn btn-success">Accept the Challenge</button>
+        </form>` : '';
 
     const pageHtml = `
         <!DOCTYPE html>
@@ -143,13 +129,14 @@ async function renderTopicPage(topicId, username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Posts in ${topic.title}</title>
+            <title>Challenges in ${topic.title}</title>
         </head>
         <body>
             <div class="container mt-5">
                 <h1>${topic.title}</h1>
                 <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
-                ${postHtml}
+                ${postsHtml}
+                ${actionButton}
             </div>
         </body>
         </html>
@@ -171,20 +158,19 @@ async function deleteTopic(topicId, username, env) {
 }
 
 async function acceptChallenge(topicId, username, env) {
-    const postExistenceCheck = env.COOLFROG_CHALLENGES.prepare("SELECT id FROM posts WHERE topic_id = ? AND username = ?");
-    const existingPost = await postExistenceCheck.bind(topicId, username).all();
-    if (existingPost.results.length === 0) {
-        const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, title, status, topic_id, username, post_date) VALUES (?, ?, ?, ?, ?, ?)");
-        await stmt.bind(uuidv4(), `${username} has accepted the challenge`, 'active', topicId, username, new Date().toISOString()).run();
-        return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
-    }
-    return new Response("Challenge Already Accepted", { status: 400 });
+    const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, topic_id, username, title, status, post_date) VALUES (?, ?, ?, ?, ?, ?)");
+    const now = new Date().toISOString();
+    const title = `${username} has accepted the challenge`;
+    await stmt.bind(uuidv4(), topicId, username, title, 'active', now).run();
+    return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
 }
 
-async function updateChallengeStatus(topicId, username, newStatus, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET title = ?, status = ?, post_date = ? WHERE topic_id = ? AND username = ?");
-    await stmt.bind(`${username} has ${newStatus} the challenge`, newStatus, new Date().toISOString(), topicId, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': `/challenge/topic/${topicId}` } });
+async function updateChallengeStatus(postId, newStatus, username, env) {
+    const updateStmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET title = ?, status = ?, post_date = ? WHERE id = ? AND username = ?");
+    const now = new Date().toISOString();
+    const title = `${username} has ${newStatus} the challenge`;
+    await updateStmt.bind(title, newStatus, now, postId, username).run();
+    return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
@@ -197,10 +183,9 @@ async function fetchTopicById(topicId, env) {
     return (await stmt.bind(topicId).all()).results;
 }
 
-async function fetchPostForTopicAndUser(topicId, username, env) {
-    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, status, username, post_date FROM posts WHERE topic_id = ? AND username = ?");
-    const result = await stmt.bind(topicId, username).all();
-    return result.results.length > 0 ? result.results[0] : null;
+async function fetchPostsForTopic(topicId, env) {
+    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, username, title, status, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
+    return (await stmt.bind(topicId).all()).results;
 }
 
 function getSessionCookie(request) {
