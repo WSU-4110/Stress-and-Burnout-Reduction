@@ -250,7 +250,7 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
             </div>
         </div>
     <div class="container mt-5">
-        <h1 class="mb-4">ToDo List</h1>
+        <h1 class="mb-4">My Goal Tracker</h1>
         <div class="mb-3">
             <button class="btn btn-primary me-2 view-btn" data-view="default" onclick="setView('default')">Default View</button>
             <button class="btn btn-primary me-2 view-btn" data-view="everything" onclick="setView('everything')">Everything View</button>
