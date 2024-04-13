@@ -93,3 +93,4 @@ document.getElementById('resetTimer9').addEventListener('click', function() { so
 document.getElementById('startTimer10').addEventListener('click', function() { selfCompassionPracticeTimer.start(); });
 document.getElementById('stopTimer10').addEventListener('click', function() { selfCompassionPracticeTimer.stop(); });
 document.getElementById('resetTimer10').addEventListener('click', function() { selfCompassionPracticeTimer.reset(); });
+
