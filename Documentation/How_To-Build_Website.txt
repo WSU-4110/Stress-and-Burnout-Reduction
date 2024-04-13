@@ -51,6 +51,31 @@ CREATE TABLE tasks (
 );
 ```
 
+2c. Create a Cloudflare D1 database called "coolfrog-challenges".
+
+Run the following SQL:
+
+```sql
+CREATE TABLE topics
+(
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    username TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts
+(
+    id TEXT PRIMARY KEY,
+    topic_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL,
+    post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
+);
+```
+
 3. Ensure the following settings are set for the project to successfully build.
 
 Custom domains:
@@ -80,6 +105,8 @@ Variable name		D1 database
 --------------------------------------------
 COOLFROG_FORUM		coolfrog-forum
 COOLFROG_GOALS		coolfrog-goals
+COOLFROG_CHALLENGES	coolfrog-challenges
+
 
 4. If you have defined any npm packages, you must declare them in "package.json" in the root directory.
 
