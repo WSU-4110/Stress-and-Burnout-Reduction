@@ -27,8 +27,20 @@ export async function onRequestPost({ request, env }) {
     const sessionId = uuidv4();
     const currentTime = Math.floor(Date.now() / 1000);
 
-    // Set last sign-in time
-    user.time_last_sign_in = currentTime;
+    // Login streak logic
+    if (user.time_last_sign_in) {
+        if (currentTime - user.time_last_sign_in >= 86400) {
+            if (currentTime - user.time_last_sign_in < 172800) {
+                user.login_streak_days = (user.login_streak_days || 0) + 1;
+            } else {
+                user.login_streak_days = 1; // More than one day missed, reset streak
+            }
+            user.time_last_sign_in = currentTime; // Update the last login time
+        }
+    } else {
+        user.login_streak_days = 1; // Initialize if it's their first login
+        user.time_last_sign_in = currentTime;
+    }
 
     // Add or update the sessions array in the user object
     if (!user.sessions) user.sessions = [];
