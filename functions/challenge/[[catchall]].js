@@ -49,15 +49,41 @@ export async function onRequestPost({ request, env }) {
 
 async function renderChallengesPage(username, env) {
     let topics = await fetchTopics(env);
-    
+    let userPosts = await fetchPostsForUser(username, env);
+
+    let activeTasksHtml = userPosts.filter(post => post.status === 'active').map(post => `
+        <tr>
+            <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
+            <td style="width: 30%;">
+                <form action="/challenge/topic/${post.topic_id}/complete-challenge" method="post">
+                    <input type="hidden" name="post_id" value="${post.id}">
+                    <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                </form>
+                <form action="/challenge/topic/${post.topic_id}/abandon-challenge" method="post">
+                    <input type="hidden" name="post_id" value="${post.id}">
+                    <button type="submit" class="btn btn-danger btn-sm">Abandon</button>
+                </form>
+            </td>
+        </tr>`
+    ).join('');
+
+    let completedTasksHtml = userPosts.filter(post => post.status === 'completed').map(post => `
+        <tr>
+            <td style="width: 70%;"><a href="/challenge/topic/${post.topic_id}">${post.title}</a></td>
+            <td style="width: 30%;">Completed</td>
+        </tr>`
+    ).join('');
+
     const topicsHtml = topics.map(topic => `
         <tr>
             <td style="width: 70%;"><a href="/challenge/topic/${topic.id}">${topic.title}</a></td>
             <td style="width: 20%;">${topic.username}</td>
-            <td style="width: 10%;">${username === topic.username ? `<form action="/challenge/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-        </tr>
-    `).join('');
-  
+            <td style="width: 10%;">
+                ${username === topic.username ? `<form action="/challenge/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}
+            </td>
+        </tr>`
+    ).join('');
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -70,6 +96,27 @@ async function renderChallengesPage(username, env) {
         <body>
             <div class="container mt-4">
                 <h1>Challenge Topics</h1>
+                <h2>Your Active Tasks</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>${activeTasksHtml}</tbody>
+                </table>
+                <h2>Your Completed Tasks</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>${completedTasksHtml}</tbody>
+                </table>
+                <h2>All Topics</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -186,6 +233,11 @@ async function fetchTopicById(topicId, env) {
 async function fetchPostsForTopic(topicId, env) {
     const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, username, title, status, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
     return (await stmt.bind(topicId).all()).results;
+}
+
+async function fetchPostsForUser(username, env) {
+    const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, title, status FROM posts WHERE username = ? ORDER BY post_date DESC");
+    return (await stmt.bind(username).all()).results;
 }
 
 function getSessionCookie(request) {
