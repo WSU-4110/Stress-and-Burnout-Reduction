@@ -1,3 +1,6 @@
+// Jesse Charlie Naser (c) 2024
+// Port of ZestyDB with modifications for Pages Functions and User Restricted Access
+
 import { v4 as uuidv4 } from 'uuid';
 
 export async function onRequestGet({ request, env }) {
@@ -118,7 +121,7 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>ToDo List</title>
+    <title>My Goal Tracker</title>
     <script>
     function deleteTask(id) {
         fetch('/goals/delete-task/' + id, { method: 'DELETE' })
@@ -184,8 +187,67 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
         setView(currentView, categoryId, selectedDate);
     });
     </script>
+    <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 <body>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <img src="/coolfrog.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
     <div class="container mt-5">
         <h1 class="mb-4">ToDo List</h1>
         <div class="mb-3">
@@ -260,6 +322,32 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
             </table>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    rightButton.textContent = 'Sign Out of ' + data.username;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
+        });
+    </script>
 </body>
 </html>`;
 }
