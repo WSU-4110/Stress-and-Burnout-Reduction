@@ -9,8 +9,8 @@ export default {
 async function handleRequest(request, env, url) {
     const sessionId = getSessionIdFromRequest(request);
 
-    // Ensure request is directed to /forums or its subpaths
     if (!url.pathname.startsWith("/forums")) {
+        // Redirect non-forum requests to the forum homepage or show not found
         return new Response("Not found", { status: 404 });
     }
 
@@ -22,25 +22,25 @@ async function handleRequest(request, env, url) {
     if (!session) {
         return mustSignInPage();
     }
-
+    
+    const username = JSON.parse(session).username;
     if (request.method === 'POST' && url.pathname === "/forums") {
-        return await handlePostRequest(request, env);
+        return await handlePostRequest(request, env, username);
     } else if (request.method === 'DELETE' && url.pathname.startsWith("/forums/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
-        return await handleDeleteTopic(topicId, env, JSON.parse(session).username);
+        return await handleDeleteTopic(topicId, env, username);
     } else if (url.pathname === "/forums") {
-        return await renderForumPage(env, JSON.parse(session).username);
+        return await renderForumPage(env, username);
     } else {
         return new Response("Not found", { status: 404 });
     }
 }
 
-async function handlePostRequest(request, env) {
+async function handlePostRequest(request, env, username) {
     const formData = await request.formData();
     const topicTitle = formData.get('title');
-    const username = formData.get('username');
     
-    if (topicTitle && username) {
+    if (topicTitle) {
         const stmt = env.COOLFROG_FORUM.prepare('INSERT INTO topics (title, createdBy) VALUES (?, ?)');
         await stmt.bind(topicTitle, username).run();
     }
@@ -52,7 +52,7 @@ async function handleDeleteTopic(topicId, env, username) {
     const stmt = env.COOLFROG_FORUM.prepare('DELETE FROM topics WHERE id = ? AND createdBy = ?');
     await stmt.bind(topicId, username).run();
     
-    return new Response(null, {status: 204});
+    return Response.redirect(`${new URL(request.url).origin}/forums`);
 }
 
 function getSessionIdFromRequest(request) {
@@ -75,13 +75,11 @@ async function renderForumPage(env, username) {
     const stmt = env.COOLFROG_FORUM.prepare('SELECT * FROM topics');
     const topics = await stmt.all();
 
-    let topicsHtml = topics.map(topic => {
-        let actions = `<div>Posted by: ${topic.createdBy}</div>`;
-        if (topic.createdBy === username) {
-            actions += `<button onclick="fetch('/forums/delete-topic/${topic.id}', { method: 'DELETE' }).then(() => location.reload())">Delete</button>`;
-        }
-        return `<li>${topic.title} - ${actions}</li>`;
-    }).join('');
+    let topicsHtml = topics.map(topic => `
+        <li>
+            ${topic.title} - Posted by: ${topic.createdBy}
+            ${topic.createdBy === username ? `<button onclick="deleteTopic('${topic.id}')">Delete</button>` : ''}
+        </li>`).join('');
 
     return new Response(`
     <!DOCTYPE html>
@@ -89,6 +87,12 @@ async function renderForumPage(env, username) {
     <head>
         <title>Forum Topics</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script>
+            async function deleteTopic(id) {
+                await fetch('/forums/delete-topic/' + id, { method: 'DELETE' });
+                window.location.reload();
+            }
+        </script>
     </head>
     <body>
         <div class="container">
