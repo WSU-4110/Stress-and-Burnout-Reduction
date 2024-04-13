@@ -1,0 +1,103 @@
+import { v4 as uuidv4 } from 'uuid';
+
+export async function onRequestGet({ request, env }) {
+    const url = new URL(request.url);
+    const sessionCookie = getSessionCookie(request);
+    let session;
+
+    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+        return unauthorizedResponse();
+    }
+    
+    if (url.pathname === '/dashboard' || url.pathname === '/dashboard/get-weekly') {
+        return renderDashboardPage(session.username, env);
+    }
+
+    return new Response("Resource Not Found", { status: 404 });
+}
+
+async function renderDashboardPage(username, env) {
+    let challenges = await getChallengesWithMostActiveMembers(env);
+    let weeklyChallenge, dailyChallenge;
+
+    // Determine weekly and daily challenges based on member participation
+    if (challenges.length >= 2) {
+        weeklyChallenge = challenges[0];
+        dailyChallenge = challenges[1];
+    } else if (challenges.length === 1) {
+        dailyChallenge = challenges[0];
+    }
+
+    const weeklyHtml = weeklyChallenge ? generateChallengeHtml(weeklyChallenge, username) : '<td>No current weekly challenge</td><td></td>';
+    const dailyHtml = dailyChallenge ? generateChallengeHtml(dailyChallenge, username) : '<td>No current daily challenge</td><td></td>';
+
+    const pageHtml = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            <title>Dashboard</title>
+        </head>
+        <body>
+        <div class="container mt-5">
+            <h1>Dashboard</h1>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Weekly Challenge</th>
+                        <th>Daily Challenge</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        ${weeklyHtml}
+                        ${dailyHtml}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </body>
+        </html>
+    `;
+
+    return new Response(pageHtml, { headers: { 'Content-Type': 'text/html' } });
+}
+
+function generateChallengeHtml(challenge, username) {
+    const btnComplete = `<form action="/challenge/topic/${challenge.id}/complete-challenge" method="post">
+        <button type="submit" class="btn btn-success btn-sm">Complete Challenge</button>
+    </form>`;
+
+    const btnAbandon = `<form action="/challenge/topic/${challenge.id}/abandon-challenge" method="post">
+        <button type="submit" class="btn btn-danger btn-sm">Abandon Challenge</button>
+    </form>`;
+
+    const actionButtons = (username === challenge.username) ? `<td>${btnComplete} ${btnAbandon}</td>` : '<td></td>';
+
+    return `<td><a href="/challenge/topic/${challenge.id}">${challenge.title}</a></td>${actionButtons}`;
+}
+
+async function getChallengesWithMostActiveMembers(env) {
+    const stmt = env.COOLFROG_CHALLENGES.prepare(`
+        SELECT topics.id, topics.title, COUNT(posts.id) AS activeCount
+        FROM topics
+        JOIN posts ON topics.id = posts.topic_id AND posts.status = 'active'
+        GROUP BY topics.id
+        ORDER BY activeCount DESC
+        LIMIT 2
+    `);
+    return (await stmt.all()).results;
+}
+
+function getSessionCookie(request) {
+    const cookieHeader = request.headers.get('Cookie');
+    if (!cookieHeader) return null;
+    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+    return Object.fromEntries(cookies)['session-id'];
+}
+
+function unauthorizedResponse() {
+    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+}
