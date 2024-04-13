@@ -1,179 +1,188 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export async function onRequestGet({ request, env }) {
-  const url = new URL(request.url);
-  const path = url.pathname.split('/').filter(p => p);
+    // Extend the existing implementation while keeping the logic untouched
+    const url = new URL(request.url);
+    const sessionCookie = getSessionCookie(request);
 
-  const sessionCookie = getSessionCookie(request);
-  if (!sessionCookie) {
-    return unauthorizedResponse();
-  }
+    if (!sessionCookie) {
+        return unauthorizedResponse();
+    }
 
-  const sessionData = await env.COOLFROG_SESSIONS.get(sessionCookie);
-  if (!sessionData) {
-    return unauthorizedResponse();
-  }
-  const session = JSON.parse(sessionData);
+    const session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie));
+    if (!session) {
+        return unauthorizedResponse();
+    }
+    
+    if (url.pathname === '/forums') {
+        return renderForumsPage(session.username, env);
+    } else if (url.pathname.startsWith("/forums/topic/")) {
+        const topicId = url.pathname.split('/').pop();
+        return renderTopicPage(topicId, session.username, env);
+    }
 
-  if (path[0] === 'forums' && path.length === 1) {
-    // Render the main forums page
-    return await renderForumsPage(session.username, env);
-  } else if (path[0] === 'forums' && path.length === 2) {
-    // Render a specific topic by its ID
-    return await renderTopicPage(path[1], session.username, env);
-  }
-
-  return new Response("Resource Not Found", { status: 404 });
+    return new Response("Resource Not Found", { status: 404 });
 }
 
 export async function onRequestPost({ request, env }) {
-  const url = new URL(request.url);
-  const sessionCookie = getSessionCookie(request);
-  if (!sessionCookie) {
-    return unauthorizedResponse();
-  }
+    // This method is engaged when posting to topics for creating and deleting posts
+    const url = new URL(request.url);
+    const formData = await request.formData();
+    const sessionCookie = getSessionCookie(request);
 
-  const sessionData = await env.COOLFROG_SESSIONS.get(sessionCookie);
-  if (!sessionData) {
-    return unauthorizedResponse();
-  }
-  const session = JSON.parse(sessionData);
+    if (!sessionCookie) {
+        return unauthorizedResponse();
+    }
 
-  const formData = await request.formData();
-  const path = url.pathname.split('/').filter(p => p);
+    const session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie));
+    if (!session) {
+        return unauthorizedResponse();
+    }
 
-  if (path[0] === 'forums' && path.length === 2 && path[1] === 'add-topic') {
-    const title = formData.get('title').trim();
-    return addTopic(title, session.username, env);
-  } else if (path[0] === 'forums' && path.length === 3 && path[1] === 'delete-topic') {
-    const topicId = path[2];
-    return deleteTopic(topicId, session.username, env);
-  } else if (path[0] === 'forums' && path.length === 3 && path[1] === 'add-post') {
-    const topicId = path[2];
-    const title = formData.get('title').trim();
-    const content = formData.get('content').trim();
-    return addPost(topicId, title, content, session.username, env);
-  } else if (path[0] === 'forums' && path.length === 3 && path[1] === 'delete-post') {
-    const postId = path[2];
-    return deletePost(postId, session.username, env);
-  }
+    if (url.pathname === "/forums/add-topic") {
+        const title = formData.get('title').trim();
+        return addTopic(title, session.username, env);
+    } else if (url.pathname.startsWith("/forums/delete-topic/")) {
+        const topicId = url.pathname.split('/')[3];
+        return deleteTopic(topicId, session.username, env);
+    } else if (url.pathname.startsWith("/forums/add-post/")) {
+        const topicId = url.pathname.split('/')[3];
+        const title = formData.get('title').trim();
+        const content = formData.get('content').trim();
+        return addPost(topicId, title, content, session.username, env);
+    } else if (url.pathname.startsWith("/forums/delete-post/")) {
+        const topicId = url.pathname.split('/')[3];
+        const postId = url.pathname.split('/')[4];
+        return deletePost(topicId, postId, session.username, env);
+    }
 
-  return new Response("Not Found", { status: 404 });
-}
-
-async function renderForumsPage(username, env) {
-  const topics = await fetchTopics(env);
-  const topicsHtml = topics.map(topic => `
-    <li>
-      <a href="/forums/${topic.id}">${topic.title}</a>
-      ${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit">Delete</button></form>` : ''}
-    </li>
-  `).join('');
-
-  return new Response(`
-    <html>
-      <body>
-        <h1>Forum Topics</h1>
-        <ul>${topicsHtml}</ul>
-        <form action="/forums/add-topic" method="post">
-          <input type="text" name="title" placeholder="New Topic Title">
-          <button type="submit">Add Topic</button>
-        </form>
-      </body>
-    </html>
-  `, { headers: {'Content-Type': 'text/html'} });
+    return new Response("Not Found", { status: 404 });
 }
 
 async function renderTopicPage(topicId, username, env) {
-  const topic = await fetchTopic(topicId, env);
-  const posts = await fetchPosts(topicId, env);
-  const postsHtml = posts.map(post => `
-    <div>
-      <h3>${post.title}</h3>
-      <p>${post.content}</p>
-      ${username === post.username ? `<button onclick="deletePost('${post.id}')">Delete</button>` : ''}
-    </div>
-  `).join('');
+    const topicInfo = await fetchTopicById(topicId, env);
+    const posts = await fetchPostsForTopic(topicId, env);
 
-  return new Response(`
-    <html>
-      <body>
-        <h1>${topic.title}</h1>
-        ${postsHtml}
-        <form action="/forums/${topicId}/add-post" method="post">
-          <input type="text" name="title" placeholder="Post Title">
-          <textarea name="content"></textarea>
-          <button type="submit">Add Post</button>
-        </form>
-        <a href="/forums">Back to Topics</a>
-      </body>
-    </html>
-  `, { headers: {'Content-Type': 'text/html'} });
+    const postsHtml = posts.map(post => `
+        <div class="post">
+            <h3>${post.title}</h3>
+            <p>${post.content}</p>
+            <span>Posted by ${post.username}</span>
+            ${username === post.username ? `<button onclick="deletePost('${post.id}')">Delete</button>` : ''}
+        </div>
+    `).join('');
+
+    const pageHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Topic: ${topicInfo.title}</title>
+        </head>
+        <body>
+            <h1>${topicInfo.title}</h1>
+            <div>${postsHtml}</div>
+            <form action="/forums/add-post/${topicId}" method="post">
+                <input type="text" name="title" placeholder="Title of your post" required>
+                <textarea name="content" placeholder="Write your post here..." required></textarea>
+                <button type="submit">Post</button>
+            </form>
+            <button onclick="window.location.href='/forums'">Back to Forums</button>
+        </body>
+        </html>`;
+    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
-async function addTopic(title, username, env) {
-  const topicId = uuidv4();
-  await env.TOPICS.put(topicId, JSON.stringify({ id: topicId, title, username }));
-  return Response.redirect('/forums');
+async function fetchTopicById(topicId, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title FROM topics WHERE id = ?");
+    return await stmt.bind(topicId).get();
 }
 
-async function deleteTopic(topicId, username, env) {
-  await env.TOPICS.delete(topicId);
-  // Also delete all associated posts
-  const posts = await fetchPosts(topicId, env);
-  posts.forEach(async post => {
-    await env.POSTS.delete(post.id);
-  });
-  return Response.redirect('/forums');
+async function fetchPostsForTopic(topicId, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, content, username FROM posts WHERE topic_id = ?");
+    return (await stmt.bind(topicId).all()).results;
 }
 
 async function addPost(topicId, title, content, username, env) {
-  const postId = uuidv4();
-  await env.POSTS.put(postId, JSON.stringify({ id: postId, title, content, username, topicId }));
-  return Response.redirect(`/forums/${topicId}`);
+    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO posts (topic_id, title, content, username) VALUES (?, ?, ?, ?)");
+    await stmt.bind(topicId, title, content, username).run();
+    return new Response(null, { status: 303, headers: { 'Location': `/forums/topic/${topicId}` } });
 }
 
-async function deletePost(postId, username, env) {
-  await env.POSTS.delete(postId);
-  return Response.redirect(`/forums/${topicId}`);
+async function deletePost(topicId, postId, username, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
+    await stmt.bind(postId, username).run();
+    return new Response(null, { status: 204, headers: { 'Location': `/forums/topic/${topicId}` } });
+}
+
+async function renderForumsPage(username, env) {
+    let topics = await fetchTopics(env);
+    
+    const topicsHtml = topics.map(topic => `
+        <tr>
+            <td>${topic.title}</td>
+            <td>${topic.username}</td>
+            <td>${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+        </tr>
+    `).join('');
+  
+    const pageHtml = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            <title>Forum Page</title>
+        </head>
+        <body>
+            <div class="container mt-4">
+                <h1>Forum Topics</h1>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>${topicsHtml}</tbody>
+                </table>
+                <form method="post" action="/forums/add-topic">
+                    <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-primary">Add Topic</button>
+                </form>
+            </div>
+        </body>
+        </html>
+    `;
+  
+    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+}
+
+async function addTopic(title, username, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (title, username) VALUES (?, ?)");
+    await stmt.bind(title, username).run();
+    return new Response(null, { status: 303, headers: { 'Location': '/forums' } });
+}
+
+async function deleteTopic(topicId, username, env) {
+    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+    await stmt.bind(topicId, username).run();
+    return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
-  const topics = [];
-  await env.TOPICS.list().keys.forEach(key => {
-    topics.push(JSON.parse(env.TOPICS.get(key.name)));
-  });
-  return topics;
-}
-
-async function fetchTopic(topicId, env) {
-  return JSON.parse(await env.TOPICS.get(topicId));
-}
-
-async function fetchPosts(topicId, env) {
-  const posts = [];
-  await env.POSTS.list().keys.forEach(key => {
-    const post = JSON.parse(env.POSTS.get(key.name));
-    if (post.topicId === topicId) {
-      posts.push(post);
-    }
-  });
-  return posts;
+    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics");
+    return (await stmt.all()).results;
 }
 
 function getSessionCookie(request) {
-  const cookieHeader = request.headers.get('Cookie');
-  if (!cookieHeader) {
-    return null;
-  }
-  const cookies = cookieHeader.split('; ').reduce((acc, cookie) => {
-    const [key, value] = cookie.split('=');
-    acc[key] = value;
-    return acc;
-  }, {});
-  return cookies['session-id'];
+    const cookieHeader = request.headers.get('Cookie');
+    if (!cookieHeader) return null;
+    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+    return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
-  return new Response('Unauthorized', { status: 401 });
+    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
 }
