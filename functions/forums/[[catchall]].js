@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-// This handles GET requests which includes serving the main forums page.
+// Handles GET requests which includes serving the main forums page.
 export async function onRequestGet({ request, env }) {
     const url = new URL(request.url);
     const sessionCookie = getSessionCookie(request);
@@ -13,7 +13,7 @@ export async function onRequestGet({ request, env }) {
     if (!session) {
         return unauthorizedResponse();
     }
-    
+
     if (url.pathname === '/forums') {
         return renderForumsPage(session.username, env);
     }
@@ -21,7 +21,7 @@ export async function onRequestGet({ request, env }) {
     return new Response("Resource Not Found", { status: 404 });
 }
 
-// This handles POST requests for adding or deleting forum topics.
+// Handles POST requests for adding or deleting forum topics.
 export async function onRequestPost({ request, env }) {
     const url = new URL(request.url);
     const formData = await request.formData();
@@ -54,10 +54,10 @@ async function renderForumsPage(username, env) {
         <tr id="topic-row-${topic.id}">
             <td>${topic.title}</td>
             <td>${topic.username}</td>
-            <td>${username === topic.username ? `<button type="button" onclick="deleteTopic('${topic.id}')" class="btn btn-danger">Delete</button>` : ''}</td>
+            <td>${username === topic.username ? `<button onclick="deleteTopic('${topic.id}')" class="btn btn-danger">Delete</button>` : ''}</td>
         </tr>
     `).join('');
-  
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -65,25 +65,20 @@ async function renderForumsPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+            <title>Forum Page</title>
             <script>
-                function deleteTopic(id) {
-                    fetch('/forums/delete-topic/' + id, { method: 'POST' })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (response.ok) {
-                                const row = document.getElementById('topic-row-' + data.id);
-                                row.remove();
-                            } else {
-                                alert('Failed to delete topic.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error deleting topic:', error);
-                            alert('Error deleting topic.');
-                        });
+                async function deleteTopic(id) {
+                    const response = await fetch('/forums/delete-topic/' + id, {
+                        method: 'POST'
+                    });
+                    if (response.ok) {
+                        const row = document.getElementById('topic-row-' + id);
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert("Failed to delete topic.");
+                    }
                 }
             </script>
-            <title>Forum Page</title>
         </head>
         <body>
             <div class="container mt-4">
@@ -106,7 +101,7 @@ async function renderForumsPage(username, env) {
         </body>
         </html>
     `;
-  
+
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
@@ -119,10 +114,7 @@ async function addTopic(title, username, env) {
 async function deleteTopic(topicId, username, env) {
     const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
     await stmt.bind(topicId, username).run();
-    return new Response(JSON.stringify({ id: topicId }), { 
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-    });
+    return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
