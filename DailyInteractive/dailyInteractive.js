@@ -1,8 +1,11 @@
+// Class definition for general day content setup and manipulation.
 class DayContent {
+    // Placeholder method to setup content, should be implemented in subclasses.
     setupContent() {
         throw new Error("This method should be implemented by subclasses");
     }
 
+    // Adjusts the style of the interactive box based on given flex properties.
     adjustInteractiveBoxStyle(flexDirection, justifyContent = 'center', alignItems = 'center') {
         const box = document.querySelector('.interactive-box');
         if (box) {
@@ -13,7 +16,9 @@ class DayContent {
     }
 }
 
+// Class for Monday's content, extends DayContent.
 class MondayContent extends DayContent {
+    // Initializes the content for Monday, setting up an affirmation section.
     setupContent() {
         const content = `
             <div class="interactive-box">
@@ -27,6 +32,7 @@ class MondayContent extends DayContent {
         this.adjustInteractiveBoxStyle('column');
     }
 
+    // Generates a new affirmation from a predefined list and updates the display.
     generateNewAffirmation() {
         const affirmations = [
             "You are enough.",
@@ -43,7 +49,9 @@ class MondayContent extends DayContent {
     }
 }
 
+// Class for Tuesday's content, extends DayContent.
 class TuesdayContent extends DayContent {
+    // Sets up an interactive box where users can type and submit their worries
     setupContent() {
         const content = `
             <div class="interactive-box" id="worry-box">
@@ -60,6 +68,7 @@ class TuesdayContent extends DayContent {
         this.adjustInteractiveBoxStyle('column');
     }
 
+    // Handles the submission of worries by fading out the text and resetting the textarea.
     handleWorrySubmission() {
         const worryText = document.getElementById('worry-text');
         if (worryText.value.trim() !== "") {
@@ -78,7 +87,9 @@ class TuesdayContent extends DayContent {
     }
 }
 
+// Class for Wednesday's content, extends DayContent.
 class WednesdayContent extends DayContent {
+    // Initializes ASMR sounds which can be played by pressing buttons.
     setupContent() {
     const content = `
         <div class="interactive-box">
@@ -117,7 +128,9 @@ class WednesdayContent extends DayContent {
 }
 }
 
+// Class for Thursday's content, extends DayContent.
 class ThursdayContent extends DayContent {
+    // Sets up an interactive image of a cat that users can "pet"
     setupContent() {
         const content = `
             <div class="interactive-box" id="cat-box">
@@ -139,7 +152,9 @@ class ThursdayContent extends DayContent {
     }
 }
 
+// Class for Friday's content, extends DayContent.
 class FridayContent extends DayContent {
+    // Sets up buttons to select different animated and auditory environments.
     setupContent() {
         const content = `
             <div class="interactive-box" id="environment-box">
@@ -159,6 +174,7 @@ class FridayContent extends DayContent {
         });
     }
 
+    // Displays the selected environment using an image and sound.
     showEnvironment(environment) {
         const environments = {
             'summary-night': { gif: 'https://i.pinimg.com/originals/de/b0/f1/deb0f1f0a7ca99c0d39a2c3b586efcf9.gif', sound: 'summary-night.mp3' },
@@ -187,7 +203,9 @@ class FridayContent extends DayContent {
     }
 }
 
+// Class for Saturday's content, extends DayContent.
 class SaturdayContent extends DayContent {
+    // Sets up a timer challenge where users should do nothing as the timer counts down.
     setupContent() {
         const content = `
             <div class="interactive-box" id="saturday-box">
@@ -204,7 +222,8 @@ class SaturdayContent extends DayContent {
             this.startTimer();
         });
     }
-    
+
+    // Starts a countdown timer, updating the progress visually on the screen.
     startTimer() {
         const startTime = 120;
         let currentTime = startTime;
@@ -224,7 +243,9 @@ class SaturdayContent extends DayContent {
     }
 } 
 
+// Class for Sunday's content, extends DayContent.
 class SundayContent extends DayContent {
+    // Sets up a button that, when pressed, gradually fills a loading bar to symbolize making everything OK.
     setupContent() {
         const content = `
             <div class="interactive-box" style="text-align: center;">
@@ -262,7 +283,7 @@ class SundayContent extends DayContent {
     }
 }
 
-
+// ContentFactory class to create content instances based on the current day of the week.
 class ContentFactory {
     static createContent(dayOfWeek) {
         switch(dayOfWeek) {
@@ -278,6 +299,7 @@ class ContentFactory {
     }
 }
 
+// When the DOM is fully loaded, sets up the content for the current day and manages changes in day selection.
 document.addEventListener('DOMContentLoaded', function() {
     var dayOfWeek = new Date().getDay();
     const contentCreator = ContentFactory.createContent(dayOfWeek);
