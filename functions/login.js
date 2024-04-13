@@ -43,7 +43,7 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Update the leaderboard (or initialize if first entry)
-    await env.COOLFROG_LEADERBOARD.put(user.login_streak_days.toString(), user.username);
+    await env.COOLFROG_LEADERBOARD.put(user.username, user.login_streak_days.toString());
 
     // Add or update the sessions array in the user object
     if (!user.sessions) user.sessions = [];
