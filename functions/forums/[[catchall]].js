@@ -1,37 +1,47 @@
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    const session = getSessionFromRequest(request);
+import { v4 as uuidv4 } from 'uuid';
 
+// Handler for POST requests
+export async function onRequestPost({ request, env }) {
+  try {
+    const url = new URL(request.url);
+    const formData = await request.formData();
+    const sessionCookie = getSessionCookie(request);
+
+    if (!sessionCookie) {
+      return unauthorizedResponse();
+    }
+
+    const session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie));
     if (!session) {
       return unauthorizedResponse();
     }
 
-    if (url.pathname === "/forums" && request.method === "GET") {
-      return await renderForumsPage(session, env);
-    } else if (url.pathname === "/forums/add-topic" && request.method === "POST") {
-      return await addTopic(request, session, env);
-    } else if (url.pathname.startsWith("/forums/delete-topic/") && request.method === "DELETE") {
+    if (url.pathname === "/forums/add-topic") {
+      const title = formData.get('title').trim();
+      return addTopic(title, session.username, env);
+    } else if (url.pathname.startsWith("/forums/delete-topic/")) {
       const topicId = url.pathname.split('/')[3];
-      return await deleteTopic(topicId, session, env);
-    } else {
-      return new Response("Not Found", { status: 404 });
+      return deleteTopic(topicId, session.username, env);
     }
-  }
-};
 
-async function renderForumsPage(session, env) {
+    return new Response("Not Found", { status: 404 });
+  } catch (error) {
+    console.error('Error:', error);
+    return new Response('Internal Server Error', { status: 500 });
+  }
+}
+
+async function renderForumsPage(username, env) {
   let topics = await fetchTopics(env);
-  
   const topicsHtml = topics.map(topic => `
     <tr>
       <td>${topic.title}</td>
       <td>${topic.username}</td>
-      <td>${session.username === topic.username ? `<button class="btn btn-danger" onClick="deleteTopic('${topic.id}')">Delete</button>` : ''}</td>
+      <td>${topic.username === username ? `<button class="btn btn-danger" formaction="/forums/delete-topic/${topic.id}" formmethod="post">Delete</button>` : ''}</td>
     </tr>
   `).join('');
 
-  const html = `
+  const pageHtml = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -43,80 +53,51 @@ async function renderForumsPage(session, env) {
     <body>
       <div class="container mt-4">
         <h1>Forum Topics</h1>
-        <table class="table table-striped">
+        <table class="table">
           <thead>
             <tr>
               <th>Title</th>
-              <th>Created By</th>
-              <th>Actions</th>
+              <th>Author</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>${topicsHtml}</tbody>
         </table>
-        <form id="newTopicForm" class="mb-3">
-          <div class="form-group">
-            <label for="title">Topic Title:</label>
-            <input type="text" id="title" class="form-control">
-          </div>
-          <button type="button" class="btn btn-primary" onclick="addTopic()">Add Topic</button>
+        <form method="post" action="/forums/add-topic">
+          <input type="text" name="title" placeholder="New topic title" required>
+          <button type="submit" class="btn btn-primary">Add Topic</button>
         </form>
       </div>
-      <script>
-        async function addTopic() {
-          const title = document.getElementById('title').value;
-          await fetch('/forums/add-topic', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({title})
-          });
-          window.location.reload();
-        }
-
-        async function deleteTopic(id) {
-          await fetch('/forums/delete-topic/' + id, { method: 'DELETE' });
-          window.location.reload();
-        }
-      </script>
     </body>
     </html>
   `;
 
-  return new Response(html, { headers: {'Content-Type': 'text/html'} });
+  return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
-async function addTopic(request, session, env) {
-  const { title } = await request.json();
-  const stmt = env.FORUM_DB.prepare("INSERT INTO topics (title, username) VALUES (?, ?)");
-  await stmt.bind(title, session.username).run();
+async function addTopic(title, username, env) {
+  const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (title, username) VALUES (?, ?)");
+  await stmt.bind(title, username).run();
   return new Response(null, { status: 303, headers: { 'Location': '/forums' } });
 }
 
-async function deleteTopic(topicId, session, env) {
-  const topic = await getTopic(topicId, env);
-  if (session.username !== topic.username) {
-    return new Response("Unauthorized to delete this topic", { status: 403 });
-  }
-
-  const stmt = env.FORUM_DB.prepare("DELETE FROM topics WHERE id = ?");
-  await stmt.bind(topicId).run();
+async function deleteTopic(topicId, username, env) {
+  const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+  await stmt.bind(topicId, username).run();
   return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
-  const stmt = env.FORUM_DB.prepare("SELECT id, title, username FROM topics");
+  const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics");
   return await stmt.all();
 }
 
-async function getTopic(topicId, env) {
-  const stmt = env.FORUM_DB.prepare("SELECT id, title, username FROM topics WHERE id = ?");
-  return await stmt.bind(topicId).get();
-}
-
-function getSessionFromRequest(request) {
-  const cookie = request.headers.get("Cookie");
-  return cookie ? JSON.parse(cookie.split('=')[1]) : null;
+function getSessionCookie(request) {
+  const cookie = request.headers.get('Cookie');
+  if (!cookie) return null;
+  return cookie.split(';').find(c => c.trim().startsWith('session-id='))?.split('=')[1];
 }
 
 function unauthorizedResponse() {
-  return new Response("Unauthorized", {status: 403, headers: {'Content-Type': 'text/plain'}});
+  return new Response("Unauthorized - Please log in", { status: 401, headers: { 'Content-Type': 'text/plain' } });
 }
