@@ -25,7 +25,7 @@ export async function onRequestPost({ request, env }) {
       const id = url.pathname.split('/').pop();
       await updateCategory(id, formData, env);
     }
-    return new Response(null, { status: 303, headers: { 'Location': url.origin } });
+    return new Response(null, { status: 303, headers: { 'Location': url.origin + '/goals' } });
   } catch (e) {
     return new Response(`Error: ${e.message}`, { status: 500 });
   }
@@ -163,7 +163,7 @@ async function renderPage(view, categoryId, selectedDate, env) {
     }
     document.addEventListener('DOMContentLoaded', function() {
         const currentView = localStorage.getItem('view') || 'default';
-        const categoryId = localStorage.get('category_id') || '';
+        const categoryId = localStorage.getItem('category_id') || '';
         const selectedDate = localStorage.getItem('selected_date') || new Date().toISOString().split('T')[0];
         setView(currentView, categoryId, selectedDate);
     });
