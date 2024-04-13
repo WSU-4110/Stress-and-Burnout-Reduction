@@ -68,6 +68,9 @@ async function renderForumsPage(username, env) {
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Forum Page</title>
     <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
         .fixed-header {
             position: fixed;
             top: 0;
@@ -156,6 +159,9 @@ async function renderTopicPage(topicId, username, env) {
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Posts in ${topic.title}</title>
     <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
         .fixed-header {
             position: fixed;
             top: 0;
@@ -171,7 +177,7 @@ async function renderTopicPage(topicId, username, env) {
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="coolfrog.png" alt="logo">
+                <img src="/coolfrog.png" alt="logo">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -180,7 +186,7 @@ async function renderTopicPage(topicId, username, env) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
                     <li class="nav-item"><a class="nav-link" href="meetup.html">Meetup Forum</a></li>
                     <li class="nav-item"><a class="nav-link" href="videopage.html">Video Library</a></li>
                     <li class="nav-item"><a class="nav-link" href="article_library.html">Article Library</a></li>
