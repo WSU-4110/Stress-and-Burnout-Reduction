@@ -18,8 +18,12 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install dependencies
+    - name: Install main dependencies
       run: npm install
+
+    - name: Install Cloudflare Workers dependencies
+      run: npm install
+      working-directory: ./tests/functions
 
     - name: Run JavaScript tests
       run: npm test
