@@ -65,9 +65,9 @@ class Timer {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const timer1 = new Timer(1, 'Sounds/hotel-bell-ding.mp3');
-    const timer2 = new Timer(2, 'Sounds/hotel-bell-ding.mp3');
-    const timer3 = new Timer(3, 'Sounds/hotel-bell-ding.mp3');
+    const timer1 = new Timer(1, '/cdn/mp3/hotel-bell-ding.mp3');
+    const timer2 = new Timer(2, '/cdn/mp3/hotel-bell-ding.mp3');
+    const timer3 = new Timer(3, '/cdn/mp3/hotel-bell-ding.mp3');
 
     document.getElementById('start1').addEventListener('click', () => timer1.start());
     document.getElementById('stop1').addEventListener('click', () => timer1.stop());
