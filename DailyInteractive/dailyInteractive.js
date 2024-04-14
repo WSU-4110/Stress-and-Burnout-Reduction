@@ -315,3 +315,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#item1 h1').textContent = dayNames[selectedDay];
     });
 });
+
+module.exports = {
+    MondayContent,
+    TuesdayContent,
+    WednesdayContent,
+    ThursdayContent,
+    FridayContent,
+    SaturdayContent,
+    SundayContent
+};
