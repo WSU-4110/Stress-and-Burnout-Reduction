@@ -188,8 +188,8 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
                     <tbody>${topicsHtml}</tbody>
                 </table>
                 <form method="post" action="/challenge/add-topic">
-                    <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
-                    <button type="submit" class="btn btn-primary">Add Topic</button>
+                    <input type="text" name="title" placeholder="Enter challenge title" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-primary">Add Challenge</button>
                 </form>
             </div>
     <script>
@@ -325,7 +325,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
             </div>
             <div class="container mt-5">
                 <h1>${topic.title}</h1>
-                <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
+                <a href="/challenge" class="btn btn-primary mb-3">Back to Challenges</a>
                 ${postsHtml}
                 ${actionButton}
             </div>
