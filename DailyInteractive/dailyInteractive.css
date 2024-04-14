@@ -37,7 +37,7 @@ section#item1 {
 }
 
 section#item2 {
-    background-image: url(DIcontent.gif);
+    background-image: url(/cdn/img/daily-interactive-content.gif);
     background-color: #000000;
     font-family: sans-serif;
 }
@@ -52,7 +52,7 @@ section#item2 {
 
 .hero {
     position: relative;
-    background:#333 url(DIcover.jpg) no-repeat center center;
+    background:#333 url(/cdn/img/daily-interactive-cover.jpg) no-repeat center center;
     background-size: cover;
     height: 100%;
     width: 100%;
