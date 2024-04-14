@@ -1,82 +1,65 @@
 <!DOCTYPE html>
-
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8">
     <title>Meetup Forum Webpage</title>
-
     <style>
-        @import url(forumStyles.css);
+      @import url(forumStyles.css);
     </style>
-</head>
-
-<body>
+  </head>
+  <body>
     <header class="fixed-header">
-        <!-- nav and ul elements used for formatting organization -->
-        <nav>
-            <div class="link-buttons mt-3">
-                <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
-                <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
-                <a href="meetup.html" class="btn btn-primary mr-2 mb-2">Meetup Forum</a>
-                <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
-                <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
-                <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
-                <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
-                <a href="relaxation-sounds.html" class="btn btn-primary mr-2 mb-2">Relaxation Sounds Library</a>
-                <a href="timersPage.html" class="btn btn-primary mr-2 mb-2">Timers</a>
-            </div>
-        </nav>
+      <!-- nav and ul elements used for formatting organization -->
+      <nav>
+        <div class="link-buttons mt-3">
+          <a href="index.html" class="btn btn-primary mr-2 mb-2">Home</a>
+          <a href="forum.html" class="btn btn-primary mr-2 mb-2">Forum</a>
+          <a href="meetup.html" class="btn btn-primary mr-2 mb-2">Meetup Forum</a>
+          <a href="videopage.html" class="btn btn-primary mr-2 mb-2">Video Library</a>
+          <a href="dashboard.html" class="btn btn-primary mr-2 mb-2">Progress Dashboard</a>
+          <a href="article_library.html" class="btn btn-primary mr-2 mb-2">Article Library</a>
+          <a href="DailyInteractive/dailyInteractive.html" class="btn btn-primary mr-2 mb-2">Daily Interactive</a>
+          <a href="relaxation-sounds.html" class="btn btn-primary mr-2 mb-2">Relaxation Sounds Library</a>
+          <a href="timersPage.html" class="btn btn-primary mr-2 mb-2">Timers</a>
+        </div>
+      </nav>
     </header>
-
     <!-- Login button -->
     <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 80px;">
-        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+      <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+      <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
     </div>
-
-    <h1 class="logo-container"><img src="MeditationLogo.PNG" alt="logo"></h1>
-
+    <h1 class="logo-container">
+      <img src="MeditationLogo.PNG" alt="logo">
+    </h1>
     <h1>Meditation+ Meetup Forum</h1>
-
     <div class="post-form-container">
-        <h2>Create a New Meetup Post</h2>
-        <form id="postForm" action="/forum" method="POST">            
-            <label for="postTitle">Title:</label>
-            <input type="text" id="postTitle" name="postTitle" required>
-
-            <label for="meetPostLocation">Location:</label>
-            <input type="text" id="postLocation" name="postLocation" required>
-
-            <label for="postMeetingDate">Meeting Date (Please use a Month-Day-Year format, ei. 12-04-24):</label>
-            <input type="text" id="postMeetingDate" name="postMeetingDate" required>
-
-            <label for="postMeetingTime">Meeting Time:</label>
-            <input type="text" id="postMeetingTime" name="postMeetingTime" required>
-    
-            <label for="postContent">Content:</label>
-            <textarea id="postContent" name="postContent" required></textarea>
-    
-            <button type="submit">Post</button>
-        </form>
+      <h2>Create a New Meetup Post</h2>
+      <form id="postForm" action="/forum" method="POST">
+        <label for="postTitle">Title:</label>
+        <input type="text" id="postTitle" name="postTitle" required>
+        <label for="meetPostLocation">Location:</label>
+        <input type="text" id="postLocation" name="postLocation" required>
+        <label for="postMeetingDate">Meeting Date (Please use a Month-Day-Year format, ei. 12-04-24):</label>
+        <input type="text" id="postMeetingDate" name="postMeetingDate" required>
+        <label for="postMeetingTime">Meeting Time:</label>
+        <input type="text" id="postMeetingTime" name="postMeetingTime" required>
+        <label for="postContent">Content:</label>
+        <textarea id="postContent" name="postContent" required></textarea>
+        <button type="submit">Post</button>
+      </form>
     </div>
-
     <!-- Section for displaying meetup forum posts -->
     <h2>Meetup Posts</h2>
-
-    <section id="meetup-forum-posts">
-
-    </section>
-
+    <section id="meetup-forum-posts"></section>
     <footer>
-        <p><small>This page and all properties owned by Meditation+&copy;</small></p>
+      <p>
+        <small>This page and all properties owned by Meditation+&copy;</small>
+      </p>
     </footer>
-
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="forumFormatting.js"></script>
-    
-</body>
-
+  </body>
 </html>
