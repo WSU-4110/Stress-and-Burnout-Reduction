@@ -2,19 +2,6 @@ import { onRequestPost, responseForRetry } from "./login";
 import { jest } from "@jest/globals";
 import { pbkdf2Sync } from "node:crypto";
 
-function createMockRequest(email, password) {
-    return {
-        formData: () => {
-            return Promise.resolve(
-                new Map([
-                    ["email", email],
-                    ["password", password],
-                ])
-            );
-        },
-    };
-}
-
 function createMockFormData(email, password) {
     return new Map([
         ["email", email],
@@ -23,7 +10,7 @@ function createMockFormData(email, password) {
 }
 
 describe("onRequestPost", () => {
-    it("should create a session when credentials are valid", async () => {
+    it("should create a session when credentials are valid and handle login streak", async () => {
         const email = "user@example.com";
         const rawPassword = "password123";
         const salt = "somesalt";
@@ -38,6 +25,8 @@ describe("onRequestPost", () => {
             password: hashedPassword,
             salt: salt,
             sessions: [],
+            login_streak_days: 1, // Assuming this is already there.
+            time_last_sign_in: Date.now() / 1000 - 60000, // Logged in one minute ago.
         };
 
         const env = {
@@ -51,14 +40,19 @@ describe("onRequestPost", () => {
             COOLFROG_SESSIONS: {
                 put: jest.fn().mockResolvedValue(null),
             },
+            COOLFROG_LEADERBOARD: {
+                put: jest.fn().mockResolvedValue(null),
+            }
         };
 
         const { onRequestPost } = await import("./login.js");
         const result = await onRequestPost({ request, env });
 
+        expect(env.COOLFROG_EMAILS.get).toBeCalledWith(email);
         expect(env.COOLFROG_USERS.get).toBeCalledWith(usernameKey);
         expect(env.COOLFROG_USERS.put).toBeCalled();
         expect(env.COOLFROG_SESSIONS.put).toBeCalled();
+        expect(env.COOLFROG_LEADERBOARD.put).toBeCalledWith(user.username, expect.any(String));
         expect(result.headers.get("Set-Cookie")).toMatch(/session-id=/);
         expect(result.status).toBe(200);
         expect(await result.text()).toContain("Redirecting...");
