@@ -82,7 +82,9 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-	"transformIgnorePatterns": ["<rootDir>/tests/functions/"]
+	"testPathIgnorePatterns": [
+        "<rootDir>/test/functions/"
+    ]
   },
   "keywords": [],
   "author": "",
