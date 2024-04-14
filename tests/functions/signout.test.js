@@ -1,4 +1,4 @@
-import { onRequest, redirectToLogin } from "functions/signout";
+import { onRequest, redirectToLogin } from "./signout";
 import { jest } from "@jest/globals";
 
 function createMockRequest(cookies = "") {
