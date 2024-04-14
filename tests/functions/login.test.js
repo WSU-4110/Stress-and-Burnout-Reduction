@@ -1,4 +1,4 @@
-import { onRequestPost, responseForRetry } from "../../functions/login";
+import { onRequestPost, responseForRetry } from "functions/login";
 import { jest } from "@jest/globals";
 import { pbkdf2Sync } from "node:crypto";
 

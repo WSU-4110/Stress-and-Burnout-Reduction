@@ -6,7 +6,10 @@
   "jest": {
     "transform": {},
 	"verbose": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+	"moduleNameMapper": {
+		"^functions/(.*)$": "<rootDir>/functions/$1.js"
+	}
   },
   "devDependencies": {
     "jest": "^29.4.3",

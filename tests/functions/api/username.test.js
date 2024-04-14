@@ -1,4 +1,4 @@
-import { onRequestGet, getSessionIdFromRequest } from "../../../functions/api/username";
+import { onRequestGet, getSessionIdFromRequest } from "functions/api/username";
 import { jest } from "@jest/globals";
 
 const createMockRequest = (cookie = "") => ({

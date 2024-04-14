@@ -26,7 +26,7 @@ describe("onRequestPost", () => {
             },
         };
 
-        const { onRequestPost } = await import("../../functions/signup");
+        const { onRequestPost } = await import("functions/signup");
 
         const result = await onRequestPost({ request, env });
 
