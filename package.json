@@ -83,7 +83,7 @@
   "jest": {
     "testEnvironment": "jsdom",
 	"testPathIgnorePatterns": [
-        "<rootDir>/tests/functions/"
+        "<rootDir>/functions/"
     ]
   },
   "keywords": [],
