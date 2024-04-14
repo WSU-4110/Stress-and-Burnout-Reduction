@@ -1,12 +1,12 @@
 // unit test for search method
 
 
-jest.mock('../MeditationSession', () => ({
+jest.mock('../scripts/MeditationSession', () => ({
     search: jest.fn()
 }));
 
 // Importing the search function
-const { search } = require('../MeditationSession');
+const { search } = require('../scripts/MeditationSession');
 
 describe('search function', () => {
     test('should call search function', () => {

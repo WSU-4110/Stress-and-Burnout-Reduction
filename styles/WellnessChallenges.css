@@ -1,0 +1,126 @@
+body {
+    background-color: #050505;
+    color: #f5ecec;
+    text-align:  center;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    margin: 0 10px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #0a0b0a;
+    border: 1px solid #6d716d;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: #89918a;
+}
+
+
+
+.challenges-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Horizontally center the items */
+    align-items: center; /* Vertically center the items */
+    margin-top: 20px;
+    padding: 0 20px; 
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+
+
+
+.challenge {
+    width: calc(70% - 100px);
+    background-color: #868781;
+    padding: 20px;
+    margin: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+}
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .challenge {
+        width: calc(50% - 40px);
+        /* Adjusted width for smaller screens */
+    }
+}
+
+/* Title of the challenge */
+.challenge h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #0a0a0a;
+}
+
+/* Description of the challenge */
+.challenge p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1e1c1c;
+    font-weight: bold;
+}
+
+/* Hover effect */
+.challenge:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 50px;
+    
+}
+
+/* Container for the title */
+.title-container {
+    margin-bottom: 20px;
+    /* Add some space below the title */
+}
+
+/* Title */
+.title {
+    font-size: 2rem;
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer-display {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.timer-btn {
+    padding: 8px 16px;
+    border: none;
+    background-color: #1d1e1f;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.timer-btn:hover {
+    background-color: #0056b3;
+}

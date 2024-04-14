@@ -135,15 +135,14 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
                     <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
                     <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
                     <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
                     <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
                 </ul>
             </div>
         </div>
@@ -189,8 +188,8 @@ let completedTasksHtml = userPosts.filter(post => post.status === 'completed').m
                     <tbody>${topicsHtml}</tbody>
                 </table>
                 <form method="post" action="/challenge/add-topic">
-                    <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
-                    <button type="submit" class="btn btn-primary">Add Topic</button>
+                    <input type="text" name="title" placeholder="Enter challenge title" class="form-control mb-2" required>
+                    <button type="submit" class="btn btn-primary">Add Challenge</button>
                 </form>
             </div>
     <script>
@@ -306,15 +305,14 @@ async function renderChallengeTopicPage(topicId, username, env) {
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
                     <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
                     <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
                     <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
                     <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
                 </ul>
             </div>
         </div>
@@ -327,7 +325,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
             </div>
             <div class="container mt-5">
                 <h1>${topic.title}</h1>
-                <a href="/challenge" class="btn btn-primary mb-3">Back to Topics</a>
+                <a href="/challenge" class="btn btn-primary mb-3">Back to Challenges</a>
                 ${postsHtml}
                 ${actionButton}
             </div>

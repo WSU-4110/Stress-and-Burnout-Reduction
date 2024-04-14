@@ -1,11 +1,11 @@
 
 //unit test unbookmarkSession method
-jest.mock('../MeditationSession', () => ({
+jest.mock('../scripts/MeditationSession', () => ({
     unbookmarkSession: jest.fn()
 }));
 
 // Importing the unbookmarkSession function
-const { unbookmarkSession } = require('../MeditationSession');
+const { unbookmarkSession } = require('../scripts/MeditationSession');
 
 describe('unbookmarkSession function', () => {
     beforeEach(() => {

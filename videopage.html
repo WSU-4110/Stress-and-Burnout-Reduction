@@ -4,34 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Article Library</title>
-    <link rel="stylesheet" href="videoStyles.css">
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/videoStyles.css">
+	    <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
 </head>
 <body>
-    <div class="navbar">
-        <a href="index.html">Home</a>
-        <a href="forum.html">Forum</a>
-        <a href="meetup.html">Meetup Forum</a>
-	    <a href="article_library.html">Article Library</a>
-	    <a href="DailyInteractive/dailyinteractive.html">Daily Interactive</a>
-        <a href="relaxation-sounds.html">Relaxation Sounds Library</a>
-        <a href="MeditationSession.html">Meditation Sessions</a>
-        <a href="timersPage.html">Timers</a>
-        <a href="WellnessChallenges.html">Wellness Challenges</a>
-        <a href="dashboard.html">Progress Dashboard</a>
-    </div>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index.html">
+                <img src="/coolfrog.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
 
     <div class="search-container" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
         <input type="text" id="searchInput" placeholder="Search videos..." style="width: 50%; padding: 10px;">
     </div>
-    
 
-    <!-- New Button Container -->
-    <div class="user-button-container" style="text-align: right; padding-right: 20px; padding-top: 80px;"> <!-- Adjust the value of padding-top -->
-        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-    </div>
-
-    <h1 class="library-title">Meditation+ Video Library</h1>
+    <h1 class="library-title">Coolfrog Video Library</h1>
 
     <div class="main-content">
         <div class="video-gallery">
@@ -153,11 +195,11 @@
     </div>
 
     <footer>
-        <p><small>Meditation+&copy;</small></p>
+        <p><small>Coolfrog &copy; 2024</small></p>
     </footer>
 
     <script src="https://kit.fontawesome.com/bd2159fd84.js" crossorigin="anonymous"></script>
-    <script src="videopage.js"></script>
+    <script src="scripts/videopage.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -170,8 +212,7 @@
                 if (data.username) {
                     leftButton.textContent = 'Account';
                     leftButton.onclick = function () { window.location.href = '/account'; };
-                    // Dynamically use the username in the 'Sign Out' button text
-                    rightButton.textContent = `Sign Out of ${data.username}`;
+                    rightButton.textContent = 'Sign Out of ' + data.username;
                     rightButton.onclick = function () { window.location.href = '/signout'; };
                 } else {
                     leftButton.textContent = 'Sign Up';

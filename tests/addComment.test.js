@@ -1,12 +1,12 @@
 //unit testing for addComment method
 
 // Mocking the required file and methods
-jest.mock('../MeditationSession', () => ({
+jest.mock('../scripts/MeditationSession', () => ({
     addComment: jest.fn()
 }));
 
 
-const { addComment } = require('../MeditationSession');
+const { addComment } = require('../scripts/MeditationSession');
 
 describe('addComment function', () => {
     test('should add a comment to the session', () => {

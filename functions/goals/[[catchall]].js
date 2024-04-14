@@ -229,15 +229,14 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetup.html">Meetup Forum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Video Library</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Article Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
                     <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds Library</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
                     <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
                     <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
                     <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard.html">Progress Dashboard</a></li>
                 </ul>
             </div>
         </div>
