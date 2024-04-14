@@ -1,4 +1,4 @@
-const { VideoModal } = require('./videopage');
+const { VideoModal } = require('./scripts/videopage');
 
 describe('VideoModal - transformVideoUrl', () => {
   beforeEach(() => {
