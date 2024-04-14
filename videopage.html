@@ -1,234 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Article Library</title>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/videoStyles.css">
-	    <style>
-        body {
-            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
-        }
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
+    <style>
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
+
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function toggleFixedHeader() {
-                const header = document.querySelector('.fixed-header');
-                if (window.scrollY > header.offsetTop) {
-                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
-                } else {
-                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
-                }
-            }
-            window.addEventListener('scroll', toggleFixedHeader);
-        });
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <img src="/coolfrog.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </header>
-
     <div class="container mt-5">
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-            </div>
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
         </div>
-
-    <div class="search-container" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
+      </div>
+      <div class="search-container" style="text-align: center; margin-top: 20px; margin-bottom: 20px;">
         <input type="text" id="searchInput" placeholder="Search videos..." style="width: 50%; padding: 10px;">
-    </div>
-
-    <h1 class="library-title">Coolfrog Video Library</h1>
-
-    <div class="main-content">
+      </div>
+      <h1 class="library-title">Coolfrog Video Library</h1>
+      <div class="main-content">
         <div class="video-gallery">
-            <!-- Video 1 -->
-            <div class="video-card" data-video-url = "https://www.youtube.com/embed/grfXR6FAsI8">
-                <a href="https://www.youtube.com/watch?v=grfXR6FAsI8&pp=ygURc3RyZXNzIG1hbmFnZW1lbnQ%3D">
-                    <img src="https://img.youtube.com/vi/grfXR6FAsI8/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>3-Minute Stress Management</h3>
-                        <p>A short stress management activity by Therapy in a Nutshell.</p>
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>
-            </div>
-            <!-- Video 2 -->
-            <div class="video-card" data-video-url = "https://www.youtube.com/embed/BaHubT9AdQ4">
-                <a href="https://youtu.be/BaHubT9AdQ4">
-                    <img src="https://img.youtube.com/vi/BaHubT9AdQ4/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>Avoiding Burnout as a Software Engineer</h3>
-                        <p>A video by TechLead on experiencing burnout as a software engineer and tips to avoid it.</p>
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>               
-            </div>
-	    <!-- Video 3 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/embed/hQX-BtFp-Rc">
-                <a href="https://youtu.be/hQX-BtFp-Rc">
-                    <img src="https://img.youtube.com/vi/hQX-BtFp-Rc/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>Why is Burnout So Common in Tech? Let's talk about it</h3>
-                        <p>This video from mayuko discusses some of the many reasons as to why many workers in the tech industry experience burnout.</p>	
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>
-            </div>
-            <!-- Video 4 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=JslvBcIVtDg">
-                <a href="https://www.youtube.com/watch?v=JslvBcIVtDg">
-                    <img src="https://img.youtube.com/vi/JslvBcIVtDg/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>How To Meditate For Beginners (Animated)</h3>
-                        <p>This video from Mitch Manly shows a step-by-step guide on learning how to meditate.</p>	
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>
-            </div>
-            <!-- Video 5 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=9skSLIZqKTw">
-                <a href="https://www.youtube.com/watch?v=9skSLIZqKTw">
-                    <img src="https://img.youtube.com/vi/9skSLIZqKTw/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>The Biological Benefits of Meditation</h3>
-                        <p>University of California Television, or UCTV for short, gives us a short lecture on the physical benefits of meditation!</p>	
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>
-            </div>
-            <!-- Video 6 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=-RZ86OB9hw4">
-                <a href="https://www.youtube.com/watch?v=-RZ86OB9hw4">
-                    <img src="https://img.youtube.com/vi/-RZ86OB9hw4/0.jpg" alt="Video thumbnail">
-                    <div class="video-info">
-                        <h3>Conquering Exam Stress: Lessons From Our Bodies</h3>
-                        <p>The Physiological Society shows how students can tackle stressful events such as exam periods, driving tests, and more!</p>	
-                    </div>
-                </a>
-                <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
-                <span class="like-count">0 Likes</span>
-            </div>
-            <!-- Video 7 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=nogh434ykF0">
+          <!-- Video 1 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/embed/grfXR6FAsI8">
+            <a href="https://www.youtube.com/watch?v=grfXR6FAsI8&pp=ygURc3RyZXNzIG1hbmFnZW1lbnQ%3D">
+              <img src="https://img.youtube.com/vi/grfXR6FAsI8/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>3-Minute Stress Management</h3>
+                <p>A short stress management activity by Therapy in a Nutshell.</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 2 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/embed/BaHubT9AdQ4">
+            <a href="https://youtu.be/BaHubT9AdQ4">
+              <img src="https://img.youtube.com/vi/BaHubT9AdQ4/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Avoiding Burnout as a Software Engineer</h3>
+                <p>A video by TechLead on experiencing burnout as a software engineer and tips to avoid it.</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 3 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/embed/hQX-BtFp-Rc">
+            <a href="https://youtu.be/hQX-BtFp-Rc">
+              <img src="https://img.youtube.com/vi/hQX-BtFp-Rc/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Why is Burnout So Common in Tech? Let's talk about it</h3>
+                <p>This video from mayuko discusses some of the many reasons as to why many workers in the tech industry experience burnout.</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 4 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=JslvBcIVtDg">
+            <a href="https://www.youtube.com/watch?v=JslvBcIVtDg">
+              <img src="https://img.youtube.com/vi/JslvBcIVtDg/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>How To Meditate For Beginners (Animated)</h3>
+                <p>This video from Mitch Manly shows a step-by-step guide on learning how to meditate.</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 5 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=9skSLIZqKTw">
+            <a href="https://www.youtube.com/watch?v=9skSLIZqKTw">
+              <img src="https://img.youtube.com/vi/9skSLIZqKTw/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>The Biological Benefits of Meditation</h3>
+                <p>University of California Television, or UCTV for short, gives us a short lecture on the physical benefits of meditation!</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 6 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=-RZ86OB9hw4">
+            <a href="https://www.youtube.com/watch?v=-RZ86OB9hw4">
+              <img src="https://img.youtube.com/vi/-RZ86OB9hw4/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Conquering Exam Stress: Lessons From Our Bodies</h3>
+                <p>The Physiological Society shows how students can tackle stressful events such as exam periods, driving tests, and more!</p>
+              </div>
+            </a>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
+            <span class="like-count">0 Likes</span>
+          </div>
+          <!-- Video 7 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=nogh434ykF0">
             <a href="https://www.youtube.com/watch?v=nogh434ykF0">
-                <img src="https://img.youtube.com/vi/nogh434ykF0/0.jpg" alt="Video thumbnail">
-                <div class="video-info">
-                    <h3>Mindset of Successful Programmers</h3>
-                    <p>A discussion on how you can change your mindset to become a more successful programmer by bigboxSWE.</p>	
-                </div>
+              <img src="https://img.youtube.com/vi/nogh434ykF0/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Mindset of Successful Programmers</h3>
+                <p>A discussion on how you can change your mindset to become a more successful programmer by bigboxSWE.</p>
+              </div>
             </a>
-            <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
             <span class="like-count">0 Likes</span>
-        </div>
-        <!-- Video 8 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=-dHOWvFZa4M">
+          </div>
+          <!-- Video 8 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=-dHOWvFZa4M">
             <a href="https://www.youtube.com/watch?v=-dHOWvFZa4M">
-                <img src="https://img.youtube.com/vi/-dHOWvFZa4M/0.jpg" alt="Video thumbnail">
-                <div class="video-info">
-                    <h3>Introduction To Breathing Meditation | Buddhism In English</h3>
-                    <p>A meditation technique focused on breathing by the Buddhism youtube page.</p>	
-                </div>
+              <img src="https://img.youtube.com/vi/-dHOWvFZa4M/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Introduction To Breathing Meditation | Buddhism In English</h3>
+                <p>A meditation technique focused on breathing by the Buddhism youtube page.</p>
+              </div>
             </a>
-            <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
             <span class="like-count">0 Likes</span>
-        </div>
-        <!-- Video 9 -->
-	    <div class="video-card" data-video-url = "https://www.youtube.com/watch?v=jsOqcwcy2mI">
+          </div>
+          <!-- Video 9 -->
+          <div class="video-card" data-video-url="https://www.youtube.com/watch?v=jsOqcwcy2mI">
             <a href="https://www.youtube.com/watch?v=jsOqcwcy2mI">
-                <img src="https://img.youtube.com/vi/jsOqcwcy2mI/0.jpg" alt="Video thumbnail">
-                <div class="video-info">
-                    <h3>Yoga For Stress Relief</h3>
-                    <p>A yoga exercise for stress relief by Yoga With Adriene!</p>	
-                </div>
+              <img src="https://img.youtube.com/vi/jsOqcwcy2mI/0.jpg" alt="Video thumbnail">
+              <div class="video-info">
+                <h3>Yoga For Stress Relief</h3>
+                <p>A yoga exercise for stress relief by Yoga With Adriene!</p>
+              </div>
             </a>
-            <button class="like-btn"><i class="fa-regular fa-heart"></i> Like </button>
+            <button class="like-btn">
+              <i class="fa-regular fa-heart"></i> Like </button>
             <span class="like-count">0 Likes</span>
+          </div>
         </div>
-       </div>
-  </div>
-  <div id="modal" class="modal">
+      </div>
+      <div id="modal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <span class="close">&times;</span>
+          <iframe id="videoFrame" width="560" height="315" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
         </div>
-    </div>
-
-    <footer>
-        <p><small>Coolfrog &copy; 2024</small></p>
-    </footer>
-
-    <script src="https://kit.fontawesome.com/bd2159fd84.js" crossorigin="anonymous"></script>
-    <script src="scripts/videopage.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const leftButton = document.getElementById('leftButton');
-            const rightButton = document.getElementById('rightButton');
-
-            fetch('/api/username').then(response => response.json()).then(data => {
-                if (data.username) {
-                    leftButton.textContent = 'Account';
-                    leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = 'Sign Out of ' + data.username;
-                    rightButton.onclick = function () { window.location.href = '/signout'; };
-                } else {
-                    leftButton.textContent = 'Sign Up';
-                    leftButton.onclick = function () { window.location.href = '/signup'; };
-                    rightButton.textContent = 'Login';
-                    rightButton.onclick = function () { window.location.href = '/login'; };
-                }
-            }).catch(error => {
-                console.error("Error fetching username:", error);
-                leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function () { window.location.href = '/signup'; };
-                rightButton.textContent = 'Login';
-                rightButton.onclick = function () { window.location.href = '/login'; };
-            });
+      </div>
+      <footer>
+        <p>
+          <small>Coolfrog &copy; 2024</small>
+        </p>
+      </footer>
+      <script src="https://kit.fontawesome.com/bd2159fd84.js" crossorigin="anonymous"></script>
+      <script src="scripts/videopage.js"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const leftButton = document.getElementById('leftButton');
+          const rightButton = document.getElementById('rightButton');
+          fetch('/api/username').then(response => response.json()).then(data => {
+            if (data.username) {
+              leftButton.textContent = 'Account';
+              leftButton.onclick = function() {
+                window.location.href = '/account';
+              };
+              rightButton.textContent = 'Sign Out of ' + data.username;
+              rightButton.onclick = function() {
+                window.location.href = '/signout';
+              };
+            } else {
+              leftButton.textContent = 'Sign Up';
+              leftButton.onclick = function() {
+                window.location.href = '/signup';
+              };
+              rightButton.textContent = 'Login';
+              rightButton.onclick = function() {
+                window.location.href = '/login';
+              };
+            }
+          }).catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          });
         });
-    </script>
-</body>
+      </script>
+  </body>
 </html>
-

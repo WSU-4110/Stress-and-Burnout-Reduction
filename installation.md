@@ -236,7 +236,7 @@ https://dash.cloudflare.com/<account-id>/r2/overview
 https://cdn.coolfrog.net/cafe.mp3
 ```
 
-- Naviage to the *Settings* tab in the bucket.
+- Naviage to the **Settings** tab in the bucket.
 
 ```
 https://dash.cloudflare.com/<account-id>/r2/default/buckets/coolfrog/settings

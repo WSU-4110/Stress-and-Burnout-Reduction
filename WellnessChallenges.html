@@ -1,259 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wellness Challenges</title>
     <link rel="stylesheet" href="styles/WellnessChallenges.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
-        }
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
+
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function toggleFixedHeader() {
-                const header = document.querySelector('.fixed-header');
-                if (window.scrollY > header.offsetTop) {
-                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
-                } else {
-                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
-                }
-            }
-            window.addEventListener('scroll', toggleFixedHeader);
-        });
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
     </script>
-</head>
-
-<body>
-
+  </head>
+  <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <img src="/coolfrog.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage.html">Videos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library.html">Articles</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/DailyInteractive/dailyInteractive.html">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds.html">Relaxation Sounds</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/MeditationSession.html">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/timersPage.html">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges.html">Wellness Challenges</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </header>
-
     <div class="container mt-5">
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-            </div>
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
         </div>
-
-
-    <h1 class="title" style="color: black;">Wellness Challenges</h1>
-
-    <div class="challenges-container">
-</div>
-
-
-
-
-
-
-<div class="challenge">
-    <h2>Deep Breathing Exercise</h2>
-         <p> Challenge 1</p>
-    <p>Take a break and practice deep breathing for 10 minutes. This exercise helps to calm the mind and body, and can help with stress.</p>
-    <div class="timer">
-        <div id="Timer1" class="timer-display">10:00</div>
-        <p>10 minutes challenge</p>
-        <button id="startTimer1" class="timer-btn">Start</button>
-        <button id="stopTimer1" class="timer-btn">Stop</button>
-        <button id="resetTimer1" class="timer-btn">Reset</button>
-    </div>
-</div>
-
-
-   
-    <div class="challenge">
+      </div>
+      <h1 class="title" style="color: black;">Wellness Challenges</h1>
+      <div class="challenges-container"></div>
+      <div class="challenge">
+        <h2>Deep Breathing Exercise</h2>
+        <p> Challenge 1</p>
+        <p>Take a break and practice deep breathing for 10 minutes. This exercise helps to calm the mind and body, and can help with stress.</p>
+        <div class="timer">
+          <div id="Timer1" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer1" class="timer-btn">Start</button>
+          <button id="stopTimer1" class="timer-btn">Stop</button>
+          <button id="resetTimer1" class="timer-btn">Reset</button>
+        </div>
+      </div>
+      <div class="challenge">
         <h2>Mindful Walking</h2>
         <p> Challenge 2</p>
         <p>Take a short mindful walk outdoors or indoors,focusing on the environment around them. Aim for a 10-minute walk, paying attention to the sounds, and feelings.</p>
         <div class="timer">
-            <div id="Timer2" class="timer-display">10:00</div>
-            <p>10 minutes challenge</p>
-            <button id="startTimer2" class="timer-btn">Start</button>
-            <button id="stopTimer2" class="timer-btn">Stop</button>
-            <button id="resetTimer2" class="timer-btn">Reset</button>
+          <div id="Timer2" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer2" class="timer-btn">Start</button>
+          <button id="stopTimer2" class="timer-btn">Stop</button>
+          <button id="resetTimer2" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Gratitude Journaling</h2>
         <p> Challenge 3</p>
         <p>Spend a few minutes writing down three things they are grateful for each day. This can help shift focus to positive aspects of life.</p>
         <div class="timer">
-            <div id="Timer3" class="timer-display">20:00</div>
-            <p>20 minutes challenge</p>
-            <button id="startTimer3" class="timer-btn">Start</button>
-            <button id="stopTimer3" class="timer-btn">Stop</button>
-            <button id="resetTimer3" class="timer-btn">Reset</button>
+          <div id="Timer3" class="timer-display">20:00</div>
+          <p>20 minutes challenge</p>
+          <button id="startTimer3" class="timer-btn">Start</button>
+          <button id="stopTimer3" class="timer-btn">Stop</button>
+          <button id="resetTimer3" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Stretch Breaks</h2>
         <p> Challenge 4</p>
         <p>Take mini stretch breaks throughout the day to release tension and improve circulation. This can help improve overall well-being.</p>
         <div class="timer">
-            <div id="Timer4" class="timer-display">10:00</div>
-            <p>10 minutes challenge</p>        
-            <button id="startTimer4" class="timer-btn">Start</button>
-            <button id="stopTimer4" class="timer-btn">Stop</button>
-            <button id="resetTimer4" class="timer-btn">Reset</button>
+          <div id="Timer4" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer4" class="timer-btn">Start</button>
+          <button id="stopTimer4" class="timer-btn">Stop</button>
+          <button id="resetTimer4" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Digital Detox</h2>
         <p> Challenge 5</p>
         <p>Take a break from screens for a designated period, such as one hour before bedtime or during meal times. Engage in offline activities like reading, crafting, or spending time with loved ones.</p>
         <div class="timer">
-            <div id="Timer5" class="timer-display">20:00</div>
-            <p>20 minutes challenge</p>
-            <button id="startTimer5" class="timer-btn">Start</button>
-            <button id="stopTimer5" class="timer-btn">Stop</button>
-            <button id="resetTimer5" class="timer-btn">Reset</button>
+          <div id="Timer5" class="timer-display">20:00</div>
+          <p>20 minutes challenge</p>
+          <button id="startTimer5" class="timer-btn">Start</button>
+          <button id="stopTimer5" class="timer-btn">Stop</button>
+          <button id="resetTimer5" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Progressive Muscle Relaxation</h2>
         <p> Challenge 6</p>
         <p>Take some time to practice a progressive muscle relaxation exercise,and relax different muscle groups in your body. This can help alleviate physical tension and promote relaxation.</p>
         <div class="timer">
-            <div id="Timer6" class="timer-display">10:00</div>
-            <p>10 minutes challenge</p> 
-            <button id="startTimer6" class="timer-btn">Start</button>
-            <button id="stopTimer6" class="timer-btn">Stop</button>
-            <button id="resetTimer6" class="timer-btn">Reset</button>
+          <div id="Timer6" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer6" class="timer-btn">Start</button>
+          <button id="stopTimer6" class="timer-btn">Stop</button>
+          <button id="resetTimer6" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-   
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Nature Connection</h2>
         <p> Challenge 7</p>
         <p>Spend time in nature, whether it's taking a walk in a park, sitting by a tree, or simply gazing at the sky. Being in nature has been shown to reduce stress and improve mood.</p>
         <div class="timer">
-            <div id="Timer7" class="timer-display">20:00</div>
-            <p>20 minutes challenge</p>
-            <button id="startTimer7" class="timer-btn">Start</button>
-             <button id="stopTimer7" class="timer-btn">Stop</button>
-            <button id="resetTimer7" class="timer-btn">Reset</button>
+          <div id="Timer7" class="timer-display">20:00</div>
+          <p>20 minutes challenge</p>
+          <button id="startTimer7" class="timer-btn">Start</button>
+          <button id="stopTimer7" class="timer-btn">Stop</button>
+          <button id="resetTimer7" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-   
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Visualization Exercise</h2>
         <p> Challenge 8</p>
         <p>Take some time to practice visualization exercise in a peaceful and calming environment. This practice can help shift focus from stressors to positive aspects of life.</p>
         <div class="timer">
-            <div id="Timer8" class="timer-display">10:00</div>
-            <p>10 minutes challenge</p>
-            <button id="startTimer8" class="timer-btn">Start</button>
-            <button id="stopTimer8" class="timer-btn">Stop</button>
-            <button id="resetTimer8" class="timer-btn">Reset</button>
+          <div id="Timer8" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer8" class="timer-btn">Start</button>
+          <button id="stopTimer8" class="timer-btn">Stop</button>
+          <button id="resetTimer8" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Social Connection</h2>
         <p> Challenge 9</p>
         <p>Reach out to a friend or family member for social support and connection. Even a brief conversation or message exchange can help alleviate stress and boost mood.</p>
         <div class="timer">
           <div id="Timer9" class="timer-display">20:00</div>
           <p>20 minutes challenge</p>
-            <button id="startTimer9" class="timer-btn">Start</button>
-            <button id="stopTimer9" class="timer-btn">Stop</button>
-            <button id="resetTimer9" class="timer-btn">Reset</button>
+          <button id="startTimer9" class="timer-btn">Start</button>
+          <button id="stopTimer9" class="timer-btn">Stop</button>
+          <button id="resetTimer9" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-   
-    <div class="challenge">
+      </div>
+      <div class="challenge">
         <h2>Self-Compassion Practice</h2>
         <p> Challenge 10</p>
         <p>Practice self-compassion by being kind to yourself. This can help alleviate stress and boost mood.</p>
         <div class="timer">
-            <div id="Timer10" class="timer-display">10:00</div>
-            <p>10 minutes challenge</p>
-            <button id="startTimer10" class="timer-btn">Start</button>
-            <button id="stopTimer10" class="timer-btn">Stop</button>
-            <button id="resetTimer10" class="timer-btn">Reset</button>
+          <div id="Timer10" class="timer-display">10:00</div>
+          <p>10 minutes challenge</p>
+          <button id="startTimer10" class="timer-btn">Start</button>
+          <button id="stopTimer10" class="timer-btn">Stop</button>
+          <button id="resetTimer10" class="timer-btn">Reset</button>
         </div>
-    </div>
-
-    <footer>
-        <p><small>Coolfrog &copy; 2024</small></p>
-    </footer>
-
-    <script src="scripts/WellnessChallenges.js"></script>
-	
-	    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const leftButton = document.getElementById('leftButton');
-            const rightButton = document.getElementById('rightButton');
-
-            fetch('/api/username').then(response => response.json()).then(data => {
-                if (data.username) {
-                    leftButton.textContent = 'Account';
-                    leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = 'Sign Out of ' + data.username;
-                    rightButton.onclick = function () { window.location.href = '/signout'; };
-                } else {
-                    leftButton.textContent = 'Sign Up';
-                    leftButton.onclick = function () { window.location.href = '/signup'; };
-                    rightButton.textContent = 'Login';
-                    rightButton.onclick = function () { window.location.href = '/login'; };
-                }
-            }).catch(error => {
-                console.error("Error fetching username:", error);
-                leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function () { window.location.href = '/signup'; };
-                rightButton.textContent = 'Login';
-                rightButton.onclick = function () { window.location.href = '/login'; };
-            });
+      </div>
+      <footer>
+        <p>
+          <small>Coolfrog &copy; 2024</small>
+        </p>
+      </footer>
+      <script src="scripts/WellnessChallenges.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const leftButton = document.getElementById('leftButton');
+          const rightButton = document.getElementById('rightButton');
+          fetch('/api/username').then(response => response.json()).then(data => {
+            if (data.username) {
+              leftButton.textContent = 'Account';
+              leftButton.onclick = function() {
+                window.location.href = '/account';
+              };
+              rightButton.textContent = 'Sign Out of ' + data.username;
+              rightButton.onclick = function() {
+                window.location.href = '/signout';
+              };
+            } else {
+              leftButton.textContent = 'Sign Up';
+              leftButton.onclick = function() {
+                window.location.href = '/signup';
+              };
+              rightButton.textContent = 'Login';
+              rightButton.onclick = function() {
+                window.location.href = '/login';
+              };
+            }
+          }).catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          });
         });
-    </script>
-</body>
-
+      </script>
+  </body>
 </html>

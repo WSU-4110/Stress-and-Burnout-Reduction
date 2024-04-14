@@ -10,26 +10,26 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
 
-    - name: Install main dependencies
-      run: npm install
-      working-directory: .
+      - name: Install main dependencies
+        run: npm install
+        working-directory: .
 
-    - name: Install Cloudflare Workers dependencies
-      run: npm install
-      working-directory: ./functions
+      - name: Install Cloudflare Workers dependencies
+        run: npm install
+        working-directory: ./functions
 
-    - name: Run JavaScript tests
-      run: npm test
-      working-directory: .
+      - name: Run JavaScript tests
+        run: npm test
+        working-directory: .
 
-    - name: Run Cloudflare Workers tests
-      run: npm test
-      working-directory: ./functions
+      - name: Run Cloudflare Workers tests
+        run: npm test
+        working-directory: ./functions
