@@ -119,3 +119,4 @@ document.addEventListener('DOMContentLoaded', function() {
     videoModal.attachLikeButtonEvents(); // Attach like button events after DOM is loaded
 });
 
+module.exports = VideoModal;
