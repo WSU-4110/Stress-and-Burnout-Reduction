@@ -1,6 +1,6 @@
 const {
 	SaturdayContent
-} = require('../DailyInteractive/dailyInteractive');
+} = require('../dailyInteractive');
 
 describe('SaturdayContent', () => {
 	beforeEach(() => {
