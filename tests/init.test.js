@@ -1,4 +1,4 @@
-const { VideoModal } = require('../scripts/videopage');
+const VideoModal = require('../scripts/videopage');
 
 describe('VideoModal - init', () => {
   beforeEach(() => {
