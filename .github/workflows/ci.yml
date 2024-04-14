@@ -24,7 +24,7 @@ jobs:
 
     - name: Install Cloudflare Workers dependencies
       run: npm install
-      working-directory: ./tests/functions
+      working-directory: ./functions
 
     - name: Run JavaScript tests
       run: npm test
@@ -32,4 +32,4 @@ jobs:
 
     - name: Run Cloudflare Workers tests
       run: npm test
-      working-directory: ./tests/functions
+      working-directory: ./functions
