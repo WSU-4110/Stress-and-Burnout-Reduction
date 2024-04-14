@@ -81,7 +81,8 @@
     "test": "jest"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+	"transformIgnorePatterns": ["<rootDir>/tests/functions/"]
   },
   "keywords": [],
   "author": "",
