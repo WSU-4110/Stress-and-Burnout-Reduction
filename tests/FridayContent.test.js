@@ -1,14 +1,16 @@
-const { FridayContent } = require('../DailyInteractive/dailyInteractive');
+const {
+	FridayContent
+} = require('../DailyInteractive/dailyInteractive');
 
 describe('FridayContent', () => {
-  beforeEach(() => {
-    document.body.innerHTML = `<div id="item2"></div>`;
-  });
+	beforeEach(() => {
+		document.body.innerHTML = `<div id="item2"></div>`;
+	});
 
-it('updates #item2 with Friday content', () => {
-  new FridayContent().setupContent();
-  const environmentCount = document.querySelectorAll('.environment-button').length;
-  expect(environmentCount).toBe(3);
-});
+	it('updates #item2 with Friday content', () => {
+		new FridayContent().setupContent();
+		const environmentCount = document.querySelectorAll('.environment-button').length;
+		expect(environmentCount).toBe(3);
+	});
 
 });
