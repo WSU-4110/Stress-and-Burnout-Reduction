@@ -5,8 +5,10 @@ describe('TuesdayContent', () => {
     document.body.innerHTML = `<div id="item2"></div>`;
   });
 
-  it('updates #item2 with Tuesday content', () => {
-    new TuesdayContent().setupContent();
-    expect(document.querySelector('#item2').innerHTML).toContain('text box to type in ur worries and it ques an animation that gets rid of them');
-  });
+it('updates #item2 with Tuesday content', () => {
+  new TuesdayContent().setupContent();
+  const instructionText = document.querySelector('.instruction-text').textContent;
+  expect(instructionText).toContain('Enter your worries');
+});
+
 });

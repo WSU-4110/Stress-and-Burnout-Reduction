@@ -5,8 +5,10 @@ describe('ThursdayContent', () => {
     document.body.innerHTML = `<div id="item2"></div>`;
   });
 
-  it('updates #item2 with Thursday content and attaches event listeners to the image', () => {
-    new ThursdayContent().setupContent();
-    expect(document.querySelector('#item2').innerHTML).toContain('cat-gif');
-  });
+it('updates #item2 with Thursday content and attaches event listeners to the image', () => {
+  new ThursdayContent().setupContent();
+  const catImage = document.querySelector('.cat-gif').src;
+  expect(catImage).toContain('3699234f311b8d44ba46d6503b4a033c.gif');
+});
+
 });

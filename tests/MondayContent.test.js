@@ -5,8 +5,10 @@ describe('MondayContent', () => {
     document.body.innerHTML = `<div id="item2"></div>`;
   });
 
-  it('updates #item2 with Monday content', () => {
-    new MondayContent().setupContent();
-    expect(document.querySelector('#item2').innerHTML).toContain('Words of affirmation generator');
-  });
+it('updates #item2 with Monday content', () => {
+  new MondayContent().setupContent();
+  const affirmationText = document.querySelector('#affirmation-text').textContent;
+  expect(affirmationText).toContain('You are capable and brave!');
+});
+
 });
