@@ -83,7 +83,7 @@
     "test": "set NODE_OPTIONS=--experimental-vm-modules && jest"
   },
   "jest": {
-    "testEnvironment": "jsdom",
+    "testEnvironment": "node",
 	"transform": {},
 	"verbose": true,
 	"moduleNameMapper": {
