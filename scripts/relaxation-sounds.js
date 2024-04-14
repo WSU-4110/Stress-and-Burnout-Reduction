@@ -57,21 +57,21 @@ function createSoundItem(sound) {
 
 // Array of sound objects
 const sounds = [
-  { name: "Morning Chirping",iconSrc: "cdn/img/morning-chirping.gif", audioSrc: "cdn/mp3/morning-chirping.mp3" },
-  { name:"Relaxing Beat", iconSrc: "cdn/img/relaxing-beat.jpg", audioSrc: "cdn/mp3/relaxing-beat.mp3"  },
-  { name: "Guitar Melody" ,iconSrc: "cdn/img/guitar-melody.png", audioSrc: "cdn/mp3/guitar-melody.mp3" },
-  { name: "Blissful Retreat", iconSrc: "cdn/img/blissful-retreat.jpeg", audioSrc: "cdn/mp3/blissful-retreat.mp3" },
-  { name:"Flute Harmony", iconSrc: "cdn/img/flute-harmony.gif", audioSrc: "cdn/mp3/flute-harmony.mp3" },
-  { name: "Lo-Fi", iconSrc: "cdn/img/lo-fi.jpg", audioSrc: "cdn/mp3/lo-fi.mp3"},
-  { name: "Nostalgic",iconSrc: "cdn/img/nostalgic.jpeg", audioSrc: "cdn/mp3/nostalgic.mp3" },
-  { name: "Rainy Night",iconSrc: "cdn/img/rainy-night.gif", audioSrc: "cdn/mp3/rainy-night.mp3" },
-  { name:"Waterfall",iconSrc: "cdn/img/waterfall.gif", audioSrc: "cdn/mp3/waterfall.mp3" },
-  { name:"Peaceful Paradise", iconSrc: "cdn/img/peaceful-paradise.gif", audioSrc: "cdn/mp3/peaceful-paradise.mp3" },
-  { name:"Gentle Raindrops",iconSrc: "cdn/img/gentle-raindrops.gif", audioSrc: "cdn/mp3/gentle-raindrops.mp3" },
-  { name:"Peaceful Violin",iconSrc: "cdn/img/peaceful-violin.jpeg", audioSrc: "cdn/mp3/peaceful-violin.mp3" },
-  { name:"Soothing Cellos", iconSrc: "cdn/img/soothing-cellos.gif", audioSrc: "cdn/mp3/soothing-cellos.mp3" },
-  { name:"Hip-Hop Vibes", iconSrc: "cdn/img/hip-hop-vibes.gif", audioSrc: "cdn/mp3/hip-hop-vibes.mp3"  },
-  { name:"Smooth Jazz",iconSrc: "cdn/img/smooth-jazz.gif", audioSrc: "cdn/mp3/smooth-jazz.mp3" },
+  { name: "Morning Chirping",iconSrc: "/cdn/img/morning-chirping.gif", audioSrc: "/cdn/mp3/morning-chirping.mp3" },
+  { name:"Relaxing Beat", iconSrc: "/cdn/img/relaxing-beat.jpg", audioSrc: "/cdn/mp3/relaxing-beat.mp3"  },
+  { name: "Guitar Melody" ,iconSrc: "/cdn/img/guitar-melody.png", audioSrc: "/cdn/mp3/guitar-melody.mp3" },
+  { name: "Blissful Retreat", iconSrc: "/cdn/img/blissful-retreat.jpeg", audioSrc: "/cdn/mp3/blissful-retreat.mp3" },
+  { name:"Flute Harmony", iconSrc: "/cdn/img/flute-harmony.gif", audioSrc: "/cdn/mp3/flute-harmony.mp3" },
+  { name: "Lo-Fi", iconSrc: "/cdn/img/lo-fi.jpg", audioSrc: "/cdn/mp3/lo-fi.mp3"},
+  { name: "Nostalgic",iconSrc: "/cdn/img/nostalgic.jpeg", audioSrc: "/cdn/mp3/nostalgic.mp3" },
+  { name: "Rainy Night",iconSrc: "/cdn/img/rainy-night.gif", audioSrc: "/cdn/mp3/rainy-night.mp3" },
+  { name:"Waterfall",iconSrc: "/cdn/img/waterfall.gif", audioSrc: "/cdn/mp3/waterfall.mp3" },
+  { name:"Peaceful Paradise", iconSrc: "/cdn/img/peaceful-paradise.gif", audioSrc: "/cdn/mp3/peaceful-paradise.mp3" },
+  { name:"Gentle Raindrops",iconSrc: "/cdn/img/gentle-raindrops.gif", audioSrc: "/cdn/mp3/gentle-raindrops.mp3" },
+  { name:"Peaceful Violin",iconSrc: "/cdn/img/peaceful-violin.jpeg", audioSrc: "/cdn/mp3/peaceful-violin.mp3" },
+  { name:"Soothing Cellos", iconSrc: "/cdn/img/soothing-cellos.gif", audioSrc: "/cdn/mp3/soothing-cellos.mp3" },
+  { name:"Hip-Hop Vibes", iconSrc: "/cdn/img/hip-hop-vibes.gif", audioSrc: "/cdn/mp3/hip-hop-vibes.mp3"  },
+  { name:"Smooth Jazz",iconSrc: "/cdn/img/smooth-jazz.gif", audioSrc: "/cdn/mp3/smooth-jazz.mp3" },
 ];
 
 // Get the container element
