@@ -94,9 +94,9 @@ class WednesdayContent extends DayContent {
     const content = `
         <div class="interactive-box">
             <p class="instruction-text">ASMR</p>
-            <button class="sound-button" data-sound="keyboard-typing.mp3">Keyboard Typing</button>
-            <button class="sound-button" data-sound="deep-breath.mp3">Deep Breath</button>
-            <button class="sound-button" data-sound="ziplock-bag.mp3">Ziplock Bag</button>
+            <button class="sound-button" data-sound="/cdn/mp3/keyboard-typing.mp3">Keyboard Typing</button>
+            <button class="sound-button" data-sound="/cdn/mp3/deep-breath.mp3">Deep Breath</button>
+            <button class="sound-button" data-sound="/cdn/mp3/ziplock-bag.mp3">Ziplock Bag</button>
         </div>
     `;
     document.querySelector('#item2').innerHTML = content;
@@ -141,7 +141,7 @@ class ThursdayContent extends DayContent {
         document.querySelector('#item2').innerHTML = content;
         this.adjustInteractiveBoxStyle('column');
         const catGif = document.querySelector('.cat-gif');
-        const sound = new Audio('purring-cat.mp3');
+        const sound = new Audio('/cdn/mp3/purring-cat.mp3');
         sound.loop = true;
 
         catGif.addEventListener('mouseenter', () => sound.play());
@@ -177,8 +177,8 @@ class FridayContent extends DayContent {
     // Displays the selected environment using an image and sound.
     showEnvironment(environment) {
         const environments = {
-            'summary-night': { gif: 'https://i.pinimg.com/originals/de/b0/f1/deb0f1f0a7ca99c0d39a2c3b586efcf9.gif', sound: 'summary-night.mp3' },
-            'garden': { gif: 'https://i.makeagif.com/media/8-22-2015/3nioqS.gif', sound: 'garden.mp3' },
+            'summary-night': { gif: 'https://i.pinimg.com/originals/de/b0/f1/deb0f1f0a7ca99c0d39a2c3b586efcf9.gif', sound: '/cdn/mp3/summary-night.mp3' },
+            'garden': { gif: 'https://i.makeagif.com/media/8-22-2015/3nioqS.gif', sound: '/cdn/mp3/garden.mp3' },
             'cafe': { gif: 'https://i.makeagif.com/media/2-24-2023/Jx32nB.gif', sound: 'https://cdn.coolfrog.net/cafe.mp3' }
         };
     
