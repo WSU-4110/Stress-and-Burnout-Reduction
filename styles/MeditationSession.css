@@ -1,101 +1,98 @@
 /* Light theme styles */
 :root {
-    --background-color: #fff;
-    --text-color: #000;
+  --background-color: #fff;
+  --text-color: #000;
 }
 
 body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
 }
 
-title{
-    color: white;
-    position :center;
+title {
+  color: white;
+  position: center;
 }
-
-
 
 #timer {
-    font-size: 2em;
-    margin-bottom: 1em;
+  font-size: 2em;
+  margin-bottom: 1em;
 }
 
 button {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .session {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .session-description {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .tabs {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .tab-btn {
-    padding: 10px 20px;
-    background-color: rgb(139, 133, 140);
-    color: #fff;
-    text-decoration: none;
-    border-radius: 5px 5px 0 0;
-    margin-right: 10px;
-    font-size: 14px;
-    letter-spacing: 2px;
-    font-weight: 400;
-    text-transform: uppercase;
+  padding: 10px 20px;
+  background-color: rgb(139, 133, 140);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px 5px 0 0;
+  margin-right: 10px;
+  font-size: 14px;
+  letter-spacing: 2px;
+  font-weight: 400;
+  text-transform: uppercase;
 }
 
 .tab-btn:hover {
-    background-color: #57595b;
+  background-color: #57595b;
 }
 
 .tab-btn.active {
-    background-color: #448383;
+  background-color: #448383;
 }
 
 .tab-btn:not(.active) {
-    border-bottom: 2px solid transparent;
+  border-bottom: 2px solid transparent;
 }
 
 .tab-btn:last-child {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 /* Dark theme styles */
 body.dark-theme {
-    --background-color: #000;
-    --text-color: #fff;
+  --background-color: #000;
+  --text-color: #fff;
 }
 
 .video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    overflow: hidden;
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
 }
 
 .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 .comment {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 2px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 2px;
 }
 
 .comment i {
-    font-style: italic;
+  font-style: italic;
 }
-
