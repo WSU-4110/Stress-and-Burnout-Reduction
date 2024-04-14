@@ -7,9 +7,9 @@
     "transform": {},
 	"verbose": true,
     "testEnvironment": "node",
-	"moduleNameMapper": {
-		"^functions/(.*)$": "<rootDir>/functions/$1.js"
-	}
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "<rootDir>/functions/$1"
+    }
   },
   "devDependencies": {
     "jest": "^29.4.3",
