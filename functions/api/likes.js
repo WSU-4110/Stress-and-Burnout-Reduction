@@ -1,61 +1,60 @@
-export async function onRequest(context) {
-    const { request, env } = context;
+export async function onRequest({request, env}) {
     const url = new URL(request.url);
-    
-    // Check for session validity
-    const sessionId = getSessionIdFromRequest(request);
+    let sessionId = getSessionIdFromRequest(request);
     if (!sessionId) {
-        return new Response(JSON.stringify({ error: 'Not logged in' }), { status: 401 });
+        return new Response(JSON.stringify({error: 'Unauthorized'}), {status: 401});
     }
 
-    const session = await env.COOLFROG_SESSIONS.get(sessionId);
-    if (!session) {
-        return new Response(JSON.stringify({ error: 'Session not found' }), { status: 403 });
+    const userSession = await env.COOLFROG_SESSIONS.get(sessionId);
+    if (!userSession) {
+        return new Response(JSON.stringify({error: 'Session not valid'}), {status: 403});
     }
 
-    const username = JSON.parse(session).username;
-    
-    switch (true) {
-        case url.pathname === '/api/likes' && request.method === 'POST':
-            const data = await request.json();
-            return handleLikeRequest(data.videoId, username, env);
+    const userData = JSON.parse(userSession);
+    const videoId = url.searchParams.get("videoId");
+
+    switch (request.method) {
+        case 'POST':
+            const liked = url.searchParams.get("like") === 'true';
+            return handleLikeRequest(videoId, liked, userData.username, env);
+        case 'GET':
+            return getLikes(videoId, env);
         default:
-            return new Response("Not Found", { status: 404 });
+            return new Response("Method Not Allowed", {status: 405});
     }
 }
 
-async function handleLikeRequest(videoId, username, env) {
-    // Check if user already liked this video
-    const query = `SELECT * FROM likes WHERE video_id = ? AND username = ?`;
-    let results = await env.COOLFROG_LIKES.query(query, [videoId, username]);
-    
-    let response, newTotal;
-    if (results.length > 0) {
-        // Unlike
-        const deleteQuery = `DELETE FROM likes WHERE video_id = ? AND username = ?`;
-        await env.COOLFROG_LIKES.query(deleteQuery, [videoId, username]);
-        newTotal = await getTotalLikes(videoId, env);
-    } else {
-        // Like
-        const insertQuery = `INSERT INTO likes (video_id, username) VALUES (?, ?)`;
-        await env.COOLFROG_LIKES.query(insertQuery, [videoId, username]);
-        newTotal = await getTotalLikes(videoId, env);
+async function handleLikeRequest(videoId, liked, username, env) {
+    const likeStatusQuery = `SELECT * FROM likes WHERE video_id = ? AND username = ?`;
+    const existingLike = await env.COOLFROG_LIKES.prepare(likeStatusQuery).bind(videoId, username).all();
+
+    if (liked && existingLike.results.length === 0) {
+        const likeQuery = `INSERT INTO likes (video_id, username) VALUES (?, ?)`;
+        await env.COOLFROG_LIKES.prepare(likeQuery).bind(videoId, username).run();
+    } else if (!liked && existingLike.results.length > 0) {
+        const unlikeQuery = `DELETE FROM likes WHERE video_id = ? AND username = ?`;
+        await env.COOLFROG_LIKES.prepare(unlikeQuery).bind(videoId, username).run();
     }
 
-    return new Response(JSON.stringify({ totalLikes: newTotal }), {
-        headers: { 'Content-Type': 'application/json' },
-        status: 200
+    return new Response(null, {status: 204});
+}
+
+async function getLikes(videoId, env) {
+    const likesQuery = `SELECT COUNT(*) AS likeCount FROM likes WHERE video_id = ?`;
+    const results = await env.COOLFROG_LIKES.prepare(likesQuery).bind(videoId).all();
+    return new Response(JSON.stringify({likes: results.results[0].likeCount}), {
+        headers: {'Content-Type': 'application/json'}
     });
 }
 
-async function getTotalLikes(videoId, env) {
-    const countQuery = `SELECT COUNT(*) AS total FROM likes WHERE video_id = ?`;
-    const results = await env.COOLFROG_LIKES.query(countQuery, [videoId]);
-    return results[0].total;
-}
-
 function getSessionIdFromRequest(request) {
-    const sessionCookie = request.headers.get('Cookie');
-    const match = sessionCookie && sessionCookie.match(/session-id=([^;]+);?/);
-    return match ? match[1] : null;
+    const cookieHeader = request.headers.get('Cookie');
+    if (!cookieHeader) return {};
+
+    const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
+    const sessionIdCookie = cookies.find(cookie => cookie.startsWith('session-id='));
+
+    if (!sessionIdCookie) return {};
+
+    return {sessionId: sessionIdCookie.split('=')[1]};
 }
