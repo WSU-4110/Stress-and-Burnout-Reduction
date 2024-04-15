@@ -1,57 +1,58 @@
 export async function onRequest({ request, env }) {
-    let url = new URL(request.url);
-    switch (url.pathname) {
-        case '/api/likes':
-            if (request.method === 'POST') {
-                return handlePostLike(request, env);
-            } else {
-                return new Response("Method Not Allowed", { status: 405 });
-            }
+    const url = new URL(request.url);
+    if (url.pathname === '/api/likes' && request.method === 'POST') {
+        return handleLikes(request, env);
+    }
+
+    return new Response("Endpoint not found", { status: 404 });
+}
+
+async function handleLikes(request, env) {
+    const { videoId, action } = await request.json();
+    const username = await getUsername(request, env);
+
+    if (!username) {
+        return new Response(JSON.stringify({ error: "Authentication required" }), {
+            status: 403,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+
+    let stmt;
+    switch (action) {
+        case 'like':
+            stmt = env.COOLFROG_LIKES.prepare("INSERT INTO likes (video_id, username) VALUES (?, ?)");
+            await stmt.run(videoId, username);
+            break;
+        case 'unlike':
+            stmt = env.COOLFROG_LIKES.prepare("DELETE FROM likes WHERE video_id = ? AND username = ?");
+            await stmt.run(videoId, username);
+            break;
         default:
-            return new Response("Not Found", { status: 404 });
+            return new Response("Invalid action", { status: 400 });
     }
+
+    const likesCount = await updateLikesCount(videoId, env);
+    return new Response(JSON.stringify({ likes: likesCount }), {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200
+    });
 }
 
-async function handlePostLike(request, env) {
-    const cookie = request.headers.get('Cookie');
-    if (!cookie) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
-    const sessionId = getSessionIdFromCookie(cookie);
+async function getUsername(request, env) {
+    const cookieHeader = request.headers.get("Cookie");
+    const sessionId = cookieHeader ? cookieHeader.split(";").find(c => c.trim().startsWith("session-id=")) : null;
+
     if (!sessionId) {
-        return Response(JSON.stringify({ error: 'Session ID missing' }), { status: 401 });
+        return null;
     }
 
-    const session = await env.COOLFROG_SESSIONS.get(sessionId);
-    if (!session) {
-        return Response(JSON.stringify({ error: 'Session not found' }), { status: 401 });
-    }
-
-    const userData = JSON.parse(session);
-    const data = await request.json();
-    const videoId = data.videoId;
-    const likeAction = data.action === 'like';
-
-    // Retrieve current likes data
-    let likesData = JSON.parse(await env.COOLFROG_LIKES.get(videoId) || '{}');
-    
-    if (likeAction && !likesData[userData.username]) {
-        likesData[userData.username] = true;
-        likesData.totalCount = (likesData.totalCount || 0) + 1;
-    } else if (!likeAction && likesData[userData.username]) {
-        delete likesData[userData.username];
-        likesData.totalCount = (likesData.totalCount || 0) - 1;
-    }
-
-    await env.COOLFROG_LIKES.put(videoId, JSON.stringify(likesData));
-
-    return new Response(JSON.stringify({ likesCount: likesData.totalCount }), { headers: { 'Content-Type': 'application/json' } });
+    const session = await env.COOLFROG_SESSIONS.get(sessionId.split("=")[1]);
+    return session ? JSON.parse(session).username : null;
 }
 
-function getSessionIdFromCookie(cookie) {
-    const cookies = cookie.split(';');
-    const sessionCookie = cookies.find(c => c.trim().startsWith('session-id='));
-    if (!sessionCookie) return null;
-
-    return sessionCookie.split('=')[1];
+async function updateLikesCount(videoId, env) {
+    const countStmt = env.COOLFROG_LIKES.prepare("SELECT COUNT(*) AS count FROM likes WHERE video_id = ?");
+    const result = await countStmt.get(videoId);
+    return result.count;
 }
