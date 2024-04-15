@@ -1,222 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Meditation Sessions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="styles/MeditationSession.css">
-</head>
-<body>
-    <div class="tabs">
-        <a href="index.html" class="tab-btn">Home</a>
-        <a href="forum.html" class="tab-btn">Forum</a>
-        <a href="meetup.html" class="tab-btn">Meetup Forum</a>
-        <a href="videopage.html" class="tab-btn">Video Library</a>
-        <a href="article_library.html" class="tab-btn">Article Library</a>
-        <a href="DailyInteractive/dailyInteractive.html" class="tab-btn">Daily Interactive</a>
-        <a href="relaxation-sounds.html" class="tab-btn">Relaxation Sounds Library</a>
-        <a href="MeditationSession.html" class="tab-btn">Meditation Sessions</a>
-        <a href="timersPage.html" class="tab-btn">Timers</a>
-        <a href="WellnessChallenges.html"class="tab-btn">Wellness Challenges</a>
-        <a href="dashboard.html" class="tab-btn">Progress Dashboard</a>
-    </div>
+    <style>
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
 
-    <h1 class="title">Welcome to the Guided Meditation Sessions </h1>
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
 
-    <div id="timer">00:00</div>
-    <button id="start">Start</button>
-    <button id="pause">Pause</button>
-    
-    <button id="reset">Reset</button>
-   
+      .navbar-brand img {
+        height: 40px;
+      }
 
-    <button id="bookmark">Bookmark</button>
-    <button id="unbookmark">Unbookmark</button>
-    <button id="themeSwitcher">Switch Theme</button>
-
-    <input type="text" id="searchInput" placeholder="Search sessions...">
-    <button id="searchButton">Search</button>
-
-    
-    <div id="bookmarks">
-        <ul id="bookmark-list"></ul>
-    </div>
-    
-    
-    <div class="session">
-        <h3>Session 1</h3>
-        <p>Morning Relaxation</p>
-        <p class="session-description">A 10-minute session to start your day with calmness.</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/X2OaMAUEPXM" title="Morning Relaxation Session" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput1" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment1">Submit</button>
-            <div id="commentsContainer1">
-              
-            </div>
+      .content {
+        padding: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
+    </script>
+  </head>
+  <body>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
         </div>
-    </div>
-    
-    
-    
-   
-    <div class="session">
-        <h3>Session 2</h3>
-        <p>Stress Relief</p>
-        <p class="session-description">A 10-minute session to help you relax and refocus.</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/AbckuluEdM0?si=pPjh6cjo8TmTh4Og" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput2" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment2">Submit</button>
-            <div id="commentsContainer2">
-               
-            </div>
+      </div>
+    </header>
+    <div class="container mt-5">
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
         </div>
-    </div>
-    
-   
-    <div class="session">
-        <h3>Session 3</h3>
-        <p>Breathing Exercise</p>
-        <p class="session-description">A 10-Minute Guided Breathing Meditation.</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/VUjiXcfKBn8?si=k-1ZfPnHAglT3MaE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput3" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment3">Submit</button>
-            <div id="commentsContainer3">
-               
-            </div>
+      </div>
+      <div class="container mt-5">
+        <h1 class="title text-center mb-4" style="color: grey;">Welcome to the Guided Meditation Sessions</h1>
+        <div class="row">
+          <div class="col-md-4">
+            <div id="timer" class="alert alert-info text-center">00:00</div>
+          </div>
+          <div class="col-md-8">
+            <button id="start" class="btn btn-primary mr-2">Start</button>
+            <button id="pause" class="btn btn-secondary mr-2">Pause</button>
+            <button id="reset" class="btn btn-warning mr-2">Reset</button>
+            <button id="bookmark" class="btn btn-success mr-2">Bookmark</button>
+            <button id="unbookmark" class="btn btn-danger mr-2">Unbookmark</button>
+            <button id="themeSwitcher" class="btn btn-dark">Switch Theme</button>
+          </div>
         </div>
-    </div>
-    
-   
-    <div class="session">
-        <h3>Session 4</h3>
-        <p>Gratitude</p>
-        <p class="session-description">5 Minute Meditation for Gratitude (guided meditation)</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/zyUy9w953L0?si=LsOu7Dk_nR1NDmxk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput4" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment4">Submit</button>
-            <div id="commentsContainer4">
-                
+        <div class="row mt-4 mb-2">
+          <div class="col-md-12">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="searchInput" placeholder="Search sessions...">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" id="searchButton" type="button">Search</button>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-    
-   
-    <div class="session">
-        <h3>Session 5</h3>
-        <p>Positive Energy</p>
-        <p class="session-description">10 Minute Morning Meditation For Positive Energy</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/z2Km9wseYoo?si=WurxuEsaG99TtBab" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput5" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment5">Submit</button>
-            <div id="commentsContainer5">
-                
+        <div id="bookmarks">
+          <ul id="bookmark-list" class="list-group mb-4"></ul>
+        </div>
+        <!-- Each meditation session listed as a card -->
+        <div class="row">
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 1: Morning Relaxation</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/X2OaMAUEPXM" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">A 10-minute session to start your day with calmness.</p>
+                <textarea id="commentInput1" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment1" class="btn btn-primary">Submit Comment</button>
+                <div id="commentsContainer1" class="comment-section mt-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-    
-
-    <div class="session">
-        <h3>Session 6</h3>
-        <p>Energy Healing</p>
-        <p class="session-description">Heart Chakra Energy Healing (10 Minute Guided Meditation)</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/i5jcY49K2Ag?si=Uy-P_0-NQGn7fv1v" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-       
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput6" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment6">Submit</button>
-            <div id="commentsContainer6">
-               
+          </div>
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 2: Stress Relief</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/AbckuluEdM0" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">A 10-minute session to help you relax and refocus.</p>
+                <textarea id="commentInput2" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment2" class="btn btn-primary">Submit Comment</button>
+                <div id="commentsContainer2" class="comment-section mt-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-    
-    
-    <div class="session">
-        <h3>Session 7</h3>
-        <p>Focus</p>
-        <p class="session-description">10 Minute Guided Meditation for Focused Attention and Concentration</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vBO8QEjANjs?si=kulidhdqQ3FPuqqp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput7" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment7">Submit</button>
-            <div id="commentsContainer7">
-               
+          </div>
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 3: Breathing Exercise</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/VUjiXcfKBn8" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">A 10-Minute Guided Breathing Meditation.</p>
+                <textarea id="commentInput3" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment3" class="btn btn-primary">Submit Comment</button>
+                <div id="commentsContainer3" class="comment-section mt-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-    
-    
-    <div class="session">
-        <h3>Session 8</h3>
-        <p>Burnout Relief</p>
-        <p class="session-description">10 Minute Guided Meditation for Burnout and Stress Relief</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/EnSBxPnArA4?si=ANdfn_8aMDVpsBdp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput8" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment8">Submit</button>
-            <div id="commentsContainer8">
-                
+          </div>
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 4: Gratitude</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/zyUy9w953L0" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">5 Minute Meditation for Gratitude (guided meditation).</p>
+                <textarea id="commentInput4" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment4" class="btn btn-primary">Submit Comment</button>
+                <div id="commentsContainer4" class="comment-section mt-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-    
-   
-    <div class="session">
-        <h3>Session 9</h3>
-        <p>Self Compassion</p>
-        <p class="session-description">10 Minute Self Compassion Guided Meditation</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/XkkxNN4SSO4?si=PHoGkELjhxoY0n2-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput9" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment9">Submit</button>
-            <div id="commentsContainer9">
-               
+          </div>
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 5: Positive Energy</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/z2Km9wseYoo" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">10 Minute Morning Meditation For Positive Energy.</p>
+                <textarea id="commentInput5" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment5" class="btn btn-primary">Submit Comment</button>
+                <div id="commentsContainer5" class="comment-section mt-2"></div>
+              </div>
             </div>
-        </div>
-    </div>
-    
-    
-    <div class="session">
-        <h3>Session 10</h3>
-        <p>Deep Relaxation</p>
-        <p class="session-description">10 Minute Guided Evening Meditation For Deep Relaxation & Gratitude</p>
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YNSPKjFHnCc?si=nF40sZvwl7E55RI8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        
-        <div class="comments-section">
-            <h4>Comments</h4>
-            <textarea id="commentInput10" placeholder="Write your comment or reviews here..."></textarea>
-            <button id="submitComment10">Submit</button>
-            <div id="commentsContainer10">
-             
+          </div>
+          <div class="col-md-12 mb-4 session">
+            <div class="card shadow">
+              <div class="card-body">
+                <h3 class="card-title">Session 6: Energy Healing</h3>
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/i5jcY49K2Ag" frameborder="0" allowfullscreen></iframe>
+                <p class="card-text session-description">Heart Chakra Energy Healing (10 Minute Guided Meditation).</p>
+                <textarea id="commentInput6" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+                <button id="submitComment6" class="btn btn-primary">Submit Comment</button <div id="commentsContainer6" class="comment-section mt-2">
+              </div>
             </div>
+          </div>
         </div>
+        <div class="col-md-12 mb-4 session">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">Session 7: Focus</h3>
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vBO8QEjANjs" frameborder="0" allowfullscreen></iframe>
+              <p class="card-text session-description">10 Minute Guided Meditation for Focused Attention and Concentration.</p>
+              <textarea id="commentInput7" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+              <button id="submitComment7" class="btn btn-primary">Submit Comment</button>
+              <div id="commentsContainer7" class="comment-section mt-2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mb-4 session">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">Session 8: Burnout Relief</h3>
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/EnSBxPnArA4" frameborder="0" allowfullscreen></iframe>
+              <p class="card-text session-description">10 Minute Guided Meditation for Burnout and Stress Relief.</p>
+              <textarea id="commentInput8" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+              <button id="submitComment8" class="btn btn-primary">Submit Comment</button>
+              <div id="commentsContainer8" class="comment-section mt-2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mb-4 session">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">Session 9: Self Compassion</h3>
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/XkkxNN4SSO4" frameborder="0" allowfullscreen></iframe>
+              <p class="card-text session-description">10 Minute Self Compassion Guided Meditation.</p>
+              <textarea id="commentInput9" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+              <button id="submitComment9" class="btn btn-primary">Submit Comment</button>
+              <div id="commentsContainer9" class="comment-section mt-2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mb-4 session">
+          <div class="card shadow">
+            <div class="card-body">
+              <h3 class="card-title">Session 10: Deep Relaxation</h3>
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YNSPKjFHnCc" frameborder="0" allowfullscreen></iframe>
+              <p class="card-text session-description">10 Minute Guided Evening Meditation For Deep Relaxation & Gratitude.</p>
+              <textarea id="commentInput10" class="form-control mb-2" placeholder="Write your comment or reviews here..."></textarea>
+              <button id="submitComment10" class="btn btn-primary">Submit Comment</button>
+              <div id="commentsContainer10" class="comment-section mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <footer>
-        <p><small>Meditation+&copy;</small></p>
+    <footer class="mt-5 py-5 text-center bg-light">
+      <p>Coolfrog © 2024</p>
     </footer>
-
     <script src="scripts/MeditationSession.js"></script>
-</body>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const leftButton = document.getElementById('leftButton');
+        const rightButton = document.getElementById('rightButton');
+        fetch('/api/username').then(response => response.json()).then(data => {
+          if (data.username) {
+            leftButton.textContent = 'Account';
+            leftButton.onclick = function() {
+              window.location.href = '/account';
+            };
+            rightButton.textContent = 'Sign Out of ' + data.username;
+            rightButton.onclick = function() {
+              window.location.href = '/signout';
+            };
+          } else {
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          }
+        }).catch(error => {
+          console.error("Error fetching username:", error);
+          leftButton.textContent = 'Sign Up';
+          leftButton.onclick = function() {
+            window.location.href = '/signup';
+          };
+          rightButton.textContent = 'Login';
+          rightButton.onclick = function() {
+            window.location.href = '/login';
+          };
+        });
+      });
+    </script>
+  </body>
 </html>
