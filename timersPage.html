@@ -6,64 +6,168 @@
     <title>Timers</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/timerStyles.css">
+    <style>
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
+
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
+    </script>
   </head>
   <body class="bg-dark text-white">
-    <header class="fixed-top bg-black">
-      <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid justify-content-center">
-          <div class="navbar-nav">
-            <a class="nav-link btn text-white mx-2" href="index.html">Home</a>
-            <a class="nav-link btn text-white mx-2" href="forum.html">Forum</a>
-            <a class="nav-link btn text-white mx-2" href="meetup.html">Meetup Forum</a>
-            <a class="nav-link btn text-white mx-2" href="videopage.html">Video Library</a>
-            <a class="nav-link btn text-white mx-2" href="article_library.html">Article Library</a>
-            <a class="nav-link btn text-white mx-2" href="DailyInteractive/dailyInteractive.html">Daily Interactive</a>
-            <a class="nav-link btn text-white mx-2" href="relaxation-sounds.html">Relaxation Sounds Library</a>
-            <a class="nav-link btn text-white mx-2" href="MeditationSession.html">Meditation Sessions</a>
-            <a class="nav-link btn text-white mx-2" href="WellnessChallenges.html">Wellness Challenges</a>
-            <a class="nav-link btn text-white mx-2" href="dashboard.html">Progress Dashboard</a>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <div class="container mt-5 pt-5">
-      <h1 class="text-center border-bottom border-warning pb-3 mb-4">Set Your Timers</h1>
-      <p class="text-center">Practicing a meditation technique? Working on something? Use these timers! Warning: A sound will play when the timer is up!</p>
-      <!-- Timer Sections -->
-      <div class="row justify-content-center my-5">
-        <!-- Timer 1 -->
-        <div class="col-md-4 timer-container mb-4">
-          <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput1">
-          <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput1">
-          <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput1">
-          <div id="display1" class="timer-display mb-2">00:00:00</div>
-          <button id="start1" class="btn btn-info mx-1">Start</button>
-          <button id="stop1" class="btn btn-warning mx-1">Stop</button>
-          <button id="reset1" class="btn btn-secondary mx-1">Reset</button>
-        </div>
-        <!-- Timer 2 -->
-        <div class="col-md-4 timer-container mb-4">
-          <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput2">
-          <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput2">
-          <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput2">
-          <div id="display2" class="timer-display mb-2">00:00:00</div>
-          <button id="start2" class="btn btn-info mx-1">Start</button>
-          <button id="stop2" class="btn btn-warning mx-1">Stop</button>
-          <button id="reset2" class="btn btn-secondary mx-1">Reset</button>
-        </div>
-        <!-- Timer 3 -->
-        <div class="col-md-4 timer-container mb-4">
-          <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput3">
-          <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput3">
-          <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput3">
-          <div id="display3" class="timer-display mb-2">00:00:00</div>
-          <button id="start3" class="btn btn-info mx-1">Start</button>
-          <button id="stop3" class="btn btn-warning mx-1">Stop</button>
-          <button id="reset3" class="btn btn-secondary mx-1">Reset</button>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-    <footer class="text-center bg-black text-light py-3">Meditation+&copy;</footer>
-    <script src="scripts/timerPage.js"></script>
+    </header>
+    <div class="container mt-5">
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+        </div>
+      </div>
+      <div class="container mt-5 pt-5">
+        <h1 class="text-center border-bottom border-warning pb-3 mb-4">Set Your Timers</h1>
+        <p class="text-center">Practicing a meditation technique? Working on something? Use these timers! Warning: A sound will play when the timer is up!</p>
+        <!-- Timer Sections -->
+        <div class="row justify-content-center my-5">
+          <!-- Timer 1 -->
+          <div class="col-md-4 timer-container mb-4">
+            <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput1">
+            <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput1">
+            <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput1">
+            <div id="display1" class="timer-display mb-2">00:00:00</div>
+            <button id="start1" class="btn btn-info mx-1">Start</button>
+            <button id="stop1" class="btn btn-warning mx-1">Stop</button>
+            <button id="reset1" class="btn btn-secondary mx-1">Reset</button>
+          </div>
+          <!-- Timer 2 -->
+          <div class="col-md-4 timer-container mb-4">
+            <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput2">
+            <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput2">
+            <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput2">
+            <div id="display2" class="timer-display mb-2">00:00:00</div>
+            <button id="start2" class="btn btn-info mx-1">Start</button>
+            <button id="stop2" class="btn btn-warning mx-1">Stop</button>
+            <button id="reset2" class="btn btn-secondary mx-1">Reset</button>
+          </div>
+          <!-- Timer 3 -->
+          <div class="col-md-4 timer-container mb-4">
+            <input type="number" class="form-control my-2" min="0" placeholder="Hours" id="hourInput3">
+            <input type="number" class="form-control my-2" min="0" placeholder="Minutes" id="minuteInput3">
+            <input type="number" class="form-control my-2" min="0" max="59" placeholder="Seconds" id="secondInput3">
+            <div id="display3" class="timer-display mb-2">00:00:00</div>
+            <button id="start3" class="btn btn-info mx-1">Start</button>
+            <button id="stop3" class="btn btn-warning mx-1">Stop</button>
+            <button id="reset3" class="btn btn-secondary mx-1">Reset</button>
+          </div>
+        </div>
+      </div>
+      <footer class="text-center bg-black text-light py-3">Meditation+&copy;</footer>
+      <script src="scripts/timerPage.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const leftButton = document.getElementById('leftButton');
+          const rightButton = document.getElementById('rightButton');
+          fetch('/api/username').then(response => response.json()).then(data => {
+            if (data.username) {
+              leftButton.textContent = 'Account';
+              leftButton.onclick = function() {
+                window.location.href = '/account';
+              };
+              rightButton.textContent = 'Sign Out of ' + data.username;
+              rightButton.onclick = function() {
+                window.location.href = '/signout';
+              };
+            } else {
+              leftButton.textContent = 'Sign Up';
+              leftButton.onclick = function() {
+                window.location.href = '/signup';
+              };
+              rightButton.textContent = 'Login';
+              rightButton.onclick = function() {
+                window.location.href = '/login';
+              };
+            }
+          }).catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          });
+        });
+      </script>
   </body>
 </html>
