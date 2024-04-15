@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+    videoModal.attachLikeButtonEvents(); // Attach like button events after DOM is loaded
+});
+
 class VideoModal {
     constructor(modalId, videoFrameId, closeButtonClass, videoCardClass) {
         this.modal = document.getElementById(modalId);
@@ -17,7 +22,7 @@ class VideoModal {
         this.videoCards.forEach(videoCard => {
             videoCard.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.openModal(videoCard.dataset.videoUrl);
+                this.openModal(videoCard.getAttribute("data-video-url"));
             });
         });
     }
@@ -52,51 +57,25 @@ class VideoModal {
     }
 
     attachLikeButtonEvents() {
-        document.querySelectorAll('.like-btn').forEach(button => {
+        const likeButtons = document.querySelectorAll('.like-btn');
+        likeButtons.forEach(button => {
             button.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const videoId = button.closest('.video-card').dataset.videoId;
-                const isLiked = button.classList.contains('liked');
-                const action = isLiked ? 'unlike' : 'like';
-
-                const response = await fetch('/api/likes', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ videoId, likeAction: action })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    button.nextElementSibling.textContent = `${data.likes} Likes`;
-                    if (action === 'like') {
-                        button.classList.add('liked');
-                        button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
-                    } else {
-                        button.classList.remove('liked');
-                        button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
-                    }
-                } else {
-                    console.error('Error updating like status');
-                }
+                e.stopPropagation(); // Prevent triggering card click events
+                const videoId = button.closest('.video-card').getAttribute('data-video-id');
+                const response = await fetch(`/api/likes?videoId=${videoId}`, { method: 'POST' });
+                const data = await response.json();
+                const likeCountElement = button.nextElementSibling;
+                likeCountElement.textContent = `${data.likes} Likes`;
+                button.classList.toggle('liked');
             });
         });
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
-    videoModal.attachLikeButtonEvents(); // Attach event listeners to like buttons
-
-    // Implement search feature
-    const searchInput = document.getElementById('searchInput');
-    const videoCards = document.querySelectorAll('.video-card');
-
-    searchInput.addEventListener('input', () => {
-        const searchQuery = searchInput.value.toLowerCase();
-        videoCards.forEach(card => {
-            const title = card.querySelector('.video-info h3').textContent.toLowerCase();
-            const description = card.querySelector('.video-info p').textContent.toLowerCase();
-            card.style.display = (title.includes(searchQuery) || description.includes(searchQuery)) ? '' : 'none';
-        });
-    });
-});
+function checkUserLoggedIn() {
+    fetch('/api/username').then(response => response.json()).then(data => {
+        if (!data.username) {
+            alert("Please log in to rate articles and access your account.");
+        }
+    }).catch(error => console.error("Error checking login status:", error));
+}

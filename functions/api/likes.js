@@ -1,67 +1,70 @@
-export async function onRequest({ request, env }) {
-    if (!validateSession(request)) {
+export async function onRequest(context) {
+    const { request, env } = context;
+    const url = new URL(request.url);
+    const sessionId = getSessionIdFromRequest(request);
+
+    if (!sessionId || !(await env.COOLFROG_SESSIONS.get(sessionId))) {
         return unauthorizedResponse();
     }
 
-    const url = new URL(request.url);
-    switch (url.pathname) {
-        case '/api/likes':
-            if (request.method === 'POST') {
-                return handleLikeRequest(request, env);
-            } else {
-                return new Response("Method Not Allowed", { status: 405 });
-            }
+    switch (request.method) {
+        case 'POST':
+            return handlePost(request, env);
+        case 'GET':
+            return handleGet(request, env);
         default:
-            return new Response("Not Found", { status: 404 });
+            return new Response("Method Not Allowed", { status: 405 });
     }
 }
 
-async function handleLikeRequest(request, env) {
-    const username = await getSessionUsername(request, env);
-    if (!username) {
-        return new Response(JSON.stringify({ error: 'Authentication required' }), { status: 403 });
+async function handlePost(request, env) {
+    const url = new URL(request.url);
+    const videoId = url.searchParams.get("videoId");
+    const username = await getUsernameFromSessionId(request, env);
+    
+    if (!videoId || !username) {
+        return new Response(JSON.stringify({ error: "Missing video ID or user information" }), { status: 400 });
     }
 
-    const data = await request.json();
-    const { videoId, likeAction } = data; // likeAction could be 'like' or 'unlike'
-
-    if (likeAction === 'like') {
-        return await addLike(videoId, username, env);
-    } else if (likeAction === 'unlike') {
-        return await removeLike(videoId, username, env);
-    } else {
-        return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400 });
-    }
-}
-
-async function addLike(videoId, username, env) {
-    // Check if already liked
-    const alreadyLiked = await env.COOLFROG_LIKES.get(`${videoId}-${username}`);
+    const alreadyLiked = await env.COOLFROG_LIKES.get(`${username}_${videoId}`);
     if (alreadyLiked) {
-        return new Response(JSON.stringify({ error: 'Already liked' }), { status: 409 });
+        await env.COOLFROG_LIKES.delete(`${username}_${videoId}`);
+    } else {
+        await env.COOLFROG_LIKES.put(`${username}_${videoId}`, 'liked');
+    }
+    
+    const likes = await countLikes(videoId, env);
+    return new Response(JSON.stringify({ likes }), { headers: { 'Content-Type': 'application/json' } });
+}
+
+async function handleGet(request, env) {
+    const url = new URL(request.url);
+    const videoId = url.searchParams.get("videoId");
+    
+    if (!videoId) {
+        return new Response(JSON.stringify({ error: "Missing video ID" }), { status: 400 });
     }
 
-    await env.COOLFROG_LIKES.put(`${videoId}-${username}`, '1');
-    return new Response(null, { status: 204 });
+    const likes = await countLikes(videoId, env);
+    return new Response(JSON.stringify({ likes }), { headers: { 'Content-Type': 'application/json' } });
 }
 
-async function removeLike(videoId, username, env) {
-    await env.COOLFROG_LIKES.delete(`${videoId}-${username}`);
-    return new Response(null, { status: 204 });
-}
-
-function validateSession(request) {
-    const sessionCookie = request.headers.get("Cookie");
-    return sessionCookie && sessionCookie.includes("sessionId=");
-}
-
-async function getSessionUsername(request, env) {
-    const sessionCookie = request.headers.get("Cookie");
-    const sessionId = sessionCookie.split("sessionId=")[1].split(";")[0];
-    const sessionData = await env.COOLFROG_SESSIONS.get(sessionId);
-    return sessionData ? JSON.parse(sessionData).username : null;
+async function countLikes(videoId, env) {
+    const keys = await env.COOLFROG_LIKES.list();
+    return keys.keys.filter(key => key.name.endsWith(`_${videoId}`)).length;
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+    return new Response("Unauthorized - Please log in.", { status: 403, headers: { 'Content-Type': 'text/plain' } });
+}
+
+function getSessionIdFromRequest(request) {
+    const cookieHeader = request.headers.get('Cookie');
+    return cookieHeader && cookieHeader.split(';').map(cookie => cookie.trim()).find(c => c.startsWith('session-id='))?.split('=')[1];
+}
+
+async function getUsernameFromSessionId(request, env) {
+    const cookie = getSessionIdFromRequest(request);
+    const session = await env.COOLFROG_SESSIONS.get(cookie);
+    return session && JSON.parse(session).username;
 }
