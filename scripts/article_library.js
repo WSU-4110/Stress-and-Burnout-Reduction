@@ -1,70 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const articles = document.querySelectorAll('.article');
-
-    searchInput.addEventListener('input', function() {
-        const searchTerm = searchInput.value.toLowerCase();
-
-        articles.forEach(article => {
-            const title = article.querySelector('h2').textContent.toLowerCase();
-            const summary = article.querySelector('p').textContent.toLowerCase();
-            if (title.includes(searchTerm) || summary.includes(searchTerm)) {
-                article.style.display = 'block';
-            } else {
-                article.style.display = 'none';
-            }
-        });
-    });
-
-    if (isAuthenticated()) {
-        const userId = getCurrentUserId();
-        fetch(`/api/articles?user=${userId}`).then(response => response.json()).then(data => {
-            document.querySelectorAll('.article').forEach(article => {
-                const articleId = article.getAttribute('data-article-id');
-                const ratingContainer = article.querySelector('.rating');
-                if (data[articleId]) {
-                    updateRatingUI(ratingContainer, parseInt(data[articleId]));
-                }
-            });
-        }).catch(error => console.error(error));
-    }
-
+    // Add event listeners to star elements for rating articles
     document.querySelectorAll('.rating .star').forEach(star => {
-        star.addEventListener('click', function() {
-            if (!isAuthenticated()) {
-                alert('Please log in to rate articles.');
-                return;
-            }
-
+        star.addEventListener('click', async function() {
             const rating = this.dataset.value;
             const articleId = this.closest('.article').getAttribute('data-article-id');
             const ratingContainer = this.parentElement;
-            const userId = getCurrentUserId();
 
-            updateRatingUI(ratingContainer, rating);
-
-            fetch('/api/articles', {
+            // Send rating to server
+            const response = await fetch('/api/articles', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    user: userId,
-                    articleId: articleId,
-                    rating: rating
-                })
-            }).then(response => response.json()).then(data => {
-                console.log(data.status);  // Log status message
-            }).catch(error => console.error("Failed to update rating:", error));
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ articleId, rating })
+            });
+
+            if (response.ok) {
+                updateRatingUI(ratingContainer, rating);
+            } else {
+                console.error('Failed to update rating');
+            }
         });
     });
+
+    // Restore ratings from server when the page is loaded
+    document.querySelectorAll('.article').forEach(async article => {
+        const articleId = article.getAttribute('data-article-id');
+        const ratingContainer = article.querySelector('.rating');
+        const response = await fetch(`/api/articles?articleId=${articleId}`);
+        
+        if (response.ok) {
+            const { rating } = await response.json();
+            if (rating) {
+                updateRatingUI(ratingContainer, parseInt(rating));
+            }
+        }
+    });
 });
-
-function isAuthenticated() {
-    return localStorage.getItem('userAuthenticated') === 'true';
-}
-
-function getCurrentUserId() {
-    return localStorage.getItem('userId');
-}
 
 function updateRatingUI(ratingContainer, rating) {
     const stars = ratingContainer.querySelectorAll('.star');
