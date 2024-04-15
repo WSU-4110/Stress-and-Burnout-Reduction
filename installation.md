@@ -218,6 +218,23 @@ https://dash.cloudflare.com/<account-id>/pages/view/<sub-domain>
 This domain is an example, but it is our canonical domain. Replace it with yours.
 ```
 
+### Add a Page Rule to Redirect the Zone Apex
+
+- We need to direct the Zone Apex: "coolfrog.net" to "www.coolfrog.net".
+
+- Navigate to your domain and click **Rules** then **Page Rules** in the left menu.
+
+```
+https://dash.cloudflare.com/<account-id>/coolfrog.net/rules
+```
+
+- Add the following Page Rule:
+
+```
+coolfrog.net/*
+Forwarding URL (Status Code: 302 - Temporary Redirect, Url: https://www.coolfrog.net/$1)
+```
+
 ## Setup Cloudflare R2 (Object Storage)
 
 - Since Cloudflare pages cannot build files over 25 MB, we must move them to a CDN.
