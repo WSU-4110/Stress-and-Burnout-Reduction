@@ -44,14 +44,15 @@ async function toggleLike(request, env) {
 async function getLikesCount(request, env) {
     const url = new URL(request.url);
     const videoId = url.searchParams.get("videoId");
-
     const stmt = env.COOLFROG_LIKES.prepare("SELECT COUNT(*) as count FROM likes WHERE video_id = ?");
     const result = await stmt.bind(videoId).get();
-
+    if (!result) {
+        return new Response(JSON.stringify({ likes: 0 }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
     return new Response(JSON.stringify({ likes: result.count }), {
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
     });
 }
 
