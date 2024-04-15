@@ -255,7 +255,7 @@ class CommentManager {
 		if (commentText !== '') {
 			const commentElement = document.createElement('div');
 			commentElement.classList.add('comment');
-			commentElement.innerHTML = `<i>${commentText}</i>`;
+			commentElement.textContent = commentText; // Moved the text here to separate styling
 
 			const deleteButton = document.createElement('button');
 			deleteButton.textContent = 'Delete';
@@ -264,8 +264,15 @@ class CommentManager {
 				this.saveCommentsToLocalStorage();
 			});
 
-			commentElement.appendChild(deleteButton);
+			// Create div that will hold the delete button
+			const buttonContainer = document.createElement('div');
+			buttonContainer.classList.add('button-container');
+			buttonContainer.appendChild(deleteButton);
+
+			// Append the actual comment and the new div with the button
+			commentElement.appendChild(buttonContainer);
 			commentsContainer.appendChild(commentElement);
+
 			this.saveCommentsToLocalStorage();
 			commentInput.value = '';
 		}
