@@ -1,58 +1,63 @@
 export async function onRequest({ request, env }) {
     const url = new URL(request.url);
-    if (url.pathname === '/api/likes' && request.method === 'POST') {
-        return handleLikes(request, env);
+    const method = request.method;
+    
+    const sessionCookie = getSessionCookie(request);
+    if (!sessionCookie || !(await env.COOLFROG_SESSIONS.get(sessionCookie))) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
-    return new Response("Endpoint not found", { status: 404 });
+    if (url.pathname === '/api/likes') {
+        switch (method) {
+            case 'POST':
+                return handlePostLike(request, env);
+            case 'GET':
+                return handleGetLikes(request, env);
+            default:
+                return new Response(null, { status: 405 });
+        }
+    }
+
+    return new Response(null, { status: 404 });
 }
 
-async function handleLikes(request, env) {
-    const { videoId, action } = await request.json();
-    const username = await getUsername(request, env);
+async function handlePostLike(request, env) {
+    const { videoId, liked } = await request.json();
+    const stmt = env.COOLFROG_LIKES.prepare(
+        "REPLACE INTO likes (video_id, username, liked) VALUES (?, ?, ?)"
+    );
+    await stmt.run(videoId, request.username, liked);
 
-    if (!username) {
-        return new Response(JSON.stringify({ error: "Authentication required" }), {
-            status: 403,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+    // Also calculate total likes
+    const countStmt = env.COOLFROG_LIKES.prepare(
+        "SELECT COUNT(*) as count FROM likes WHERE video_id = ? AND liked = 1"
+    );
+    const { count } = await countStmt.get(videoId);
 
-    let stmt;
-    switch (action) {
-        case 'like':
-            stmt = env.COOLFROG_LIKES.prepare("INSERT INTO likes (video_id, username) VALUES (?, ?)");
-            await stmt.run(videoId, username);
-            break;
-        case 'unlike':
-            stmt = env.COOLFROG_LIKES.prepare("DELETE FROM likes WHERE video_id = ? AND username = ?");
-            await stmt.run(videoId, username);
-            break;
-        default:
-            return new Response("Invalid action", { status: 400 });
-    }
-
-    const likesCount = await updateLikesCount(videoId, env);
-    return new Response(JSON.stringify({ likes: likesCount }), {
-        headers: { 'Content-Type': 'application/json' },
-        status: 200
+    return new Response(JSON.stringify({ likes: count }), {
+        headers: { 'Content-Type': 'application/json' }
     });
 }
 
-async function getUsername(request, env) {
-    const cookieHeader = request.headers.get("Cookie");
-    const sessionId = cookieHeader ? cookieHeader.split(";").find(c => c.trim().startsWith("session-id=")) : null;
-
-    if (!sessionId) {
-        return null;
-    }
-
-    const session = await env.COOLFROG_SESSIONS.get(sessionId.split("=")[1]);
-    return session ? JSON.parse(session).username : null;
+async function handleGetLikes(request, env) {
+    const videoId = new URL(request.url).searchParams.get('video_id');
+    const countStmt = env.COOLFROG_LIKES.prepare(
+        "SELECT COUNT(*) as count FROM likes WHERE video_id = ? AND liked = 1"
+    );
+    const { count } = await countStmt.get(videoId);
+    
+    return new Response(JSON.stringify({ likes: count }), {
+        headers: { 'Content-Type': 'application/json' }
+    });
 }
 
-async function updateLikesCount(videoId, env) {
-    const countStmt = env.COOLFROG_LIKES.prepare("SELECT COUNT(*) AS count FROM likes WHERE video_id = ?");
-    const result = await countStmt.get(videoId);
-    return result.count;
+function getSessionCookie(request) {
+    const cookieHeader = request.headers.get('Cookie');
+    if (!cookieHeader) return null;
+    return Object.fromEntries(
+        cookieHeader.split(';').map(c => {
+            const [key, ...v] = c.trim().split('=');
+            return [key, v.join('=')];
+        })
+    )['session-id'];
 }
