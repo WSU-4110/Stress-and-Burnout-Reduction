@@ -4,7 +4,7 @@ class VideoModal {
         this.videoFrame = document.getElementById(videoFrameId);
         this.closeButton = document.getElementsByClassName(closeButtonClass)[0];
         this.videoCards = document.querySelectorAll(videoCardClass);
-        this.init();
+        this.init(); // Initialize the modal functionality
     }
 
     init() {
@@ -52,42 +52,57 @@ class VideoModal {
     }
 
     attachLikeButtonEvents() {
-        const likeButtons = document.querySelectorAll('.like-btn');
-        likeButtons.forEach(button => {
+        document.querySelectorAll('.like-btn').forEach(button => {
             button.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const videoId = button.closest('.video-card').getAttribute('data-video-id');
-                fetch(`/api/likes?videoId=${videoId}`, { method: 'POST' })
-                    .then(() => updateLikeStatus(button))
-                    .catch(error => console.error('Error:', error));
+                const isLiked = button.classList.contains('liked');
+                this.handleLikeButtonClick(button, videoId, isLiked ? 'unlike' : 'like');
             });
         });
     }
-}
 
-async function updateLikeStatus(button) {
-    const videoId = button.closest('.video-card').getAttribute('data-video-id');
-    const countSpan = button.nextElementSibling;
-    const response = await fetch(`/api/likes?videoId=${videoId}`);
-    const data = await response.json();
-    countSpan.textContent = `${data.likes} Likes`;
-    button.classList.toggle('liked');
-    button.innerHTML = button.classList.contains('liked') ? 
-        '<i class="fa-solid fa-heart"></i> Liked' : '<i class="fa-regular fa-heart"></i> Like';
+    async handleLikeButtonClick(button, videoId, action) {
+        try {
+            const response = await fetch('/api/likes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoId, action })
+            });
+
+            if (response.ok) {
+                const countResponse = await fetch(`/api/likes?videoId=${videoId}`);
+                const data = await countResponse.json();
+                this.updateLikeButtonUI(button, data.likes, action);
+            }
+        } catch (error) {
+            console.error('Error handling like button click:', error);
+        }
+    }
+
+    updateLikeButtonUI(button, likes, action) {
+        const likeCountElement = button.nextElementSibling;
+        likeCountElement.textContent = `${likes} Likes`;
+        button.classList.toggle('liked', action === 'like');
+
+        if (action === 'like') {
+            button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
+        } else {
+            button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
+        }
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
     videoModal.attachLikeButtonEvents();
-    checkUserLoggedIn();
 
     const searchInput = document.getElementById('searchInput');
     const videoCards = document.querySelectorAll('.video-card');
     const videoInfos = document.querySelectorAll('.video-info');
 
-    searchInput.addEventListener('input', () => {
+    searchInput.addEventListener('input', function() {
         const searchQuery = searchInput.value.toLowerCase();
-      
         videoCards.forEach((card, index) => {
             const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
             const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
@@ -95,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
             card.style.display = isVisible ? '' : 'none';
         });
     });
+
+    checkUserLoggedIn();
 });
 
 async function checkUserLoggedIn() {
@@ -102,7 +119,7 @@ async function checkUserLoggedIn() {
         const response = await fetch('/api/username');
         const data = await response.json();
         if (!data.username) {
-            alert("Please log in to like videos and access your account.");
+            alert("Please log in to like videos.");
         }
     } catch (error) {
         console.error("Error checking login status:", error);
