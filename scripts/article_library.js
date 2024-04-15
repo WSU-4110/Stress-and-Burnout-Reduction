@@ -1,21 +1,16 @@
-// Listen for DOMContentLoaded event to ensure the document is fully loaded before executing the code
-document.addEventListener('DOMContentLoaded', function() {
-	// Get the search input element and all articles on the page
+document.addEventListener('DOMContentLoaded', async function() {
+	// Check if the user is logged in and show pop-up if not
+	checkUserLoggedIn();
+
+	// Set up search functionality
 	const searchInput = document.getElementById('searchInput');
 	const articles = document.querySelectorAll('.article');
 
-	// Add an event listener to the search input to detect input changes
 	searchInput.addEventListener('input', function() {
-		// Convert the search term to lowercase for case-insensitive comparison
 		const searchTerm = searchInput.value.toLowerCase();
-
-		// Iterate over each article to check if its title or summary contains the search term
 		articles.forEach(article => {
-			// Get the title and summary of the current article, converted to lowercase
 			const title = article.querySelector('h2').textContent.toLowerCase();
 			const summary = article.querySelector('p').textContent.toLowerCase();
-
-			// If the title or summary contains the search term, display the article; otherwise, hide it
 			if (title.includes(searchTerm) || summary.includes(searchTerm)) {
 				article.style.display = 'block';
 			} else {
@@ -23,43 +18,51 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 	});
-});
 
+	// Event listeners for rating stars
+	document.querySelectorAll('.rating .star').forEach(star => {
+		star.addEventListener('click', async function() {
+			const rating = this.dataset.value;
+			const articleId = this.closest('.article').getAttribute('data-article-id');
+			const ratingContainer = this.parentElement;
 
+			// Send rating to server
+			const response = await fetch('/api/articles', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					articleId,
+					rating
+				})
+			});
 
-// Function to check if the user is authenticated
-function isAuthenticated() {
-	return localStorage.getItem('userAuthenticated') === 'true';
-}
+			if (response.ok) {
+				updateRatingUI(ratingContainer, rating);
+			} else {
+				console.error('Failed to update rating');
+			}
+		});
+	});
 
-// Function to get the current user's identifier (e.g., user ID)
-function getCurrentUserId() {
-	return localStorage.getItem('userId');
-}
+	// Restore ratings from server when the page loads
+	document.querySelectorAll('.article').forEach(async article => {
+		const articleId = article.getAttribute('data-article-id');
+		const ratingContainer = article.querySelector('.rating');
 
-// Add event listeners to star elements for rating articles
-document.querySelectorAll('.rating .star').forEach(star => {
-	star.addEventListener('click', function() {
-		const rating = this.dataset.value;
-		const articleId = this.closest('.article').getAttribute('data-article-id'); // Assuming each article has a unique ID
-		const ratingContainer = this.parentElement;
-
-		if (isAuthenticated()) {
-			const userId = getCurrentUserId();
-			// Save rating locally (in localStorage) associated with the user and article ID
-			localStorage.setItem(`user_${userId}_article_${articleId}_rating`, rating);
-			// Update UI to reflect the rating (e.g., change star colors)
-			updateRatingUI(ratingContainer, rating);
-		} else {
-			// Handle case where user is not authenticated
-			alert('Please sign in to rate articles.');
-			// Optionally, redirect the user to the sign-in page
-			// window.location.href = '/sign-in';
+		const response = await fetch(`/api/articles?articleId=${articleId}`);
+		if (response.ok) {
+			const {
+				rating
+			} = await response.json();
+			if (rating) {
+				updateRatingUI(ratingContainer, parseInt(rating));
+			}
 		}
 	});
 });
 
-// Function to update UI to reflect the rating
 function updateRatingUI(ratingContainer, rating) {
 	const stars = ratingContainer.querySelectorAll('.star');
 	stars.forEach((star, index) => {
@@ -71,17 +74,14 @@ function updateRatingUI(ratingContainer, rating) {
 	});
 }
 
-// Restore ratings from localStorage when the page is loaded
-document.addEventListener('DOMContentLoaded', function() {
-	if (isAuthenticated()) {
-		const userId = getCurrentUserId();
-		document.querySelectorAll('.article').forEach(article => {
-			const articleId = article.getAttribute('data-article-id');
-			const ratingContainer = article.querySelector('.rating');
-			const savedRating = localStorage.getItem(`user_${userId}_article_${articleId}_rating`);
-			if (savedRating) {
-				updateRatingUI(ratingContainer, parseInt(savedRating));
-			}
-		});
+async function checkUserLoggedIn() {
+	try {
+		const response = await fetch('/api/username');
+		const data = await response.json();
+		if (!data.username) {
+			alert("Please log in to rate articles and access your account.");
+		}
+	} catch (error) {
+		console.error("Error checking login status:", error);
 	}
-});
+}
