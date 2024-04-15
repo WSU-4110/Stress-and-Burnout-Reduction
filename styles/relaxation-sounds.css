@@ -37,30 +37,6 @@ h1 {
   line-height: 1.6;
 }
 
-nav {
-  background-color: rgb(20, 15, 15);
-  color: rgb(28, 27, 27);
-  padding: 20px;
-  text-align: center;
-}
-
-nav a {
-  padding: 15px 30px;
-  color: #a1a1a1;
-  text-decoration: none;
-  margin: 0 10px;
-  display: inline-block;
-  font-size: 14px;
-  letter-spacing: 2px;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-nav a:hover {
-  background-color: #4caf50;
-  color: rgb(59, 3, 3);
-}
-
 #soundsContainer {
   display: flex;
   flex-wrap: wrap;
