@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
+
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
+    </script>
+  </head>
+  <body>
+    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="container mt-5">
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+        </div>
+      </div>
+      <div class="container mt-5">
+        <h1 class="mb-4">Terms of Service</h1>
+        <p>Last updated: April 14, 2024</p>
+        <h2 class="mt-5">1. Introduction</h2>
+        <p>Welcome to <strong>Coolfrog</strong>. By accessing our website or using our services, you agree to be bound by these terms of service. Please read them carefully. </p>
+        <h2 class="mt-4">2. Community Guidelines</h2>
+        <ol>
+          <li>You may not perform automatic exploit testing on this website. To report bugs, visit: <a href="https://github.com/WSU-4110/Stress-and-Burnout-Reduction/issues" target="_blank">https://github.com/WSU-4110/Stress-and-Burnout-Reduction/issues</a>
+          </li>
+          <li>Act on this website as you would in a public forum.</li>
+          <ol>
+            <li>be respectful and kind;</li>
+            <li>refrain from spam;</li>
+            <li>refrain from creating multiple accounts or identities, your primary account may add multiple emails instead;</li>
+            <li>do not post links or material that is illegal in the jurisdiction of the United States of America;</li>
+            <li>do not impersonate other users or people.</li>
+          </ol>
+          <li>Your account shall automatically terminate if you violate any of these restrictions and may be terminated by Coolfrog at any time.</li>
+        </ol>
+        <h2 class="mt-4">3. Disclaimer</h2>
+        <p>The materials on the Coolfrog's website are provided on an 'as is' basis. The Coolfrog makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+        <h2 class="mt-4">4. Limitations</h2>
+        <p>In no event shall the Coolfrog or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the Coolfrog's website, even if the Coolfrog or a Coolfrog authorized representative has been notified orally or in writing of the possibility of such damage.</p>
+        <h2 class="mt-4">5. Governing Law</h2>
+        <p>These terms and conditions are governed by and construed in accordance with the laws of the United States of America and you irrevocably submit to the exclusive jurisdiction of the courts in the United States of America.</p>
+        <footer class="mt-5 mb-3 text-muted">
+          <p>
+            <strong>Coolfrog</strong> &copy; 2024. All rights reserved.
+          </p>
+        </footer>
+      </div>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.3/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const leftButton = document.getElementById('leftButton');
+          const rightButton = document.getElementById('rightButton');
+          fetch('/api/username').then(response => response.json()).then(data => {
+            if (data.username) {
+              leftButton.textContent = 'Account';
+              leftButton.onclick = function() {
+                window.location.href = '/account';
+              };
+              rightButton.textContent = 'Sign Out of ' + data.username;
+              rightButton.onclick = function() {
+                window.location.href = '/signout';
+              };
+            } else {
+              leftButton.textContent = 'Sign Up';
+              leftButton.onclick = function() {
+                window.location.href = '/signup';
+              };
+              rightButton.textContent = 'Login';
+              rightButton.onclick = function() {
+                window.location.href = '/login';
+              };
+            }
+          }).catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          });
+        });
+      </script>
+  </body>
+</html>
