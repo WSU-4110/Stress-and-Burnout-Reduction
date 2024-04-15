@@ -1,59 +1,35 @@
-export async function handleRequest({ request, env }) {
-    const url = new URL(request.url);
-    if (url.pathname.startsWith('/api/articles')) {
-        if (request.method === 'POST') {
-            return await setArticleRating(request, env);
-        } else if (request.method === 'GET') {
-            return await getArticleRating(request, env);
-        } else {
-            return new Response("Method Not Allowed", { status: 405 });
-        }
+export async function onRequest({ request, env }) {
+    let url = new URL(request.url);
+
+    if (request.method === 'POST') {
+        return await setArticleRating(request, env);
+    } else if (request.method === 'GET') {
+        return await getArticleRating(request, env);
+    } else {
+        return new Response("Method Not Allowed", { status: 405 });
     }
-    return new Response("Not Found", { status: 404 });
 }
 
 async function setArticleRating(request, env) {
-    const { sessionId, user } = await authenticateUser(request, env);
-    if (!user) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
-    }
-
-    const data = await request.json();
-    const { articleId, rating } = data;
-    let ratings = await env.COOLFROG_ARTICLES.get(user, 'json') || {};
-    ratings[articleId] = rating;
-    await env.COOLFROG_ARTICLES.put(user, JSON.stringify(ratings));
-    
-    return new Response(JSON.stringify({ success: true }), { headers: {'Content-Type': 'application/json'} });
+    const { user, articleId, rating } = await request.json();
+    const key = `user_${user}_ratings`;
+    let userData = await env.COOLFROG_ARTICLES.get(key);
+    userData = userData ? JSON.parse(userData) : {};
+    userData[articleId] = rating;
+    await env.COOLFROG_ARTICLES.put(key, JSON.stringify(userData));
+    return new Response(JSON.stringify({status: "Rating updated successfully."}), {status: 200});
 }
 
 async function getArticleRating(request, env) {
-    const { sessionId, user } = await authenticateUser(request, env);
-    if (!user) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
-    }
-
     const url = new URL(request.url);
-    const articleId = url.searchParams.get("articleId");
-    const ratings = await env.COOLFROG_ARTICLES.get(user, 'json');
-    const rating = ratings ? ratings[articleId] : null;
-
-    return new Response(JSON.stringify({ rating }), { headers: {'Content-Type': 'application/json'} });
-}
-
-async function authenticateUser(request, env) {
-    const sessionId = getSessionIdFromRequest(request);
-    if (!sessionId) {
-        return {};
+    const user = url.searchParams.get('user');
+    const articleId = url.searchParams.get('articleId');
+    const key = `user_${user}_ratings`;
+    const userData = await env.COOLFROG_ARTICLES.get(key);
+    if (userData) {
+        const ratings = JSON.parse(userData);
+        const rating = ratings[articleId] || 0;
+        return new Response(JSON.stringify({rating: rating}), {status: 200});
     }
-    const sessionValue = await env.COOLFROG_SESSIONS.get(sessionId);
-    return sessionValue ? JSON.parse(sessionValue) : {};
-}
-
-export function getSessionIdFromRequest(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim());
-    const sessionCookie = cookies.find(cookie => cookie.startsWith('session-id='));
-    return sessionCookie ? sessionCookie.split('=')[1] : null;
+    return new Response("No ratings found for this user.", {status: 404});
 }
