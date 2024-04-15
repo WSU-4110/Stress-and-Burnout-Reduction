@@ -1,6 +1,20 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
     videoModal.attachLikeButtonEvents(); // Attach like button events after DOM is loaded
+
+    const searchInput = document.getElementById('searchInput');
+    const videoCards = document.querySelectorAll('.video-card');
+    const videoInfos = document.querySelectorAll('.video-info');
+
+    searchInput.addEventListener('input', () => {
+        const searchQuery = searchInput.value.toLowerCase();
+        videoCards.forEach((card, index) => {
+            const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
+            const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
+            const isVisible = title.includes(searchQuery) || description.includes(searchQuery);
+            card.style.display = isVisible ? '' : 'none';
+        });
+    });
 });
 
 class VideoModal {
@@ -59,23 +73,31 @@ class VideoModal {
     attachLikeButtonEvents() {
         const likeButtons = document.querySelectorAll('.like-btn');
         likeButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-                e.stopPropagation(); // Prevent triggering card click events
-                const videoId = button.closest('.video-card').getAttribute('data-video-id');
-                const response = await fetch(`/api/likes?videoId=${videoId}`, { method: 'POST' });
-                const data = await response.json();
-                const likeCountElement = button.nextElementSibling;
-                likeCountElement.textContent = `${data.likes} Likes`;
-                button.classList.toggle('liked');
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.handleLikeButtonClick(button);
             });
         });
     }
-}
 
-function checkUserLoggedIn() {
-    fetch('/api/username').then(response => response.json()).then(data => {
-        if (!data.username) {
-            alert("Please log in to rate articles and access your account.");
-        }
-    }).catch(error => console.error("Error checking login status:", error));
+    handleLikeButtonClick(button) {
+        const videoId = button.closest('.video-card').getAttribute('data-video-id');
+        const isLiked = button.classList.contains('liked');
+        const action = isLiked ? 'unlike' : 'like';
+        const url = `/api/likes`;
+
+        fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoId, action })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const likeCountElement = button.nextElementSibling;
+                likeCountElement.textContent = `${data.totalLikes} Likes`;
+                button.classList.toggle('liked', !isLiked);
+                button.innerHTML = button.classList.contains('liked') ? '<i class="fa-solid fa-heart"></i> Liked' : '<i class="fa-regular fa-heart"></i> Like';
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }
