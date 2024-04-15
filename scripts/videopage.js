@@ -1,109 +1,73 @@
-class VideoModal {
-    constructor(modalId, videoFrameId, closeButtonClass, videoCardClass) {
-        this.modal = document.getElementById(modalId);
-        this.videoFrame = document.getElementById(videoFrameId);
-        this.closeButton = document.getElementsByClassName(closeButtonClass)[0];
-        this.videoCards = document.querySelectorAll(videoCardClass);
-        this.init();
-    }
-
-    init() {
-        this.attachVideoCardsEvents();
-        this.attachCloseButtonEvent();
-        this.attachWindowClickEvent();
-        this.attachLikeButtonEvents();
-    }
-
-    attachVideoCardsEvents() {
-        this.videoCards.forEach(videoCard => {
-            videoCard.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.openModal(videoCard.getAttribute("data-video-url"));
-            });
-        });
-    }
-
-    openModal(videoUrl) {
-        const embedUrl = this.transformVideoUrl(videoUrl);
-        this.videoFrame.src = `${embedUrl}?autoplay=1&rel=0`;
-        this.modal.style.display = "block";
-    }
-
-    transformVideoUrl(videoUrl) {
-        return videoUrl.replace("watch?v=", "embed/");
-    }
-
-    attachCloseButtonEvent() {
-        this.closeButton.onclick = () => {
-            this.closeModal();
-        };
-    }
-
-    attachWindowClickEvent() {
-        window.onclick = (event) => {
-            if (event.target === this.modal) {
-                this.closeModal();
-            }
-        };
-    }
-
-    closeModal() {
-        this.modal.style.display = "none";
-        this.videoFrame.src = "";
-    }
-
-    attachLikeButtonEvents() {
-        const likeButtons = document.querySelectorAll('.like-btn');
-        likeButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.handleLikeButtonClick(button);
-            });
-        });
-    }
-
-    handleLikeButtonClick(button) {
-        const videoId = button.closest('.video-card').getAttribute('data-video-id');
-        button.disabled = true; // Disable the button while processing
-        fetch(`/api/likes/${videoId}`, { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                const likeCountElement = button.nextElementSibling;
-                likeCountElement.textContent = `0 Likes`; // Update based on response data if provided by API
-                toggleLikeButton(button); // Toggle the button state visually
-            })
-            .catch(error => {
-                console.error("Error handling like:", error);
-            })
-            .finally(() => {
-                button.disabled = false; // Re-enable the button
-            });
-    }
-
-    toggleLikeButton(button) {
-        if (button.classList.contains('liked')) {
-            button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
-            button.classList.remove('liked');
-        } else {
-            button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
-            button.classList.add('liked');
-        }
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
-    const searchInput = document.getElementById('searchInput');
-    const videoCards = document.querySelectorAll('.video-card');
-    const videoInfos = document.querySelectorAll('.video-info');
+	checkUserLoggedIn();
 
-    searchInput.addEventListener('input', () => {
-        const searchQuery = searchInput.value.toLowerCase();
-        videoCards.forEach((card, index) => {
-            const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
-            const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
-            const isVisible = title.includes(searchQuery) || description.includes(searchQuery);
-            card.style.display = isVisible ? '' : 'none';
-        });
-    });
+	const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+	videoModal.attachLikeButtonEvents();
+
+	// Check if the user is logged in and show popup if not
+	async function checkUserLoggedIn() {
+		try {
+			const response = await fetch('/api/username');
+			const data = await response.json();
+			if (!data.username) {
+				alert("Please log in to like videos and access your account.");
+			}
+		} catch (error) {
+			console.error("Error checking login status:", error);
+		}
+	}
+
+	async function attachLikeButtonEvents() {
+		document.querySelectorAll('.like-btn').forEach(button => {
+			button.addEventListener('click', async (e) => {
+				e.stopPropagation();
+				const videoCard = button.closest('.video-card');
+				const videoId = videoCard.getAttribute('data-video-id');
+				const liked = button.classList.contains('liked');
+				const response = await fetch('/api/likes', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ videoId, like: !liked })
+				});
+
+				if (response.ok) {
+					updateLikesCount(videoId, button);
+				} else if (response.status === 403) {
+					alert("You must be logged in to like videos.");
+				} else {
+					alert("An error occurred, please try again later.");
+				}
+			});
+		});
+	}
+
+	async function updateLikesCount(videoId, button) {
+		const countSpan = button.nextElementSibling;
+		const response = await fetch(`/api/likes?videoId=${videoId}`);
+		const data = await response.json();
+		countSpan.textContent = `${data.likes} Likes`;
+		button.classList.toggle('liked', data.likedByUser);
+
+		if (button.classList.contains('liked')) {
+			button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
+		} else {
+			button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
+		}
+	}
+
+	// Search functionality
+	const searchInput = document.getElementById('searchInput');
+	const videoCards = document.querySelectorAll('.video-card');
+	const videoInfos = document.querySelectorAll('.video-info');
+
+	searchInput.addEventListener('input', () => {
+		const searchQuery = searchInput.value.toLowerCase();
+
+		videoCards.forEach((card, index) => {
+			const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
+			const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
+			const isVisible = title.includes(searchQuery) || description.includes(searchQuery);
+			card.style.display = isVisible ? '' : 'none';
+		});
+	});
 });
