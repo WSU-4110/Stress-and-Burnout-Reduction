@@ -1,91 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <!-- Meta information and page title -->
     <meta charset="UTF-8">
     <title>Daily Interactive</title>
     <!-- Link to external CSS for styling -->
-    <link rel="stylesheet" href="/styles/dailyInteractive.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles/dailyInteractive.css">
+    <style>
+      .row {
+        display: flex;
+        justify-content: flex-end;
+      }
 
+      .col-auto {
+        flex: 0 0 auto;
+        margin-right: 20px;
+      }
+
+      .row {
+        background-color: black;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: 0.3rem;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+      }
+
+      .btn-secondary:hover {
+        background-color: #545b62;
+        border-color: #545b62;
+      }
+
+      .btn-lg {
+        padding: 0.5rem 1.5rem;
+        font-size: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
     <!-- Header section with a hero image and title -->
     <header id="home">
-        <div class="hero">
-            <div class="overlay"></div> <!-- Semi-transparent overlay to enhance text contrast -->
-            <h1>Daily Interactive</h1> <!-- Main heading of the page -->
-        </div>
+      <div class="hero">
+        <div class="overlay"></div>
+        <!-- Semi-transparent overlay to enhance text contrast -->
+        <h1>Daily Interactive</h1>
+        <!-- Main heading of the page -->
+      </div>
     </header>
-
     <!-- Navigation bar -->
     <div class="sticky-wrapper">
-        <nav>
-            <ul>
-                <li><a href="../index.html">Home</a></li>
-                <li><a href="../forum.html">Forum</a></li>
-		        <li><a href="../videopage.html">Video Library</a></li>
-                <li><a href="../article_library.html">Article Library</a></li>
-                <li><a href="dailyInteractive.html">Daily Interactive</a></li>
-                <li><a href="../relaxation-sounds.html">Relaxation Sounds Library</a></li>
-                <a href="../MeditationSession.html">Meditation Sessions</a></li>
-                <a href="../timersPage.html">Timers</a></li>
-                <a href="../WellnessChallenges.html">Wellness Challenges</a></li>
-                <a href="../dashboard.html">Progress Dash</a></li>
-            </ul>
-        </nav>
+      <nav>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/index">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/forums">Forums</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/meetups">Meetups</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/videopage">Videos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/article_library">Articles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/timersPage">Timers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+          </li>
+        </ul>
+      </nav>
     </div>
-
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+        <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+      </div>
+    </div>
     <!-- Selector for choosing a day -->
     <div class="day-selector">
-        <label for="day-select">Choose a day:</label>
-        <select id="day-select">
-            <option value="0">Sunday</option>
-            <option value="1">Monday</option>
-            <option value="2">Tuesday</option>
-            <option value="3">Wednesday</option>
-            <option value="4">Thursday</option>
-            <option value="5">Friday</option>
-            <option value="6">Saturday</option>
-        </select>
+      <label for="day-select">Choose a day:</label>
+      <select id="day-select">
+        <option value="0">Sunday</option>
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+        <option value="6">Saturday</option>
+      </select>
     </div>
-    
     <!-- Placeholder for the name of the day -->
     <section id="item1">
-        <h1>Monday</h1> <!-- Initially shows Monday, changes based on selection -->
+      <h1>Monday</h1>
+      <!-- Initially shows Monday, changes based on selection -->
     </section>
-
     <!-- Placeholder for the interactive content of the selected day -->
     <section id="item2">
-        <h1>interactive here</h1> <!-- Content changes dynamically based on JS logic -->
+      <h1>interactive here</h1>
+      <!-- Content changes dynamically based on JS logic -->
     </section>
-
     <!-- External script references, including jQuery for functionality -->
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="/scripts/dailyInteractive.js"></script>
+    <script src="scripts/dailyInteractive.js"></script>
     <!-- Inline JavaScript for dynamic page effects -->
     <script>
-        $(window).scroll(function(){
-            var heroHeight = $('header').height();
-            var yPosition = $(document).scrollTop();
-
-            if (yPosition <= heroHeight){
-                var effectFactor = yPosition / heroHeight;
-                var rotation = effectFactor * (Math.PI / 2 - Math.asin (
-                (heroHeight - yPosition) / heroHeight));
-                $('.hero').css({
-                    '-webkit-transform': 'rotateX('+rotation+'rad)',
-                    'transform': 'rotateX('+rotation+'rad)',
-                })
-                .find('.overlay').css('opacity',effectFactor);
-            }
-
-            if (yPosition <= heroHeight){
-                $('nav').removeClass('fixed');
-            } else{
-                $('nav').addClass('fixed');
-            }
+      document.addEventListener('DOMContentLoaded', function() {
+        const leftButton = document.getElementById('leftButton');
+        const rightButton = document.getElementById('rightButton');
+        fetch('/api/username').then(response => response.json()).then(data => {
+          if (data.username) {
+            leftButton.textContent = 'Account';
+            leftButton.onclick = function() {
+              window.location.href = '/account';
+            };
+            rightButton.textContent = 'Sign Out of ' + data.username;
+            rightButton.onclick = function() {
+              window.location.href = '/signout';
+            };
+          } else {
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          }
+        }).catch(error => {
+          console.error("Error fetching username:", error);
+          leftButton.textContent = 'Sign Up';
+          leftButton.onclick = function() {
+            window.location.href = '/signup';
+          };
+          rightButton.textContent = 'Login';
+          rightButton.onclick = function() {
+            window.location.href = '/login';
+          };
         });
+      });
     </script>
-
-</body>
+  </body>
 </html>
