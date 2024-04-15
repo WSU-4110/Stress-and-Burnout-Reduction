@@ -71,6 +71,7 @@ class VideoModal {
             });
 
             if (response.ok) {
+                // Fetch the current like count to update UI correctly
                 const countResponse = await fetch(`/api/likes?videoId=${videoId}`);
                 const data = await countResponse.json();
                 this.updateLikeButtonUI(button, data.likes, action);
@@ -85,6 +86,7 @@ class VideoModal {
         likeCountElement.textContent = `${likes} Likes`;
         button.classList.toggle('liked', action === 'like');
 
+        // Adjust the button text based on like status
         if (action === 'like') {
             button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
         } else {
