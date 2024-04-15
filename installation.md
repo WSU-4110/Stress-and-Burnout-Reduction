@@ -141,10 +141,11 @@ https://dash.cloudflare.com/<accound-id>/workers/kv/namespaces
 ### Create the following KV namespaces:
 
 ```
+coolfrog.articles
 coolfrog.emails
+coolfrog.leaderboard
 coolfrog.sessions
 coolfrog.users
-coolfrog.leaderboard
 ```
 
 ## Cloudflare Pages Setup
@@ -186,6 +187,7 @@ nodejs_compat
 ```
 Variable name		KV namespace
 --------------------------------------------
+COOLFROG_ARTICLES	coolfrog.articles
 COOLFROG_EMAILS		coolfrog.emails
 COOLFROG_SESSIONS	coolfrog.sessions
 COOLFROG_USERS		coolfrog.users
