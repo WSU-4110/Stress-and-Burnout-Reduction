@@ -3,7 +3,6 @@
 
 /* each title and brackets affects that element in the html webpage that uses the menuStyles.css file for formatting */
 body {
-  font-family: Verdana, sans-serif;
   font-size: 100%;
   color: #fff;
   background-color: #000;
@@ -61,11 +60,6 @@ footer {
   padding: 10px;
   bottom: 0;
   width: 100%;
-}
-
-li {
-  font-size: large;
-  font-family: sans-serif;
 }
 
 /* styling for user login and sign up buttons*/
