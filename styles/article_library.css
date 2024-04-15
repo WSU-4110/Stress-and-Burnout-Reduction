@@ -1,6 +1,6 @@
 body {
   background-color: black;
-  color: #333;
+  color: #ffffff;
   font-family: "Roboto", sans-serif;
   padding: 20px;
 }
@@ -104,33 +104,6 @@ main {
 .user-button-container button:hover {
   background-color: #a1a1a1;
   color: rgb(34, 32, 32);
-}
-
-nav {
-  text-align: center;
-}
-
-nav div {
-  text-align: center;
-}
-
-nav a:hover {
-  background-color: #dbd7d7;
-  color: black;
-}
-
-nav div a {
-  text-align: center;
-  height: 65px;
-  line-height: 65px;
-  padding: 10px 15px;
-  color: #a1a1a1;
-  background-color: black;
-  font-size: 14px;
-  letter-spacing: 2px;
-  font-weight: 400;
-  text-transform: uppercase;
-  text-decoration: none;
 }
 
 /* Add styling for rated stars */
