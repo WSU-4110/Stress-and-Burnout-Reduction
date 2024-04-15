@@ -1,63 +1,67 @@
 export async function onRequest({ request, env }) {
+    if (!validateSession(request)) {
+        return unauthorizedResponse();
+    }
+
     const url = new URL(request.url);
-    const method = request.method;
-    
-    const sessionCookie = getSessionCookie(request);
-    if (!sessionCookie || !(await env.COOLFROG_SESSIONS.get(sessionCookie))) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    switch (url.pathname) {
+        case '/api/likes':
+            if (request.method === 'POST') {
+                return handleLikeRequest(request, env);
+            } else {
+                return new Response("Method Not Allowed", { status: 405 });
+            }
+        default:
+            return new Response("Not Found", { status: 404 });
+    }
+}
+
+async function handleLikeRequest(request, env) {
+    const username = await getSessionUsername(request, env);
+    if (!username) {
+        return new Response(JSON.stringify({ error: 'Authentication required' }), { status: 403 });
     }
 
-    if (url.pathname === '/api/likes') {
-        switch (method) {
-            case 'POST':
-                return handlePostLike(request, env);
-            case 'GET':
-                return handleGetLikes(request, env);
-            default:
-                return new Response(null, { status: 405 });
-        }
+    const data = await request.json();
+    const { videoId, likeAction } = data; // likeAction could be 'like' or 'unlike'
+
+    if (likeAction === 'like') {
+        return await addLike(videoId, username, env);
+    } else if (likeAction === 'unlike') {
+        return await removeLike(videoId, username, env);
+    } else {
+        return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400 });
+    }
+}
+
+async function addLike(videoId, username, env) {
+    // Check if already liked
+    const alreadyLiked = await env.COOLFROG_LIKES.get(`${videoId}-${username}`);
+    if (alreadyLiked) {
+        return new Response(JSON.stringify({ error: 'Already liked' }), { status: 409 });
     }
 
-    return new Response(null, { status: 404 });
+    await env.COOLFROG_LIKES.put(`${videoId}-${username}`, '1');
+    return new Response(null, { status: 204 });
 }
 
-async function handlePostLike(request, env) {
-    const { videoId, liked } = await request.json();
-    const stmt = env.COOLFROG_LIKES.prepare(
-        "REPLACE INTO likes (video_id, username, liked) VALUES (?, ?, ?)"
-    );
-    await stmt.run(videoId, request.username, liked);
-
-    // Also calculate total likes
-    const countStmt = env.COOLFROG_LIKES.prepare(
-        "SELECT COUNT(*) as count FROM likes WHERE video_id = ? AND liked = 1"
-    );
-    const { count } = await countStmt.get(videoId);
-
-    return new Response(JSON.stringify({ likes: count }), {
-        headers: { 'Content-Type': 'application/json' }
-    });
+async function removeLike(videoId, username, env) {
+    await env.COOLFROG_LIKES.delete(`${videoId}-${username}`);
+    return new Response(null, { status: 204 });
 }
 
-async function handleGetLikes(request, env) {
-    const videoId = new URL(request.url).searchParams.get('video_id');
-    const countStmt = env.COOLFROG_LIKES.prepare(
-        "SELECT COUNT(*) as count FROM likes WHERE video_id = ? AND liked = 1"
-    );
-    const { count } = await countStmt.get(videoId);
-    
-    return new Response(JSON.stringify({ likes: count }), {
-        headers: { 'Content-Type': 'application/json' }
-    });
+function validateSession(request) {
+    const sessionCookie = request.headers.get("Cookie");
+    return sessionCookie && sessionCookie.includes("sessionId=");
 }
 
-function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    return Object.fromEntries(
-        cookieHeader.split(';').map(c => {
-            const [key, ...v] = c.trim().split('=');
-            return [key, v.join('=')];
-        })
-    )['session-id'];
+async function getSessionUsername(request, env) {
+    const sessionCookie = request.headers.get("Cookie");
+    const sessionId = sessionCookie.split("sessionId=")[1].split(";")[0];
+    const sessionData = await env.COOLFROG_SESSIONS.get(sessionId);
+    return sessionData ? JSON.parse(sessionData).username : null;
+}
+
+function unauthorizedResponse() {
+    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
 }
