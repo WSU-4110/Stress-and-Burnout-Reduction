@@ -31,13 +31,12 @@ export async function onRequestPost({ request, env }) {
 
     if (url.pathname === "/meetups/add-topic") {
         const title = formData.get('title').trim();
-        const emailGroup = formData.get('emailGroup').trim();
+        const emailGroup = formData.get('email_group').trim();
         const description = formData.get('description').trim();
-        const mode = formData.get('mode').trim(); // 'In Person' or 'Online'
-        const locationOrLink = mode === 'In Person' ? formData.get('location').trim() : formData.get('link').trim();
-        const dateAndTime = formData.get('dateAndTime').trim();
-
-        return addTopic(title, description, emailGroup, mode, locationOrLink, dateAndTime, session.username, env);
+        const eventType = formData.get('event_type').trim();
+        const locationOrLink = eventType === 'In Person' ? formData.get('location').trim() : formData.get('link').trim();
+        const dateTime = formData.get('date_time').trim();
+        return addTopic(title, emailGroup, description, eventType, locationOrLink, dateTime, session.username, env);
     } else if (url.pathname.startsWith("/meetups/delete-topic/")) {
         const topicId = url.pathname.split('/')[3];
         return deleteTopic(topicId, session.username, env);
@@ -58,17 +57,13 @@ async function renderForumsPage(username, env) {
     let topics = await fetchTopics(env);
     
     const topicsHtml = topics.map(topic => `
-    <tr>
-        <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
-        <td style="width: 20%;">${topic.username}</td>
-        <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-    </tr>
-`).join('');
-
-    const user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    const emailGroups = [...new Set(user.emails.map(email => '@' + email.email.split('@')[1]))];
-    const emailGroupOptions = emailGroups.map(group => `<option value="${group}">${group}</option>`).join('');
-
+        <tr>
+            <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
+            <td style="width: 20%;">${topic.username}</td>
+            <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+        </tr>
+    `).join('');
+  
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -76,7 +71,7 @@ async function renderForumsPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Welcome to the Forum Page</title>
+            <title>Forum Page</title>
         </head>
         <body>
             <div class="container mt-4">
@@ -93,38 +88,44 @@ async function renderForumsPage(username, env) {
                 </table>
                 <form method="post" action="/meetups/add-topic">
                     <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
-                    <select name="emailGroup" class="form-control mb-2">${emailGroupOptions}</select>
-                    <textarea name="description" placeholder="Enter description" class="form-control mb-2" required></textarea>
-                    <label><input type="radio" name="mode" value="In Person" required>In Person</label>
-                    <label><input type="radio" name="mode" value="Online" required>Online</label>
-                    <input type="text" name="location" class="form-control mb-2" placeholder="Enter location">
-                    <input type="text" name="link" class="form-control mb-2" placeholder="Enter link">
-                    <input type="datetime-local" name="dateAndTime" class="form-control mb-2" required>
+                    <select name="email_group" class="form-control mb-2" required>
+                        <option value="">Select Email Group</option>
+                        <!-- Option values should be fetched based on user's email domains -->
+                    </select>
+                    <textarea name="description" class="form-control mb-2" placeholder="Enter description" required></textarea>
+                    <select name="event_type" class="form-control mb-2" required onchange="toggleEventDetails(this.value)">
+                        <option value="Online">Online</option>
+                        <option value="In Person">In Person</option>
+                    </select>
+                    <input type="text" name="location" placeholder="Enter location" class="form-control mb-2" style="display:none;">
+                    <input type="url" name="link" placeholder="Enter link" class="form-control mb-2">
+                    <input type="datetime-local" name="date_time" class="form-control mb-2" required>
+                    <script>
+                        function toggleEventDetails(value) {
+                            const locationInput = document.querySelector('input[name="location"]');
+                            const linkInput = document.querySelector('input[name="link"]');
+                            if (value === 'In Person') {
+                                locationInput.style.display = 'block';
+                                linkInput.style.display = 'none';
+                            } else {
+                                locationInput.style.display = 'none';
+                                linkInput.style.display = 'block';
+                            }
+                        }
+                    </script>
                     <button type="submit" class="btn btn-primary">Add Topic</button>
                 </form>
             </div>
         </body>
         </html>
     `;
-
+  
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
 async function renderTopicPage(topicId, username, env) {
     let topic = (await fetchTopicById(topicId, env))[0];
     let posts = await fetchPostsForTopic(topicId, env);
-
-    const topicInfoHtml = `
-        <div class="card mb-3">
-            <div class="card-header">Topic Details</div>
-            <div class="card-body">
-                <h5 class="card-title">${topic.title} (${topic.mode})</h5>
-                <p class="card-text">${topic.description}</p>
-                <p>${topic.mode === 'In Person' ? `Location: ${topic.location}` : `Link: ${topic.link}`}</p>
-                <p>Date and Time: ${new Date(topic.dateAndTime).toLocaleString()}</p>
-            </div>
-        </div>
-    `;
 
     const postsHtml = posts.map(post => `
         <div class="card mb-3">
@@ -137,13 +138,26 @@ async function renderTopicPage(topicId, username, env) {
             </div>
             <div class="card-body">
                 <h5 class="card-title">${post.title}</h5>
-                <p class="card-text">${post.body}</p
+                <p class="card-text">${post.body}</p>
             </div>
             <div class="card-footer text-muted">
                 ${new Date(post.post_date).toLocaleString()}
             </div>
         </div>
     `).join('');
+
+    // Here's the pinned topic information card
+    const topicInfoHtml = `
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Event Details</div>
+            <div class="card-body">
+                <h5 class="card-title">${topic.title}</h5>
+                <p class="card-text">${topic.description}</p>
+                ${topic.event_type === 'In Person' ? `<p>Location: ${topic.location}</p>` : `<p>Link: ${topic.link}</p>`}
+                <p>Date and Time: ${new Date(topic.date_time).toLocaleString()}</p>
+            </div>
+        </div>
+    `;
 
     const pageHtml = `
         <!DOCTYPE html>
@@ -163,7 +177,7 @@ async function renderTopicPage(topicId, username, env) {
                 <form method="post" action="/meetups/topic/${topicId}/add-post">
                     <input type="text" name="title" placeholder="Enter post title" class="form-control mb-2" required>
                     <textarea name="body" class="form-control mb-2" placeholder="Enter post body" required></textarea>
-                    <button type="submit" class="btn btn-success">Add Post</button>
+                    <button type="submit" class="btn btn-success">Add Post</button
                 </form>
             </div>
         </body>
@@ -173,29 +187,29 @@ async function renderTopicPage(topicId, username, env) {
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
-async function addTopic(title, description, emailGroup, mode, locationOrLink, dateAndTime, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO topics (id, title, description, emailGroup, mode, location, link, dateAndTime, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    const location = mode === 'In Person' ? locationOrLink : null;
-    const link = mode === 'Online' ? locationOrLink : null;
-    await stmt.bind(uuidv4(), title, description, emailGroup, mode, location, link, dateAndTime, username).run();
+async function addTopic(title, emailGroup, description, eventType, locationOrLink, dateTime, username, env) {
+    const location = eventType === 'In Person' ? locationOrLink : null;
+    const link = eventType === 'Online' ? locationOrLink : null;
+    const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO topics (id, title, description, email_group, event_type, location, link, date_time, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    await stmt.run(uuidv4(), title, description, emailGroup, eventType, location, link, new Date(dateTime).toISOString(), username);
     return new Response(null, { status: 303, headers: { 'Location': '/meetups' } });
 }
 
 async function deleteTopic(topicId, username, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
-    await stmt.bind(topicId, username).run();
+    await stmt.run(topicId, username);
     return new Response(null, { status: 204 });
 }
 
 async function addPost(title, body, topicId, username, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
-    await stmt.bind(uuidv4(), title, body, topicId, username).run();
+    await stmt.run(uuidv4(), title, body, topicId, username);
     return new Response(null, { status: 303, headers: { 'Location': `/meetups/topic/${topicId}` } });
 }
 
 async function deletePost(postId, username, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
-    await stmt.bind(postId, username).run();
+    await stmt.run(postId, username);
     return new Response(null, { status: 204 });
 }
 
@@ -205,7 +219,7 @@ async function fetchTopics(env) {
 }
 
 async function fetchTopicById(topicId, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, description, emailGroup, mode, location, link, dateAndTime, username FROM topics WHERE id = ?");
+    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, description, email_group, event_type, location, link, date_time, username FROM topics WHERE id = ?");
     return (await stmt.bind(topicId).all()).results;
 }
 
@@ -218,8 +232,7 @@ function getSessionCookie(request) {
     const cookieHeader = request.headers.get('Cookie');
     if (!cookieHeader) return null;
     const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    const sessionId = Object.fromEntries(cookies).find(entry => entry[0] === 'session-id');
-    return sessionId ? sessionId[1] : null;
+    return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
