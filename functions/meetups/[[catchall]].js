@@ -69,11 +69,74 @@ async function renderForumsPage(username, env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-            <title>Forum Page</title>
+            <title>Meetups Page</title>
+			    <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .content {
+            padding: 20px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
         </head>
         <body>
+		    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index">
+                <img src="/cdn/coolfrog.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dailyInteractive">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
             <div class="container mt-4">
-                <h1>Forum Topics</h1>`;
+                <h1>Meetups Topics</h1>`;
 
     for (let domain of emailDomains) {
         let topics = await fetchTopicsByEmailGroup(domain, env);
@@ -88,7 +151,7 @@ async function renderForumsPage(username, env) {
 
         pageHtml += `
                 <div class="email-group-section">
-                    <h2>@${domain} Topics</h2>
+                    <h2>@${domain} Meetups</h2>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -104,7 +167,7 @@ async function renderForumsPage(username, env) {
 
     pageHtml += `
                 <form method="post" action="/meetups/add-topic">
-                    <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
+                    <input type="text" name="title" placeholder="Enter meetup title" class="form-control mb-2" required>
                     <select name="email_group" class="form-control mb-2">${emailGroupOptions}</select>
                     <textarea name="description" class="form-control mb-2" placeholder="Enter description" required></textarea>
                     <select name="meeting_type" class="form-control mb-2" required onchange="toggleLocationLink(this.value)">
@@ -114,7 +177,7 @@ async function renderForumsPage(username, env) {
                     <input type="text" name="location" placeholder="Enter location" class="form-control mb-2" hidden>
                     <input type="url" name="link" placeholder="Enter online meeting link" class="form-control mb-2" hidden>
                     <input type="datetime-local" name="datetime" class="form-control mb-2" required>
-                    <button type="submit" class="btn btn-primary">Add Topic</button>
+                    <button type="submit" class="btn btn-primary">Add Meetup</button>
                 </form>
             </div>
             <script>
@@ -134,6 +197,32 @@ async function renderForumsPage(username, env) {
                     toggleLocationLink(document.querySelector('select[name="meeting_type"]').value);
                 });
             </script>
+			    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    rightButton.textContent = 'Sign Out of ' + data.username;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
+        });
+    </script>
         </body>
         </html>
     `;
@@ -189,11 +278,74 @@ async function renderTopicPage(topicId, username, env) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
             <title>Posts in ${topic.title}</title>
+			    <style>
+        body {
+            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .content {
+            padding: 20px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function toggleFixedHeader() {
+                const header = document.querySelector('.fixed-header');
+                if (window.scrollY > header.offsetTop) {
+                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+                } else {
+                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+                }
+            }
+            window.addEventListener('scroll', toggleFixedHeader);
+        });
+    </script>
         </head>
         <body>
+		    <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index">
+                <img src="/cdn/coolfrog.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/videopage">Videos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/article_library">Articles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dailyInteractive">Daily Interactive</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/MeditationSession">Meditation Sessions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/timersPage">Timers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mt-5">
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
+            </div>
+        </div>
             <div class="container mt-5">
                 <h1>${topic.title}</h1>
-                <a href="/meetups" class="btn btn-primary mb-3">Back to Topics</a>
+                <a href="/meetups" class="btn btn-primary mb-3">Back to Meetups</a>
                 ${topicInformationHtml}
                 ${postsHtml}
                 <form method="post" action="/meetups/topic/${topicId}/add-post">
@@ -202,6 +354,32 @@ async function renderTopicPage(topicId, username, env) {
                     <button type="submit" class="btn btn-success">Add Post</button>
                 </form>
             </div>
+			    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+
+            fetch('/api/username').then(response => response.json()).then(data => {
+                if (data.username) {
+                    leftButton.textContent = 'Account';
+                    leftButton.onclick = function () { window.location.href = '/account'; };
+                    rightButton.textContent = 'Sign Out of ' + data.username;
+                    rightButton.onclick = function () { window.location.href = '/signout'; };
+                } else {
+                    leftButton.textContent = 'Sign Up';
+                    leftButton.onclick = function () { window.location.href = '/signup'; };
+                    rightButton.textContent = 'Login';
+                    rightButton.onclick = function () { window.location.href = '/login'; };
+                }
+            }).catch(error => {
+                console.error("Error fetching username:", error);
+                leftButton.textContent = 'Sign Up';
+                leftButton.onclick = function () { window.location.href = '/signup'; };
+                rightButton.textContent = 'Login';
+                rightButton.onclick = function () { window.location.href = '/login'; };
+            });
+        });
+    </script>
         </body>
         </html>
     `;
