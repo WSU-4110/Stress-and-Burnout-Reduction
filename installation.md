@@ -128,6 +128,37 @@ CREATE TABLE posts
 );
 ```
 
+### Create a Cloudflare D1 database called "coolfrog-meetups".
+
+- Run the following SQL to setup the tables:
+
+```sql
+CREATE TABLE topics
+(
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    email_group TEXT NOT NULL,
+    description TEXT NOT NULL,
+    meeting_type TEXT NOT NULL,
+    location_or_link TEXT NOT NULL,
+    datetime TIMESTAMP NOT NULL,
+    username TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts
+(
+    id TEXT PRIMARY KEY,
+    topic_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    post_date TIMESTAMP
+        DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
+);
+```
+
 ## Cloudflare KV (key-value) Setup
 
 ### Preliminary Steps
@@ -204,6 +235,7 @@ Variable name		D1 database
 COOLFROG_FORUM		coolfrog-forum
 COOLFROG_GOALS		coolfrog-goals
 COOLFROG_CHALLENGES	coolfrog-challenges
+COOLFROG_MEETUPS	coolfrog-meetups
 ```
 
 ## You may now build the website.
