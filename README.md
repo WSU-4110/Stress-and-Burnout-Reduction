@@ -15,9 +15,9 @@ This website is designed to reduce stress and burnout, specifically among Softwa
 
 It does so on three levels:
 
-1. Personal: [/videopage](https://www.coolfrog.net/videopage), [/article_library](https://www.coolfrog.net/article_library), [/dailyInteractive](https://www.coolfrog.net/dailyInteractive), [/relaxation-sounds](https://www.coolfrog.net/relaxation-sounds), [/MeditationSession](https://www.coolfrog.net/MeditationSession), [/timersPage](https://www.coolfrog.net/timersPage), [/WellnessChallenges](https://www.coolfrog.net/WellnessChallenges)
+1. Personal: [/videopage](https://www.coolfrog.net/videopage), [/article_library](https://www.coolfrog.net/article_library), [/dailyInteractive](https://www.coolfrog.net/dailyInteractive), [/relaxation-sounds](https://www.coolfrog.net/relaxation-sounds), [/MeditationSession](https://www.coolfrog.net/MeditationSession), [/timersPage](https://www.coolfrog.net/timersPage), [/WellnessChallenges](https://www.coolfrog.net/WellnessChallenges), [/config](https://www.coolfrog.net/config), [/goals](https://www.coolfrog.net/goals)
 2. Organizational: [/meetups](https://www.coolfrog.net/meetups)
-3. Global: [/forums](https://www.coolfrog.net/forums)
+3. Global: [/forums](https://www.coolfrog.net/forums), [/account](https://www.coolfrog.net/account), [/challenge](https://www.coolfrog.net/challenge), [/leaderboard](https://www.coolfrog.net/leaderboard)
 
 ## Functionalities
 
