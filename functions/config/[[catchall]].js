@@ -1,68 +1,84 @@
-import { v4 as uuidv4 } from 'uuid';
+import {
+	v4 as uuidv4
+} from 'uuid';
 
-export async function onRequestGet({ request, env }) {
-    const url = new URL(request.url);
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestGet({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
-    
-    if (url.pathname === '/config') {
-        return renderConfigPage(session.username, env);
-    } else if (url.pathname === '/config/profile') {
-        return renderProfilePage(session.username, env);
-    } else if (url.pathname === '/config/emails') {
-        return renderEmailsPage(session.username, env);
-    } else if (url.pathname === '/config/sessions') {
-        return renderSessionsPage(session.username, env);
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    return new Response("Resource Not Found", { status: 404 });
+	if (url.pathname === '/config') {
+		return renderConfigPage(session.username, env);
+	} else if (url.pathname === '/config/profile') {
+		return renderProfilePage(session.username, env);
+	} else if (url.pathname === '/config/emails') {
+		return renderEmailsPage(session.username, env);
+	} else if (url.pathname === '/config/sessions') {
+		return renderSessionsPage(session.username, env);
+	}
+
+	return new Response("Resource Not Found", {
+		status: 404
+	});
 }
 
-export async function onRequestPost({ request, env }) {
-    const url = new URL(request.url);
-    const formData = await request.formData();
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestPost({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const formData = await request.formData();
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    if (url.pathname === "/config/update-profile") {
-        const pronouns = formData.get('pronouns').trim();
-        const givenNames = formData.get('given_names').trim();
-        const lastName = formData.get('last_name').trim();
+	if (url.pathname === "/config/update-profile") {
+		const pronouns = formData.get('pronouns').trim();
+		const givenNames = formData.get('given_names').trim();
+		const lastName = formData.get('last_name').trim();
 
-        if (!givenNames || !lastName) {
-            return new Response("Both Given Names and Last Name are required.", { status: 400 });
-        }
+		if (!givenNames || !lastName) {
+			return new Response("Both Given Names and Last Name are required.", {
+				status: 400
+			});
+		}
 
-        return updateProfile(pronouns, givenNames, lastName, session.username, env);
-    } else if (url.pathname.startsWith("/config/add-email")) {
-        const email = formData.get('email').trim();
-        if (await env.COOLFROG_EMAILS.get(email)) {
-            return new Response("This email is already in use.", { status: 400 });
-        }
-        return addEmail(email, session.username, env);
-    } else if (url.pathname.startsWith("/config/remove-email/")) {
-        const email = url.pathname.split('/')[3];
-        return removeEmail(email, session.username, env);
-    } else if (url.pathname === "/config/remove-session") {
-        const sessionId = formData.get('session_id');
-        return removeSession(sessionId, session.username, env);
-    } else if (url.pathname === "/config/remove-all-sessions") {
-        return removeAllSessions(session.username, env);
-    }
+		return updateProfile(pronouns, givenNames, lastName, session.username, env);
+	} else if (url.pathname.startsWith("/config/add-email")) {
+		const email = formData.get('email').trim();
+		if (await env.COOLFROG_EMAILS.get(email)) {
+			return new Response("This email is already in use.", {
+				status: 400
+			});
+		}
+		return addEmail(email, session.username, env);
+	} else if (url.pathname.startsWith("/config/remove-email/")) {
+		const email = url.pathname.split('/')[3];
+		return removeEmail(email, session.username, env);
+	} else if (url.pathname === "/config/remove-session") {
+		const sessionId = formData.get('session_id');
+		return removeSession(sessionId, session.username, env);
+	} else if (url.pathname === "/config/remove-all-sessions") {
+		return removeAllSessions(session.username, env);
+	}
 
-    return new Response("Bad Request", { status: 400 });
+	return new Response("Bad Request", {
+		status: 400
+	});
 }
 
 async function renderConfigPage(username, env) {
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -169,13 +185,17 @@ async function renderConfigPage(username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function renderProfilePage(username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -292,13 +312,17 @@ async function renderProfilePage(username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function renderEmailsPage(username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
-    const emailsHtml = user.emails.map(email => `
+	const emailsHtml = user.emails.map(email => `
         <tr>
             <td>${email.email}</td>
             <td>${email.verified ? 'Verified' : 'Not Verified'}</td>
@@ -310,7 +334,7 @@ async function renderEmailsPage(username, env) {
         </tr>
     `).join('');
 
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -429,13 +453,17 @@ async function renderEmailsPage(username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function renderSessionsPage(username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
-    const sessionsHtml = user.sessions.map(session => `
+	const sessionsHtml = user.sessions.map(session => `
         <tr>
             <td>${session.sessionId}</td>
             <td>${new Date(session.time_session_creation * 1000).toLocaleString()}</td>
@@ -448,7 +476,7 @@ async function renderSessionsPage(username, env) {
         </tr>
     `).join('');
 
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -563,62 +591,101 @@ async function renderSessionsPage(username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function updateProfile(pronouns, givenNames, lastName, username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    user.pronouns = pronouns;
-    user.given_names = givenNames;
-    user.last_name = lastName;
-    await env.COOLFROG_USERS.put(username, JSON.stringify(user));
-    return new Response(null, { status: 303, headers: { 'Location': '/config/profile' } });
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	user.pronouns = pronouns;
+	user.given_names = givenNames;
+	user.last_name = lastName;
+	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/config/profile'
+		}
+	});
 }
 
 async function addEmail(email, username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    user.emails.push({ email: email, verified: false });
-    await env.COOLFROG_USERS.put(username, JSON.stringify(user));
-    await env.COOLFROG_EMAILS.put(email, username);
-    return new Response(null, { status: 303, headers: { 'Location': '/config/emails' } });
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	user.emails.push({
+		email: email,
+		verified: false
+	});
+	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+	await env.COOLFROG_EMAILS.put(email, username);
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/config/emails'
+		}
+	});
 }
 
 async function removeEmail(email, username, env) {
-     let user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    if (user.emails.length <= 1) {
-        return new Response("Cannot remove the last email. At least one email must be associated with the account.", { status: 400 });
-    }
-    user.emails = user.emails.filter(e => e.email !== email);
-    await env.COOLFROG_USERS.put(username, JSON.stringify(user));
-    await env.COOLFROG_EMAILS.delete(email);
-    return new Response(null, { status: 303, headers: { 'Location': '/config/emails' } });
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	if (user.emails.length <= 1) {
+		return new Response("Cannot remove the last email. At least one email must be associated with the account.", {
+			status: 400
+		});
+	}
+	user.emails = user.emails.filter(e => e.email !== email);
+	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+	await env.COOLFROG_EMAILS.delete(email);
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/config/emails'
+		}
+	});
 }
 
 async function removeSession(sessionId, username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    user.sessions = user.sessions.filter(s => s.sessionId !== sessionId);
-    await env.COOLFROG_USERS.put(username, JSON.stringify(user));
-    await env.COOLFROG_SESSIONS.delete(sessionId);
-    return new Response(null, { status: 303, headers: { 'Location': '/config/sessions' } });
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	user.sessions = user.sessions.filter(s => s.sessionId !== sessionId);
+	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+	await env.COOLFROG_SESSIONS.delete(sessionId);
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/config/sessions'
+		}
+	});
 }
 
 async function removeAllSessions(username, env) {
-    let user = JSON.parse(await env.COOLFROG_USERS.get(username));
-    for (let session of user.sessions) {
-        await env.COOLFROG_SESSIONS.delete(session.sessionId);
-    }
-    user.sessions = [];
-    await env.COOLFROG_USERS.put(username, JSON.stringify(user));
-    return new Response(null, { status: 303, headers: { 'Location': '/config/sessions' } });
+	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
+	for (let session of user.sessions) {
+		await env.COOLFROG_SESSIONS.delete(session.sessionId);
+	}
+	user.sessions = [];
+	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/config/sessions'
+		}
+	});
 }
 
 function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    return Object.fromEntries(cookies)['session-id'];
+	const cookieHeader = request.headers.get('Cookie');
+	if (!cookieHeader) return null;
+	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+	return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+	return new Response("Unauthorized - Please log in.", {
+		status: 403,
+		headers: {
+			'Content-Type': 'text/plain'
+		}
+	});
 }

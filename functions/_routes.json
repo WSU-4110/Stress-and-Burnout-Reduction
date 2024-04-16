@@ -1,5 +1,9 @@
 {
-   "version": 1,
-   "include": ["/*"],
-   "exclude": ["**/*.test.js"]
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "**/*.test.js"
+  ]
 }

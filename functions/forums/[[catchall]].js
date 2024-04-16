@@ -1,65 +1,77 @@
-import { v4 as uuidv4 } from 'uuid';
+import {
+	v4 as uuidv4
+} from 'uuid';
 
-export async function onRequestGet({ request, env }) {
-    const url = new URL(request.url);
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestGet({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
-    
-    if (url.pathname === '/forums') {
-        return renderForumsPage(session.username, env);
-    } else if (url.pathname.startsWith('/forums/topic/')) {
-        const topicId = url.pathname.split('/')[3];
-        return renderTopicPage(topicId, session.username, env);
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    return new Response("Resource Not Found", { status: 404 });
+	if (url.pathname === '/forums') {
+		return renderForumsPage(session.username, env);
+	} else if (url.pathname.startsWith('/forums/topic/')) {
+		const topicId = url.pathname.split('/')[3];
+		return renderTopicPage(topicId, session.username, env);
+	}
+
+	return new Response("Resource Not Found", {
+		status: 404
+	});
 }
 
-export async function onRequestPost({ request, env }) {
-    const url = new URL(request.url);
-    const formData = await request.formData();
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestPost({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const formData = await request.formData();
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    if (url.pathname === "/forums/add-topic") {
-        const title = formData.get('title').trim();
-        return addTopic(title, session.username, env);
-    } else if (url.pathname.startsWith("/forums/delete-topic/")) {
-        const topicId = url.pathname.split('/')[3];
-        return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname.startsWith("/forums/topic/") && url.pathname.endsWith('/add-post')) {
-        const topicId = url.pathname.split('/')[3];
-        const title = formData.get('title');
-        const body = formData.get('body');
-        return addPost(title, body, topicId, session.username, env);
-    } else if (url.pathname.startsWith("/forums/topic/") && url.pathname.endsWith('/delete-post')) {
-        const postId = formData.get('post_id');
-        return deletePost(postId, session.username, env);
-    }
+	if (url.pathname === "/forums/add-topic") {
+		const title = formData.get('title').trim();
+		return addTopic(title, session.username, env);
+	} else if (url.pathname.startsWith("/forums/delete-topic/")) {
+		const topicId = url.pathname.split('/')[3];
+		return deleteTopic(topicId, session.username, env);
+	} else if (url.pathname.startsWith("/forums/topic/") && url.pathname.endsWith('/add-post')) {
+		const topicId = url.pathname.split('/')[3];
+		const title = formData.get('title');
+		const body = formData.get('body');
+		return addPost(title, body, topicId, session.username, env);
+	} else if (url.pathname.startsWith("/forums/topic/") && url.pathname.endsWith('/delete-post')) {
+		const postId = formData.get('post_id');
+		return deletePost(postId, session.username, env);
+	}
 
-    return new Response("Bad Request", { status: 400 });
+	return new Response("Bad Request", {
+		status: 400
+	});
 }
 
 async function renderForumsPage(username, env) {
-    let topics = await fetchTopics(env);
-    
-const topicsHtml = topics.map(topic => `
+	let topics = await fetchTopics(env);
+
+	const topicsHtml = topics.map(topic => `
     <tr>
         <td style="width: 70%;"><a href="/forums/topic/${topic.id}">${topic.title}</a></td>
         <td style="width: 20%;">${topic.username}</td>
         <td style="width: 10%;">${username === topic.username ? `<form action="/forums/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
     </tr>
 `).join('');
-  
-    const pageHtml = `
+
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -174,15 +186,19 @@ const topicsHtml = topics.map(topic => `
         </body>
         </html>
     `;
-  
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function renderTopicPage(topicId, username, env) {
-    let topic = (await fetchTopicById(topicId, env))[0];
-    let posts = await fetchPostsForTopic(topicId, env);
+	let topic = (await fetchTopicById(topicId, env))[0];
+	let posts = await fetchPostsForTopic(topicId, env);
 
-    const postsHtml = posts.map(post => `
+	const postsHtml = posts.map(post => `
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>@${post.username}</span>
@@ -201,7 +217,7 @@ async function renderTopicPage(topicId, username, env) {
         </div>
     `).join('');
 
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -310,56 +326,79 @@ async function renderTopicPage(topicId, username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 
 async function addTopic(title, username, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (id, title, username) VALUES (?, ?, ?)");
-    await stmt.bind(uuidv4(), title, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': '/forums' } });
+	const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (id, title, username) VALUES (?, ?, ?)");
+	await stmt.bind(uuidv4(), title, username).run();
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/forums'
+		}
+	});
 }
 
 async function deleteTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
-    await stmt.bind(topicId, username).run();
-    return new Response(null, { status: 204 });
+	const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+	await stmt.bind(topicId, username).run();
+	return new Response(null, {
+		status: 204
+	});
 }
 
 async function addPost(title, body, topicId, username, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
-    await stmt.bind(uuidv4(), title, body, topicId, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': `/forums/topic/${topicId}` } });
+	const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
+	await stmt.bind(uuidv4(), title, body, topicId, username).run();
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': `/forums/topic/${topicId}`
+		}
+	});
 }
 
 async function deletePost(postId, username, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
-    await stmt.bind(postId, username).run();
-    return new Response(null, { status: 204 });
+	const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
+	await stmt.bind(postId, username).run();
+	return new Response(null, {
+		status: 204
+	});
 }
 
 async function fetchTopics(env) {
-    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics ORDER BY title");
-    return (await stmt.all()).results;
+	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics ORDER BY title");
+	return (await stmt.all()).results;
 }
 
 async function fetchTopicById(topicId, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics WHERE id = ?");
-    return (await stmt.bind(topicId).all()).results;
+	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics WHERE id = ?");
+	return (await stmt.bind(topicId).all()).results;
 }
 
 async function fetchPostsForTopic(topicId, env) {
-    const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
-    return (await stmt.bind(topicId).all()).results;
+	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
+	return (await stmt.bind(topicId).all()).results;
 }
 
 function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    return Object.fromEntries(cookies)['session-id'];
+	const cookieHeader = request.headers.get('Cookie');
+	if (!cookieHeader) return null;
+	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+	return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+	return new Response("Unauthorized - Please log in.", {
+		status: 403,
+		headers: {
+			'Content-Type': 'text/plain'
+		}
+	});
 }
