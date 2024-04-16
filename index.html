@@ -1,193 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
     <title>Home Webpage</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            padding-top: 80px; /* Padding to ensure content isn't hidden behind fixed header */
-        }
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        .navbar-brand img {
-            height: 40px;
-        }
-        .content {
-            padding: 20px;
-        }
+      body {
+        padding-top: 80px;
+        /* Padding to ensure content isn't hidden behind fixed header */
+      }
+
+      .fixed-header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .navbar-brand img {
+        height: 40px;
+      }
     </style>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            function toggleFixedHeader() {
-                const header = document.querySelector('.fixed-header');
-                if (window.scrollY > header.offsetTop) {
-                    header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
-                } else {
-                    header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
-                }
-            }
-            window.addEventListener('scroll', toggleFixedHeader);
-        });
+      document.addEventListener('DOMContentLoaded', function() {
+        function toggleFixedHeader() {
+          const header = document.querySelector('.fixed-header');
+          if (window.scrollY > header.offsetTop) {
+            header.classList.add('fixed-top', 'bg-dark', 'navbar-dark');
+          } else {
+            header.classList.remove('fixed-top', 'bg-dark', 'navbar-dark');
+          }
+        }
+        window.addEventListener('scroll', toggleFixedHeader);
+      });
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="fixed-header navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="/index">
-                <img src="/cdn/coolfrog.png" alt="logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="/index">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/forums">Forums</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/meetups">Meetups</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/videopage">Videos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/article_library">Articles</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dailyInteractive">Daily Interactive</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/MeditationSession">Meditation Sessions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/timersPage">Timers</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand" href="/index">
+          <img src="/cdn/coolfrog.png" alt="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/forums">Forums</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/meetups">Meetups</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/videopage">Videos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/article_library">Articles</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/dailyInteractive">Daily Interactive</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/relaxation-sounds">Relaxation Sounds</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/MeditationSession">Meditation Sessions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/timersPage">Timers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/WellnessChallenges">Wellness Challenges</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </header>
-
     <div class="container mt-5">
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
-                <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
-            </div>
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <button id="leftButton" class="btn btn-primary btn-lg">Sign Up</button>
+          <button id="rightButton" class="btn btn-secondary btn-lg">Login</button>
         </div>
-        
-        <h1 class="text-center my-4">Coolfrog</h1>
-        <div class="content">
-            <h2>Our Organization</h2>
-            <p>
-                Introducing "Meditation+," a cutting-edge wellness company dedicated to promoting mental and emotional well-being.
-            </p>
-            <p>
-                Our mission is to provide a holistic approach to stress reduction, burnout prevention, and relaxation through a variety of activities and services.
-            </p>
-            <p>
-                At Meditation+, we understand the demands of modern life and the importance of finding balance.
-            </p>
-            <p>
-                Our team of certified meditation instructors, mindfulness experts, and wellness coaches collaborates to create personalized programs tailored to each individual's needs.
-            </p>
-
-            <h2>Our Organization's Goals</h2>
-            <p>
-                <strong>Promote Mental Wellness:</strong> Meditation+ is committed to raising awareness about the importance of mental health.
-                Our primary goal is to promote mental wellness by providing accessible and effective tools to manage stress, reduce burnout, and enhance overall mental well-being.
-            </p>
-            <p>
-                <strong>Empower Individuals:</strong> We strive to empower individuals to take control of their mental health journey.
-                Through personalized wellness plans, educational resources, and supportive communities, Meditation+ aims to give individuals the tools they need to navigate life's challenges with resilience and mindfulness.
-            </p>
-            <p>
-                <strong>Cultivate Mindfulness Practices:</strong> Our organization is dedicated to cultivating mindfulness practices as a key component of a balanced lifestyle.
-                We aim to integrate mindfulness into daily routines, encouraging individuals to embrace the present moment and develop a heightened sense of self-awareness.
-            </p>
-            <p>
-                <strong>Foster Inclusivity:</strong> Meditation+ is committed to creating an inclusive and welcoming environment for people from all walks of life.
-                We believe that everyone should have access to resources that promote mental well-being, and we actively work towards removing barriers and promoting diversity in our programs.
-            </p>
-            <p>
-                <strong>Collaborate for Impact:</strong> To maximize our impact, we actively seek collaborations with mental health professionals, researchers, and community organizations.
-                By fostering partnerships, Meditation+ aims to contribute to the collective effort in advancing the understanding and practice of mental wellness.
-            </p>
-
-            <h2>Location and Shipping</h2>
-            <p>
-                Meditation+ has both online resources and physical storefronts available in all 50 American states.
-            </p>
-            <p>
-                For further information, please contact us at <a href="mailto:info@meditationplus.com">info@meditationplus.com</a>.
-            </p>
-        </div>
-
-        <div class="content">
-            <h1>Services:</h1>
-            <h3>Self Help Articles</h3>
-            <p>
-                On the Meditation+ website, you can find a diverse range of self-help and mental wellness articles aimed at providing valuable insights,
-                practical tips, and evidence-based information to support individuals on their journey towards better mental health.
-            </p>
-
-            <h3>De-Stress Meditations</h3>
-            <p>
-                On the Meditation+ website, you'll find a variety of meditation services designed to cater to individuals at different experience levels and preferences.
-                These services aim to foster a sense of calm, mindfulness, and overall mental well-being.
-            </p>
-
-            <h3>Relaxing Sound and ASMR Library</h3>
-            <p>
-                Meditation+ offers a curated Relaxing Sound and ASMR Library, providing a soothing auditory experience to enhance relaxation, mindfulness, and overall well-being.
-                The library is designed to cater to diverse preferences, offering a variety of sounds that can be used for meditation, stress relief, focus enhancement,
-                or simply to create a calming atmosphere.
-            </p>
-        </div>
-
-        <div class="content">
-            <h1>Other Services:</h1>
-            <p>
-                In addition to meditation services and a Relaxing Sound and ASMR Library, Meditation+ offers a range of basic services to support individuals on their journey towards mental well-being.
-                These services are designed to provide comprehensive and accessible resources for users at various stages of their mindfulness practice.
-            </p>
-        </div>
-
-        <div class="content">
-            <h1>Organization Public Statement</h1>
-            <p>
-                Join Meditation+ and embark on a journey toward a healthier, more balanced life.
-                Embrace the power of mindfulness, reduce stress, and discover the tranquility that comes with our comprehensive approach to well-being.
-            </p>
-        </div>
-
-        <footer class="footer bg-light py-3 text-center">
-            <p><small>This page and all properties owned by Meditation+&copy;</small></p>
-        </footer>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const leftButton = document.getElementById('leftButton');
-            const rightButton = document.getElementById('rightButton');
-
-            fetch('/api/username').then(response => response.json()).then(data => {
-                if (data.username) {
-                    leftButton.textContent = 'Account';
-                    leftButton.onclick = function () { window.location.href = '/account'; };
-                    rightButton.textContent = 'Sign Out of ' + data.username;
-                    rightButton.onclick = function () { window.location.href = '/signout'; };
-                } else {
-                    leftButton.textContent = 'Sign Up';
-                    leftButton.onclick = function () { window.location.href = '/signup'; };
-                    rightButton.textContent = 'Login';
-                    rightButton.onclick = function () { window.location.href = '/login'; };
-                }
-            }).catch(error => {
-                console.error("Error fetching username:", error);
-                leftButton.textContent = 'Sign Up';
-                leftButton.onclick = function () { window.location.href = '/signup'; };
-                rightButton.textContent = 'Login';
-                rightButton.onclick = function () { window.location.href = '/login'; };
-            });
+      </div>
+      <h1 id="coolfrog">Coolfrog</h1>
+      <h2 id="purpose">Purpose</h2>
+      <p>This website is designed to reduce stress and burnout, specifically among Software Developers.</p>
+      <p>It does so on three levels:</p>
+      <ol>
+        <li>
+          <strong>Personal</strong>: At this level, pages are designed for the individual Software Engineer.
+        </li>
+        <li>
+          <strong>Organizational</strong>: At this level, pages are designed for the Software Engineer within their primary organization.
+        </li>
+        <li>
+          <strong>Global</strong>: At this level, pages are designed for the Software Engineer connecting with all others across the globe.
+        </li>
+      </ol>
+      <h2 id="functionalities">Functionalities</h2>
+      <h3 id="personal">Personal</h3>
+      <p>At this level, pages are designed for the individual Software Engineer.</p>
+      <ul>
+        <li>
+          <a href="https://www.coolfrog.net/videopage">/videopage</a>: Displays videos for reducing stress and burnout. Can search and like videos. Likes are persistent and global to all users.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/article_library">/article_library</a>: Displays articles for reducing stress and burnout. Can search and rate articles. Ratings are presistent for each user.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/dailyInteractive">/dailyInteractive</a>: Presents user with a new activity each day of the week to reduce stress and burnout.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/relaxation-sounds">/relaxation-sounds</a>: Displays sounds for reducing stress and burnout. Can search, download, and loop sounds.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/MeditationSession">/MeditationSession</a>: Presents user with guided meditation sessions. User can start, pause, and reset a timer. User can bookmark and unbookmark topics of interest to think about during this session. User can switch theme if they prefer dark mode. User can comment on each session as a personal reflection, which is not persistent and will be cleared when leaving the page for reusability.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/timersPage">/timersPage</a>: Presents user with timers that can be set. Timers count down and play a sound upon finish. Timers can be started, stopped and reset.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/WellnessChallenges">/WellnessChallenges</a>: Presents user with challenges they can do whenever they are stressed: they come to this page. Each challenge has a timer that can be started, stopped, and reset.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/config">/config</a>: User may update their Pronouns, Given, and Last names. User can update and add multiple Emails for the <a href="https://www.coolfrog.net/meetups">/meetups</a>. User can manage all active login sessions to signout old sessions that have not been signed out manually.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/goals">/goals</a>: Presents user with an easy way to manage their goals. Reduces stress with many views of tasks, by due or completed, everything and categorical. Taks can have priority and times.
+        </li>
+      </ul>
+      <h3 id="organizational">Organizational</h3>
+      <ul>
+        <li>
+          <a href="https://www.coolfrog.net/meetups">/meetups</a>: The meetups forums is a place for Software Engineers within the same organization. Organizations are determined by the email of your account (which means if you set multiple emails in the <a href="https://www.coolfrog.net/config">/config</a> then you can see multiple organizations). For example, all @intel.com engineers can talk to another on the fourms and create meetups (either in person with a location, or online with a meeting link) which has a title, description and date and time. This makes it easy for Software Engineers to connect with their coworkers in the goal of reducing stress and burnout.
+        </li>
+      </ul>
+      <h3 id="global">Global</h3>
+      <ul>
+        <li>
+          <a href="https://www.coolfrog.net/forums">/forums</a>: This is the regular forums, without a meetup feature. Any Software Engineer in the world can make forum topics and all Software Engineers can respond.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/account">/account</a>: In addition to other links, this page shows the Weekly and Daily challenge. The Weekly is the most active member challenge, and the Daily is the second most active member challenge ( <a href="https://www.coolfrog.net/challenge">/challenge</a>). As members complete old challenges and new ones arise, they are automatically populated.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/challenge">/challenge</a>: Software Engineers can create challenges for other website members to do for reducing stress and burnout. The user can see their progress, as well as the entire community of Software Engineers.
+        </li>
+        <li>
+          <a href="https://www.coolfrog.net/leaderboard">/leaderboard</a>: This presents the user with a login streak of all users on the website, and see who is the top of the leaderboard.
+        </li>
+      </ul>
+      <h3 id="technical">Technical</h3>
+      <p>This project is a serverless website that runs on Cloudflare Pages. The website is designed with HTML, CSS, and JavaScript. For non-static portions, designed with Cloudflare Workers, Cloudflare KV (key-value), and Cloudflare D1 (SQL Database). Continuous Integration includes automatic Unit Testing via Jest for JavaScript and Cloudflare Worker modules.</p>
+      <hr>
+      <p>Coolfrog © 2024</p>
+      <p>Group Members: Deboshree Chowdhury, Ali Mehaidli, Jesse Naser, Carlos Nunez, Noah Mousseau</p>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const leftButton = document.getElementById('leftButton');
+          const rightButton = document.getElementById('rightButton');
+          fetch('/api/username').then(response => response.json()).then(data => {
+            if (data.username) {
+              leftButton.textContent = 'Account';
+              leftButton.onclick = function() {
+                window.location.href = '/account';
+              };
+              rightButton.textContent = 'Sign Out of ' + data.username;
+              rightButton.onclick = function() {
+                window.location.href = '/signout';
+              };
+            } else {
+              leftButton.textContent = 'Sign Up';
+              leftButton.onclick = function() {
+                window.location.href = '/signup';
+              };
+              rightButton.textContent = 'Login';
+              rightButton.onclick = function() {
+                window.location.href = '/login';
+              };
+            }
+          }).catch(error => {
+            console.error("Error fetching username:", error);
+            leftButton.textContent = 'Sign Up';
+            leftButton.onclick = function() {
+              window.location.href = '/signup';
+            };
+            rightButton.textContent = 'Login';
+            rightButton.onclick = function() {
+              window.location.href = '/login';
+            };
+          });
         });
-    </script>
-</body>
+      </script>
+  </body>
 </html>
