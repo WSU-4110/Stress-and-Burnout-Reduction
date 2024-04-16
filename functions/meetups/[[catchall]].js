@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
     }
     
     if (url.pathname === '/meetups') {
-        return renderForumsPage(session.username, env, session);
+        return renderForumsPage(session.username, env);
     } else if (url.pathname.startsWith('/meetups/topic/')) {
         const topicId = url.pathname.split('/')[3];
         return renderTopicPage(topicId, session.username, env);
@@ -53,10 +53,10 @@ export async function onRequestPost({ request, env }) {
     return new Response("Bad Request", { status: 400 });
 }
 
-async function renderForumsPage(username, env, session) {
-    let userEmails = session.emails.map(email => email.email.split('@')[1]).filter((value, index, self) => self.indexOf(value) === index);
-    let emailGroupOptions = userEmails.map(domain => `<option value="@${domain}">@${domain}</option>`).join('');
-
+async function renderForumsPage(username, env) {
+    const user = JSON.parse(await env.COOLFROG_USERS.get(username));
+    const emailDomains = user.emails.map(emailObj => emailObj.email.split('@')[1]).filter((value, index, self) => self.indexOf(value) === index);
+    
     let topics = await fetchTopics(env);
     
     const topicsHtml = topics.map(topic => `
@@ -66,7 +66,9 @@ async function renderForumsPage(username, env, session) {
             <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
         </tr>
     `).join('');
-  
+    
+    const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -103,22 +105,22 @@ async function renderForumsPage(username, env, session) {
                     <input type="text" name="location" placeholder="Enter location" class="form-control mb-2" style="display:none;">
                     <input type="url" name="link" placeholder="Enter link" class="form-control mb-2">
                     <input type="datetime-local" name="date_time" class="form-control mb-2" required>
-                    <script>
-                        function toggleEventDetails(value) {
-                            const locationInput = document.querySelector('input[name="location"]');
-                            const linkInput = document.querySelector('input[name="link"]');
-                            if (value === 'In Person') {
-                                locationInput.style.display = 'block';
-                                linkInput.style.display = 'none';
-                            } else {
-                                locationInput.style.display = 'none';
-                                linkInput.style.display = 'block';
-                            }
-                        }
-                    </script>
                     <button type="submit" class="btn btn-primary">Add Topic</button>
                 </form>
             </div>
+            <script>
+                function toggleEventDetails(value) {
+                    const locationInput = document.querySelector('input[name="location"]');
+                    const linkInput = document.querySelector('input[name="link"]');
+                    if (value === 'In Person') {
+                        locationInput.style.display = 'block';
+                        linkInput.style.display = 'none';
+                    } else {
+                        locationInput.style.display = 'none';
+                        linkInput.style.display = 'block';
+                    }
+                }
+            </script>
         </body>
         </html>
     `;
@@ -149,6 +151,7 @@ async function renderTopicPage(topicId, username, env) {
         </div>
     `).join('');
 
+    // Here's the pinned topic information card
     const topicInfoHtml = `
         <div class="card text-white bg-info mb-3">
             <div class="card-header">Event Details</div>
