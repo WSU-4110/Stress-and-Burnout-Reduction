@@ -120,6 +120,10 @@ const topicsHtml = topics.map(topic => `
                         linkInput.hidden = false;
                     }
                 }
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Default to 'In Person' on initial load
+                    toggleLocationLink(document.querySelector('select[name="meeting_type"]').value);
+                });
             </script>
         </body>
         </html>
