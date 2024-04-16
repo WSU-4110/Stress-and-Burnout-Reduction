@@ -1,5 +1,6 @@
-export async function onRequest({ request, env }) {
-    const url = new URL(request.url);
+export async function onRequest(context) {
+    const { request, env } = context;
+    let url = new URL(request.url);
 
     if (url.pathname === '/api/likes') {
         switch (request.method) {
@@ -16,7 +17,6 @@ export async function onRequest({ request, env }) {
 
 async function toggleLike(request, env) {
     const { sessionId } = getSessionIdFromRequest(request);
-
     if (!sessionId) {
         return new Response(JSON.stringify({ error: 'Session ID missing' }), { status: 401 });
     }
@@ -30,25 +30,27 @@ async function toggleLike(request, env) {
     const body = await request.json();
     const videoId = body.videoId;
 
-    let userLikes = JSON.parse(await env.COOLFROG_LIKES.get(userData.username) || "{}");
-    const likedVideosSet = new Set(userLikes);
-    const isLiked = likedVideosSet.has(videoId);
+    const userLikesKey = userData.username;
+    const videoLikesKey = `_${videoId}`;
+    
+    const userLikesData = await env.COOLFROG_LIKES.get(userLikesKey) || "{}";
+    const userLikes = JSON.parse(userLikesData);
+    const liked = userLikes[videoId];
+    
+    let videoLikesCount = parseInt(await env.COOLFROG_LIKES.get(videoLikesKey)) || 0;
 
-    if (isLiked) {
-        likedVideosSet.delete(videoId);
+    if (liked) {
+        delete userLikes[videoId];
+        videoLikesCount = Math.max(0, videoLikesCount - 1);
     } else {
-        likedVideosSet.add(videoId);
+        userLikes[videoId] = true;
+        videoLikesCount += 1;
     }
 
-    await env.COOLFROG_LIKES.put(userData.username, JSON.stringify(Array.from(likedVideosSet)));
+    await env.COOLFROG_LIKES.put(userLikesKey, JSON.stringify(userLikes));
+    await env.COOLFROG_LIKES.put(videoLikesKey, videoLikesCount.toString());
 
-    const videoLikeKey = "_" + videoId;
-    const currentLikes = Number(await env.COOLFROG_LIKES.get(videoLikeKey) || "0");
-    const newLikes = isLiked ? currentLikes - 1 : currentLikes + 1;
-
-    await env.COOLFROG_LIKES.put(videoLikeKey, String(newLikes));
-
-    return new Response(JSON.stringify({ success: true, likes: newLikes }), {
+    return new Response(JSON.stringify({ likes: videoLikesCount, liked: !liked }), {
         headers: { 'Content-Type': 'application/json' }
     });
 }
@@ -65,17 +67,16 @@ async function getLikes(request, env) {
     }
 
     const userData = JSON.parse(sessionValue);
-    
-    let userLikes = JSON.parse(await env.COOLFROG_LIKES.get(userData.username) || "{}");
-    const likedVideosSet = new Set(userLikes);
+    const url = new URL(request.url);
+    const videoId = url.searchParams.get("videoId");
 
-    let likesData = {};
-    for (const videoId of likedVideosSet) {
-        const totalLikes = await env.COOLFROG_LIKES.get("_" + videoId) || 0;
-        likesData[videoId] = { totalLikes, userLiked: true };
-    }
+    const userLikesData = await env.COOLFROG_LIKES.get(userData.username) || "{}";
+    const userLikes = JSON.parse(userLikesData);
+    const liked = !!userLikes[videoId];
 
-    return new Response(JSON.stringify(likesData), {
+    const videoLikesCount = parseInt(await env.COOLFROG_LIKES.get(`_${videoId}`)) || 0;
+
+    return new Response(JSON.stringify({ likes: videoLikesCount, liked }), {
         headers: { 'Content-Type': 'application/json' }
     });
 }
@@ -89,7 +90,5 @@ function getSessionIdFromRequest(request) {
 
     if (!sessionIdCookie) return {};
 
-    return {
-        sessionId: sessionIdCookie.split('=')[1]
-    };
+    return { sessionId: sessionIdCookie.split('=')[1] };
 }

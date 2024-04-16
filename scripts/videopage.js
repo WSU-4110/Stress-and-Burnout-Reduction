@@ -11,8 +11,7 @@ class VideoModal {
         this.attachVideoCardsEvents();
         this.attachCloseButtonEvent();
         this.attachWindowClickEvent();
-        this.attachLikeButtonEvents();
-        this.retrieveLikes(); // Retrieve likes when the page loads
+        this.attachLikeButtonEvents(); // Initialize like button events here
     }
 
     attachVideoCardsEvents() {
@@ -54,63 +53,43 @@ class VideoModal {
     }
 
     attachLikeButtonEvents() {
-        const likeButtons = document.querySelectorAll('.like-btn');
-        likeButtons.forEach(button => {
+        document.querySelectorAll('.like-btn').forEach(button => {
             button.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 const videoId = button.closest('.video-card').getAttribute('data-video-id');
-                const url = `/api/likes`;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ videoId })
-                });
-                
-                if (response.ok) {
+                try {
+                    const response = await fetch(`/api/likes`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ videoId })
+                    });
                     const data = await response.json();
-                    const likeCountElement = button.nextElementSibling;
-                    likeCountElement.textContent = `${data.likes} Likes`;
-                    button.classList.toggle('liked', !button.classList.contains('liked'));
-                } else {
-                    console.error('Failed to toggle the like');
+                    if (response.ok) {
+                        const likeCountElement = button.nextElementSibling;
+                        likeCountElement.textContent = `${data.likes} Likes`;
+                        button.classList.toggle('liked', data.liked);
+                        button.innerHTML = data.liked ?
+                            '<i class="fa-solid fa-heart"></i> Liked' :
+                            '<i class="fa-regular fa-heart"></i> Like';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
             });
         });
-    }
-
-    async retrieveLikes() {
-        const response = await fetch('/api/likes', { method: 'GET' });
-        if (response.ok) {
-            const likesData = await response.json();
-            this.videoCards.forEach(card => {
-                const videoId = card.getAttribute('data-video-id');
-                if(videoId in likesData) {
-                    const likeButton = card.querySelector('.like-btn');
-                    const likeCount = card.querySelector('.like-count');
-                    likeCount.textContent = `${likesData[videoId].totalLikes} Likes`;
-                    likeButton.classList.toggle('liked', likesData[videoId].userLiked);
-                }
-            });
-        } else {
-            console.error('Failed to load likes data');
-        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+    videoModal.attachLikeButtonEvents(); // Initial setup of like button events
 
-    // Search functionality
     const searchInput = document.getElementById('searchInput');
     const videoCards = document.querySelectorAll('.video-card');
     const videoInfos = document.querySelectorAll('.video-info');
 
     searchInput.addEventListener('input', () => {
         const searchQuery = searchInput.value.toLowerCase();
-
         videoCards.forEach((card, index) => {
             const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
             const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
@@ -119,3 +98,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+module.exports = VideoModal;
