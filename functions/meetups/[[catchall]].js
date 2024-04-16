@@ -55,23 +55,44 @@ export async function onRequestPost({ request, env }) {
 }
 
 async function renderForumsPage(username, env) {
-    let topics = await fetchTopics(env);
     let user = await env.COOLFROG_USERS.get(username);
+    if (!user) {
+        return unauthorizedResponse();
+    }
     user = JSON.parse(user);
 
-    // Extracting unique email domains for the dropdown
-    const emailDomains = [ ...new Set(user.emails.map(email => email.email.split('@')[1])) ];
+    // Extracting unique email domains for the dropdown and filtering
+    const emailDomains = new Set(user.emails.map(email => email.email.split('@')[1]));
 
-    const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
+    const topics = await fetchTopics(env);
+    // Filter topics based on the user's email group access
+    const filteredTopics = topics.filter(topic => emailDomains.has(topic.email_group));
 
-const topicsHtml = topics.map(topic => `
-    <tr>
-        <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
-        <td style="width: 20%;">${topic.username}</td>
-        <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-    </tr>
-`).join('');
-  
+    const groupedTopicsHtml = Array.from(emailDomains).map(domain => {
+        const domainTopics = filteredTopics.filter(topic => topic.email_group === domain);
+        return `
+            <h3>${domain}</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                ${domainTopics.map(topic => `
+                    <tr>
+                        <td><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
+                        <td>${topic.username}</td>
+                        <td>${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+                    </tr>
+                `).join('')}
+                </tbody>
+            </table>
+        `;
+    }).join('');
+
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -84,19 +105,12 @@ const topicsHtml = topics.map(topic => `
         <body>
             <div class="container mt-4">
                 <h1>Forum Topics</h1>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>${topicsHtml}</tbody>
-                </table>
+                ${groupedTopicsHtml}
                 <form method="post" action="/meetups/add-topic">
                     <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
-                    <select name="email_group" class="form-control mb-2">${emailGroupOptions}</select>
+                    <select name="email_group" class="form-control mb-2">
+                        ${Array.from(emailDomains).map(domain => `<option value="${domain}">@${domain}</option>`).join('')}
+                    </select>
                     <textarea name="description" class="form-control mb-2" placeholder="Enter description" required></textarea>
                     <select name="meeting_type" class="form-control mb-2" required onchange="toggleLocationLink(this.value)">
                         <option value="InPerson">In Person</option>
@@ -121,7 +135,6 @@ const topicsHtml = topics.map(topic => `
                     }
                 }
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Default to 'In Person' on initial load
                     toggleLocationLink(document.querySelector('select[name="meeting_type"]').value);
                 });
             </script>
