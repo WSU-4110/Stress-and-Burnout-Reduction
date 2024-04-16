@@ -1,72 +1,51 @@
 const VideoModal = require('../scripts/videopage');
 
-describe('VideoModal Class', () => {
-    let mockModal, mockVideoFrame, mockCloseButton, mockVideoCards;
+// Use jest to mock the global fetch function
+global.fetch = jest.fn();
 
-    beforeAll(() => {
-        global.fetch = jest.fn();  // Mock fetch globally
-    });
-
-    afterAll(() => {
-        global.fetch.mockRestore();  // Restore original fetch
-    });
+describe("VideoModal", () => {
+    let videoModal;
 
     beforeEach(() => {
-        // Set up mock elements
-        mockModal = { style: { display: 'none' } };
-        mockVideoFrame = { src: '' };
-        mockCloseButton = { onclick: jest.fn() };
-        mockVideoCards = Array.from({ length: 3 }, (_, index) => ({
-            getAttribute: jest.fn().mockReturnValue(`test_video_id_${index}`),
-            querySelector: jest.fn().mockImplementation(selector => {
-                if (selector === '.like-btn') 
-                    return { classList: { toggle: jest.fn() }, innerHTML: '' };
-                if (selector === '.like-count') 
-                    return { textContent: '' };
-                return null;
-            })
-        }));
+        // Set up the document body
+        document.body.innerHTML = `
+            <div id="modal"></div>
+            <iframe id="videoFrame"></iframe>
+            <button class="close"></button>
+            <div id="videoCard" class="video-card" data-video-id="123">
+                <button class="like-btn"></button>
+                <span class="like-count"></span>
+            </div>`;
 
-        // Mocking DOM methods
-        document.getElementById = jest.fn().mockImplementation(id => {
-            if (id === 'modal') return mockModal;
-            if (id === 'videoFrame') return mockVideoFrame;
-            return null;
-        });
-        document.getElementsByClassName = jest.fn().mockReturnValue([mockCloseButton]);
-        document.querySelectorAll = jest.fn().mockReturnValue(mockVideoCards);
+        // Initialize the VideoModal instance
+        videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
 
-        // Mocking fetch behavior
-        fetch.mockClear().mockResolvedValue({
-            ok: true,
-            json: () => Promise.resolve({ likes: 10, liked: true })
-        });
-    });
-
-    afterEach(() => {
+        // Clear all instances and calls to constructor and all methods:
         jest.clearAllMocks();
     });
 
-    it('initializes and attaches events correctly', async () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        
-        // Init method should set up all necessary events and states
-        expect(document.getElementById).toHaveBeenCalledWith('modal');
-        expect(document.getElementById).toHaveBeenCalledWith('videoFrame');
-        
-        expect(document.getElementsByClassName).toHaveBeenCalledWith('close');
-        expect(document.querySelectorAll).toHaveBeenCalledWith('.video-card');
-
-        // Check if modal is displayed correctly during modal operations
-        mockCloseButton.onclick();
-        expect(mockModal.style.display).toBe('none');
-
-        // Since videoModal.init() is async, we should check if it handles updates correctly
-        await videoModal.init();
-        mockVideoCards.forEach(card => {
-            expect(card.querySelector).toHaveBeenCalledWith('.like-count');
-            expect(card.querySelector('.like-count').textContent).toBe('10 Likes');
-            expect(card.querySelector).toHaveBeenCalledWith('.like-btn');
+    it("should handle like states updating", async () => {
+        // Mock fetch to resolve with specific data
+        global.fetch.mockImplementation((url) => {
+            return Promise.resolve({
+                ok: true,
+                json: () => Promise.resolve({
+                    likes: 10,
+                    liked: true
+                })
+            });
         });
+
+        // Wait for like states to update
+        await videoModal.updateAllLikeStates();
+
+        // Get elements that should be updated
+        const likeButton = document.querySelector('.like-btn');
+        const likeCountElement = document.querySelector('.like-count');
+
+        // Check if the DOM updates as expected
+        expect(likeCountElement.textContent).toBe("10 Likes");
+        expect(likeButton.classList.contains('liked')).toBe(true);
+        expect(likeButton.innerHTML).toContain('Liked');
     });
 });

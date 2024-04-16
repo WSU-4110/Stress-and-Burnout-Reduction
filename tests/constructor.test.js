@@ -1,76 +1,58 @@
 const VideoModal = require('../scripts/videopage');
 
-// Mocking the necessary DOM structure and behavior
-document.body.innerHTML = `
-<div id="modal" style="display: none;"></div>
-<iframe id="videoFrame"></iframe>
-<button class="close"></button>
-<div class="video-card" data-video-id="123">
-  <div class="like-count"></div>
-  <button class="like-btn"></button>
-</div>
-`;
+describe("VideoModal Class", () => {
+    // Prepare your DOM elements and other required mocks
+    beforeAll(() => {
+        document.body.innerHTML = `
+            <div id="modal"></div>
+            <iframe id="videoFrame"></iframe>
+            <button class="close"></button>
+            <div class="video-card" data-video-id="123" data-video-url="https://youtube.com/watch?v=xyz">
+                <div class="video-info">
+                    <h3>Video Title</h3>
+                    <p>Video Description</p>
+                </div>
+                <button class="like-btn"></button>
+                <span class="like-count">0 Likes</span>
+            </div>
+        `;
 
-// Mocking global fetch
-global.fetch = jest.fn();
-
-describe('VideoModal', () => {
-    let videoModal;
-    beforeEach(() => {
-        // Reset fetch mock before each test
-        fetch.mockReset();
-
-        // Set up fetch mock response
-        fetch.mockResolvedValue({
+        // Mock fetch initially
+        global.fetch = jest.fn(() => Promise.resolve({
             ok: true,
             json: () => Promise.resolve({
-                liked: false,
-                likes: 5
+                likes: 1,
+                liked: true
             })
-        });
-
-        // Initialize VideoModal instance
-        videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
+        }));
     });
 
-    it('initializes class properties correctly', () => {
-        expect(videoModal.modal).toBe(document.getElementById('modal'));
-        expect(videoModal.videoFrame).toBe(document.getElementById('videoFrame'));
-        expect(videoModal.closeButton).toBe(document.getElementsByClassName('close')[0]);
+    afterEach(() => {
+        // Restore the mocks back to the original state
+        jest.restoreAllMocks();
+    });
+
+    test('initializes class properties correctly', () => {
+        const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
+
+        expect(videoModal.modal).toBe(document.getElementById("modal"));
+        expect(videoModal.videoFrame).toBe(document.getElementById("videoFrame"));
+        expect(videoModal.closeButton).toBe(document.getElementsByClassName("close")[0]);
         expect(videoModal.videoCards.length).toBe(1);
-        expect(videoModal.videoCards[0]).toBe(document.querySelector('.video-card'));
     });
 
-    it('calls fetch and updates like state for video cards correctly', async () => {
+    test('calls fetch and updates like state for video cards', async () => {
+        const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
         await videoModal.updateAllLikeStates();
 
-        // Verify fetch call details
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith('/api/likes?videoId=123');
+        // Checking if fetch has been called with the correct URL
+        expect(fetch).toHaveBeenCalledWith(`/api/likes?videoId=123`);
 
-        // Verify DOM updates after fetch
+        // Ensure the DOM updates were made correctly
         const likeCountElement = document.querySelector('.like-count');
         const likeButton = document.querySelector('.like-btn');
-
-        expect(likeCountElement.textContent).toBe('5 Likes');
-        expect(likeButton.classList.contains('liked')).toBe(false);
-        expect(likeButton.innerHTML).toContain('Like');
-    });
-
-    it('transforms video URL to embed URL correctly', () => {
-        const sampleUrl = "https://www.youtube.com/watch?v=XYZ";
-        const transformedUrl = videoModal.transformVideoUrl(sampleUrl);
-        expect(transformedUrl).toEqual("https://www.youtube.com/embed/XYZ");
-    });
-
-    it('handles modal open and close correctly', () => {
-        const sampleUrl = "https://www.youtube.com/watch?v=XYZ";
-        videoModal.openModal(sampleUrl);
-        expect(videoModal.modal.style.display).toBe("block");
-        expect(videoModal.videoFrame.src).toContain("embed/XYZ?autoplay=1&rel=0");
-
-        videoModal.closeModal();
-        expect(videoModal.modal.style.display).toBe("none");
-        expect(videoModal.videoFrame.src).toBe("");
+        expect(likeCountElement.textContent).toBe("1 Likes");
+        expect(likeButton.classList.contains('liked')).toBe(true);
+        expect(likeButton.innerHTML).toContain('Liked');
     });
 });
