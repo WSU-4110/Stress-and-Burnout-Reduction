@@ -47,7 +47,8 @@ export async function onRequestPost({ request, env }) {
         return addPost(title, body, topicId, session.username, env);
     } else if (url.pathname.startsWith("/meetups/topic/") && url.pathname.endsWith('/delete-post')) {
         const postId = formData.get('post_id');
-        return deletePost(postId, session.username, env);
+        const topicId = formData.get('topic_id');
+        return deletePost(postId, topicId, session.username, env);
     }
 
     return new Response("Bad Request", { status: 400 });
@@ -152,9 +153,10 @@ async function renderTopicPage(topicId, username, env) {
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>@${post.username}</span>
                 ${username === post.username ? `<form action="/meetups/topic/${topicId}/delete-post" method="post" class="mb-0">
-                    <input type="hidden" name="post_id" value="${post.id}">
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>` : ''}
+    <input type="hidden" name="post_id" value="${post.id}">
+    <input type="hidden" name="topic_id" value="${topicId}"> <!-- Include the topic ID -->
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+</form>` : ''}
             </div>
             <div class="card-body">
                 <h5 class="card-title">${post.title}</h5>
@@ -228,7 +230,7 @@ async function deleteTopic(topicId, username, env) {
     return new Response(null, { status: 204, headers: { 'Location': '/meetups' } });
 }
 
-async function deletePost(postId, username, env) {
+async function deletePost(postId, topicId, username, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
     await stmt.bind(postId, username).run();
     return new Response(null, { status: 204, headers: { 'Location': `/meetups/topic/${topicId}` } });
