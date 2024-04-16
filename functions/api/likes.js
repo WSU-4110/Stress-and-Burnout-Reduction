@@ -48,7 +48,7 @@ async function toggleLike(request, env) {
 	const videoId = body.videoId;
 
 	const userLikesKey = userData.username;
-	const videoLikesKey = `_${videoId}`;
+	const videoLikesKey = `__${videoId}`;
 
 	const userLikesData = await env.COOLFROG_LIKES.get(userLikesKey) || "{}";
 	const userLikes = JSON.parse(userLikesData);
@@ -106,7 +106,7 @@ async function getLikes(request, env) {
 	const userLikes = JSON.parse(userLikesData);
 	const liked = !!userLikes[videoId];
 
-	const videoLikesCount = parseInt(await env.COOLFROG_LIKES.get(`_${videoId}`)) || 0;
+	const videoLikesCount = parseInt(await env.COOLFROG_LIKES.get(`__${videoId}`)) || 0;
 
 	return new Response(JSON.stringify({
 		likes: videoLikesCount,
