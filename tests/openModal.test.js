@@ -1,6 +1,6 @@
 const VideoModal = require('../scripts/videopage');
 
-// Mocking fetch globally
+// Mock fetch
 global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
@@ -8,36 +8,40 @@ global.fetch = jest.fn(() =>
   })
 );
 
-describe('VideoModal - openModal', () => {
-    let mockModal, mockVideoFrame;
-    
+describe('VideoModal', () => {
+    let mockModal, mockVideoFrame, mockCards;
+
     beforeEach(() => {
-        // Reset mocks before each test
         fetch.mockClear();
 
-        // Mock modal and videoFrame elements
         mockModal = { style: { display: 'none' } };
         mockVideoFrame = { src: '' };
-
-        document.getElementById = jest.fn().mockImplementation((id) => {
-            if (id === 'modal') return mockModal;
-            if (id === 'videoFrame') return mockVideoFrame;
-            return null;
-        });
+        mockCards = [{
+            getAttribute: jest.fn().mockReturnValue('123'),
+            querySelector: jest.fn().mockReturnValue({
+                textContent: '',
+                classList: {
+                    toggle: jest.fn()
+                },
+                innerHTML: ''
+            })
+        }];
+        
+        document.getElementById = jest.fn((id) => ({
+            'modal': mockModal,
+            'videoFrame': mockVideoFrame
+        })[id]);
 
         document.getElementsByClassName = jest.fn().mockReturnValue([{ onclick: null }]);
-        document.querySelectorAll = jest.fn().mockReturnValue([{ 
-            addEventListener: jest.fn(),
-            getAttribute: jest.fn().mockReturnValue('https://www.example.com/watch?v=example')
-        }]);
+        document.querySelectorAll = jest.fn().mockReturnValue(mockCards);
     });
 
-    it('sets videoFrame src and displays modal', () => {
+    it('updates all like states when initialized', async () => {
         const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        videoModal.openModal(testUrl);
+        await videoModal.updateAllLikeStates();
 
-        expect(mockVideoFrame.src).toContain('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
-        expect(mockModal.style.display).toBe('block');
+        expect(fetch).toHaveBeenCalledTimes(mockCards.length);
+        expect(mockCards[0].querySelector).toHaveBeenCalledWith('.like-btn');
+        expect(mockCards[0].querySelector).toHaveBeenCalledWith('.like-count');
     });
 });
