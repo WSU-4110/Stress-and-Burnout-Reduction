@@ -2,12 +2,11 @@ const VideoModal = require('../scripts/videopage');
 
 describe('VideoModal - transformVideoUrl', () => {
     it('transforms YouTube watch URL to embed URL correctly', () => {
-        // Mocking the constructor parts that are not needed for this test
-        document.getElementById = jest.fn();
-        document.getElementsByClassName = jest.fn();
-        document.querySelectorAll = jest.fn();
+        // Mocking the DOM elements to provide necessary mock values
+        document.getElementById = jest.fn(() => document.createElement('div'));
+        document.getElementsByClassName = jest.fn(() => [document.createElement('button')]);
+        document.querySelectorAll = jest.fn(() => [document.createElement('div')]);
 
-        // Test case for transformVideoUrl
         const videoModal = new VideoModal('dummyModalId', 'dummyVideoFrameId', 'dummyCloseButtonClass', 'dummyVideoCardClass');
         const inputUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
         const expectedUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
