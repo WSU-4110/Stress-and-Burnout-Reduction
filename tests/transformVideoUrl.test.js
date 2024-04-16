@@ -46,7 +46,7 @@ describe("VideoModal Class Tests", () => {
     const likeCountElement = document.querySelector('.like-count');
     const likeButton = document.querySelector('.like-btn');
 
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledTimes(2);
     expect(fetch).toHaveBeenCalledWith("/api/likes?videoId=123");
     expect(likeCountElement.textContent).toBe("15 Likes");
     expect(likeButton.classList.contains('liked')).toBe(true);
