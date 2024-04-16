@@ -12,13 +12,14 @@ class VideoModal {
         this.attachCloseButtonEvent();
         this.attachWindowClickEvent();
         this.attachLikeButtonEvents();
+        this.retrieveLikes(); // Retrieve likes when the page loads
     }
 
     attachVideoCardsEvents() {
-        this.videoCards.forEach(card => {
-            card.addEventListener('click', e => {
+        this.videoCards.forEach(videoCard => {
+            videoCard.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.openModal(card.getAttribute("data-video-url"));
+                this.openModal(videoCard.getAttribute("data-video-url"));
             });
         });
     }
@@ -34,12 +35,16 @@ class VideoModal {
     }
 
     attachCloseButtonEvent() {
-        this.closeButton.onclick = () => this.closeModal();
+        this.closeButton.onclick = () => {
+            this.closeModal();
+        };
     }
 
     attachWindowClickEvent() {
-        window.onclick = event => {
-            if (event.target === this.modal) this.closeModal();
+        window.onclick = (event) => {
+            if (event.target === this.modal) {
+                this.closeModal();
+            }
         };
     }
 
@@ -49,39 +54,49 @@ class VideoModal {
     }
 
     attachLikeButtonEvents() {
-        document.querySelectorAll('.like-btn').forEach(button => {
-            button.addEventListener('click', e => {
-                e.preventDefault();
+        const likeButtons = document.querySelectorAll('.like-btn');
+        likeButtons.forEach(button => {
+            button.addEventListener('click', async (e) => {
                 e.stopPropagation();
-                this.handleLikeButtonClick(button);
+                const videoId = button.closest('.video-card').getAttribute('data-video-id');
+                const url = `/api/likes`;
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ videoId })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const likeCountElement = button.nextElementSibling;
+                    likeCountElement.textContent = `${data.likes} Likes`;
+                    button.classList.toggle('liked', !button.classList.contains('liked'));
+                } else {
+                    console.error('Failed to toggle the like');
+                }
             });
         });
     }
 
-    handleLikeButtonClick(button) {
-        const videoId = button.closest('.video-card').getAttribute('data-video-id');
-        const isLiked = button.classList.contains('liked');
-        const action = isLiked ? 'unlike' : 'like';
-    
-        fetch(`/api/likes`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ videoId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const likeCountElement = button.nextElementSibling;
-                likeCountElement.textContent = `${data.likes} Likes`;
-                button.classList.toggle('liked', !isLiked);
-                if (!isLiked) {
-                    button.innerHTML = '<i class="fa-solid fa-heart"></i> Liked';
-                } else {
-                    button.innerHTML = '<i class="fa-regular fa-heart"></i> Like';
+    async retrieveLikes() {
+        const response = await fetch('/api/likes', { method: 'GET' });
+        if (response.ok) {
+            const likesData = await response.json();
+            this.videoCards.forEach(card => {
+                const videoId = card.getAttribute('data-video-id');
+                if(videoId in likesData) {
+                    const likeButton = card.querySelector('.like-btn');
+                    const likeCount = card.querySelector('.like-count');
+                    likeCount.textContent = `${likesData[videoId].totalLikes} Likes`;
+                    likeButton.classList.toggle('liked', likesData[videoId].userLiked);
                 }
-            })
-            .catch(error => console.error('Error:', error));
+            });
+        } else {
+            console.error('Failed to load likes data');
+        }
     }
 }
 
@@ -95,12 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchInput.addEventListener('input', () => {
         const searchQuery = searchInput.value.toLowerCase();
+
         videoCards.forEach((card, index) => {
             const title = videoInfos[index].querySelector('h3').textContent.toLowerCase();
             const description = videoInfos[index].querySelector('p').textContent.toLowerCase();
-            card.style.display = title.includes(searchQuery) || description.includes(searchQuery) ? '' : 'none';
+            const isVisible = title.includes(searchQuery) || description.includes(searchQuery);
+            card.style.display = isVisible ? '' : 'none';
         });
     });
 });
-
-module.exports = VideoModal;
