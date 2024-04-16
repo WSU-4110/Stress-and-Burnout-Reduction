@@ -55,27 +55,14 @@ export async function onRequestPost({ request, env }) {
 }
 
 async function renderForumsPage(username, env) {
-    let topics = await fetchTopics(env);
     let user = await env.COOLFROG_USERS.get(username);
     user = JSON.parse(user);
 
-    // Extracting unique email domains to filter topics by these groups
+    // Extracting unique email domains for the dropdown and preparing to fetch topics separately
     const emailDomains = [...new Set(user.emails.map(email => email.email.split('@')[1]))];
-
-    // Filtering topics by the user's email groups
-    const filteredTopics = topics.filter(topic => emailDomains.includes(topic.email_group.replace('@', '')));
-
     const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
-
-    const topicsHtml = filteredTopics.map(topic => `
-        <tr>
-            <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
-            <td style="width: 20%;">${topic.username}</td>
-            <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-        </tr>
-    `).join('');
-  
-    const pageHtml = `
+    
+    let pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -86,17 +73,36 @@ async function renderForumsPage(username, env) {
         </head>
         <body>
             <div class="container mt-4">
-                <h1>Forum Topics</h1>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>${topicsHtml}</tbody>
-                </table>
+                <h1>Forum Topics</h1>`;
+
+    for (let domain of emailDomains) {
+        let topics = await fetchTopicsByEmailGroup(domain, env);
+        const topicsHtml = topics.map(topic => `
+            <tr>
+                <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
+                <td style="width: 20%;">${topic.username}</td>
+                <td style="width: 10%;">
+                ${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+            </tr>
+        `).join('');
+
+        pageHtml += `
+                <div class="email-group-section">
+                    <h2>@${domain} Topics</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>${topicsHtml}</tbody>
+                    </table>
+                </div>`;
+    }
+
+    pageHtml += `
                 <form method="post" action="/meetups/add-topic">
                     <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
                     <select name="email_group" class="form-control mb-2">${emailGroupOptions}</select>
@@ -131,7 +137,7 @@ async function renderForumsPage(username, env) {
         </body>
         </html>
     `;
-  
+
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
@@ -216,9 +222,9 @@ async function addPost(title, body, topicId, username, env) {
     return new Response(null, { status: 303, headers: { 'Location': `/meetups/topic/${topicId}` } });
 }
 
-async function fetchTopics(env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics ORDER BY title");
-    return (await stmt.all()).results;
+async function fetchTopicsByEmailGroup(emailDomain, env) {
+    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics WHERE email_group = ?");
+    return (await stmt.bind(emailDomain).all()).results;
 }
 
 async function fetchTopicById(topicId, env) {
