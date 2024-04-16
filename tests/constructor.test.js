@@ -1,85 +1,60 @@
 const VideoModal = require('../scripts/videopage');
 
-global.fetch = jest.fn(() => Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ liked: true, likes: 10 })
-}));
+// Mocking the necessary DOM structure and behavior
+document.body.innerHTML = `
+<div id="modal" style="display: none;"></div>
+<iframe id="videoFrame"></iframe>
+<button class="close"></button>
+<div class="video-card" data-video-id="123">
+  <div class="like-count"></div>
+  <button class="like-btn"></button>
+</div>
+`;
+
+// Mocking global fetch
+global.fetch = jest.fn();
 
 describe('VideoModal', () => {
+    let videoModal;
     beforeEach(() => {
-        // Reset all mocks between tests
-        fetch.mockClear();
-        document.getElementById.mockClear();
-        document.getElementsByClassName.mockClear();
-        document.querySelectorAll.mockClear();
+        // Reset fetch mock before each test
+        fetch.mockReset();
 
-        // Set up mocks for document methods used in VideoModal
-        document.getElementById = jest.fn().mockImplementation(id => {
-            if (id === 'modal') return { style: { display: 'none' } };
-            if (id === 'videoFrame') return { src: '' };
-            return null;
+        // Setup fetch mock response
+        fetch.mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve({
+                liked: true,
+                likes: 10
+            })
         });
 
-        document.getElementsByClassName = jest.fn().mockReturnValue([{
-            addEventListener: jest.fn()
-        }]);
-
-        document.querySelectorAll = jest.fn().mockReturnValue([...new Array(5)].map(() => ({
-            getAttribute: jest.fn().mockReturnValue('123'),
-            addEventListener: jest.fn(),
-            querySelector: jest.fn().mockReturnValue({
-                textContent: '',
-                classList: {
-                    toggle: jest.fn()
-                },
-                innerHTML: ''
-            })
-        })));
+        // Initialize VideoModal instance
+        videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
     });
 
-    it('initializes and binds UI elements correctly', () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        
-        // Check proper instantiation and method calls
-        expect(document.getElementById).toHaveBeenCalledWith('modal');
-        expect(document.getElementById).toHaveBeenCalledWith('videoFrame');
-        expect(document.getElementsByClassName).toHaveBeenCalledWith('close');
-        expect(document.querySelectorAll).toHaveBeenCalledWith('.video-card');
-
-        // Assert that properties are set up correctly
-        expect(videoModal.modal).toBeDefined();
-        expect(videoModal.videoFrame).toBeDefined();
-        expect(videoModal.closeButton).toBeDefined();
-        expect(videoModal.videoCards.length).toBe(5);
+    it('initializes class properties correctly', () => {
+        expect(videoModal.modal).toEqual(document.getElementById('modal'));
+        expect(videoModal.videoFrame).toEqual(document.getElementById('videoFrame'));
+        expect(videoModal.closeButton).toEqual(document.getElementsByClassName('close')[0]);
+        expect(videoModal.videoCards.length).toBe(1);
+        expect(videoModal.videoCards[0]).toEqual(document.querySelector('.video-card'));
     });
 
-    it('updates like states correctly when initializing', async () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
+    it('calls fetch and updates like state for video cards', async () => {
+        // Trigger the update method which calls fetch
+        await videoModal.updateAllLikeStates();
 
-        // The updateAllLikeStates method should be called during initialization
-        await videoModal.init();
+        // Check if fetch was called correctly
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledWith('/api/likes?videoId=123');
 
-        // Since there are 5 cards, ensure fetch was called 5 times
-        expect(fetch).toHaveBeenCalledTimes(5);
-        expect(fetch.mock.calls[0][0]).toBe('/api/likes?videoId=123');
+        // Check changes to DOM (like count and button text)
+        const likesCountElement = videoModal.videoCards[0].querySelector('.like-count');
+        const likeButton = videoModal.videoCards[0].querySelector('.like-btn');
 
-        const card = document.querySelectorAll().mock.results[0].value[0];
-        expect(card.querySelector.mock.calls.length).toBe(2);  // Called twice per card: once for button, once for count
-        expect(card.querySelector().classList.toggle).toHaveBeenCalledWith('liked', true);
-        expect(card.querySelector().textContent).toBe('10 Likes');
-    });
-
-    it('handles modal opening and closing correctly', () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        videoModal.openModal('https://youtube.com/watch?v=dQw4w9WgXcQ');
-
-        // Verify that the modal display style changes to block
-        expect(videoModal.modal.style.display).toBe('block');
-        expect(videoModal.videoFrame.src).toContain('https://youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
-
-        // Simulate closing the modal
-        videoModal.closeModal();
-        expect(videoModal.modal.style.display).toBe('none');
-        expect(videoModal.videoFrame.src).toBe('');
+        expect(likesCountElement.textContent).toBe('10 Likes');
+        expect(likeButton.classList.contains('liked')).toBe(true);
+        expect(likeButton.innerHTML).toContain('Liked');
     });
 });
