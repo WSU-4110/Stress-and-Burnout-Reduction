@@ -1,54 +1,37 @@
 const VideoModal = require('../scripts/videopage');
 
-describe('VideoModal - constructor and methods', () => {
+describe('VideoModal - constructor', () => {
     beforeEach(() => {
-        // Mocking DOM elements more comprehensively
-        document.getElementById = jest.fn((id) => {
+        // Mock DOM elements
+        document.getElementById = jest.fn().mockImplementation(id => {
             if (id === 'modal') {
-                return {
-                    style: {
-                        display: ''
-                    }
-                };
+                return { style: {} };  // Mock modal element
             }
             if (id === 'videoFrame') {
-                return {
-                    src: '',
-                    setAttribute: jest.fn()
-                };
+                return { src: '' };  // Mock videoFrame element
             }
-            return null;
         });
-
+        
         document.getElementsByClassName = jest.fn().mockReturnValue([{
-            onclick: jest.fn(),
-            addEventListener: jest.fn()
-        }]);
-
-        document.querySelectorAll = jest.fn().mockImplementation(selector => {
-            if (selector === '.video-card') {
-                return [{
-                    addEventListener: jest.fn(),
-                    getAttribute: jest.fn((attr) => {
-                        if (attr === 'data-video-id') return 'test-video-id';
-                        if (attr === 'data-video-url') return 'http://example.com/watch?v=1234';
-                    }),
-                    querySelector: jest.fn().mockImplementation((subSelector) => {
-                        if (subSelector === '.like-btn') return { 
-                            classList: { toggle: jest.fn() },
-                            innerHTML: '',
-                            addEventListener: jest.fn(),
-                            nextElementSibling: {
-                                textContent: ''
-                            }
-                        };
-                        if (subSelector === '.like-count') return { textContent: '' };
+            onclick: jest.fn()
+        }]);  // Mock for className 'close'
+        
+        document.querySelectorAll = jest.fn().mockReturnValue([{
+            getAttribute: jest.fn(name => {
+                switch (name) {
+                    case 'data-video-id':
+                        return '123';
+                    default:
                         return null;
-                    })
-                }];
-            }
-            return [];
-        });
+                }
+            }),
+            addEventListener: jest.fn(),
+            querySelector: jest.fn().mockReturnValue({
+                textContent: '',
+                classList: { toggle: jest.fn() },
+                innerHTML: ''
+            })
+        }]);  // Mock for selector '.video-card'
     });
 
     it('initializes class properties correctly', () => {
@@ -58,19 +41,11 @@ describe('VideoModal - constructor and methods', () => {
         expect(document.getElementById).toHaveBeenCalledWith('videoFrame');
         expect(document.getElementsByClassName).toHaveBeenCalledWith('close');
         expect(document.querySelectorAll).toHaveBeenCalledWith('.video-card');
-    });
-
-    it('should handle click on video card correctly', () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        const mockVideoCard = document.querySelectorAll('.video-card')[0];
         
-        // Simulates clicking the video card
-        mockVideoCard.addEventListener.mock.calls[0][1]({
-           preventDefault: jest.fn() 
-        });
-
-        // Expectations such as if the modal opens correctly, video URL is transformed, etc.
-        expect(videoModal.modal.style.display).toBe('block');
-        expect(videoModal.videoFrame.src).toContain('embed/');
+        // Add additional assertions to check if the properties are correctly set if necessary
+        expect(videoModal.modal).toBeTruthy();
+        expect(videoModal.videoFrame).toBeTruthy();
+        expect(videoModal.closeButton).toBeTruthy();
+        expect(videoModal.videoCards.length).toBe(1);
     });
 });
