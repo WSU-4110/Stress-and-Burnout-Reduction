@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
     }
     
     if (url.pathname === '/meetups') {
-        return renderForumsPage(session.username, env);
+        return renderForumsPage(session.username, env, session);
     } else if (url.pathname.startsWith('/meetups/topic/')) {
         const topicId = url.pathname.split('/')[3];
         return renderTopicPage(topicId, session.username, env);
@@ -53,7 +53,10 @@ export async function onRequestPost({ request, env }) {
     return new Response("Bad Request", { status: 400 });
 }
 
-async function renderForumsPage(username, env) {
+async function renderForumsPage(username, env, session) {
+    let userEmails = session.emails.map(email => email.email.split('@')[1]).filter((value, index, self) => self.indexOf(value) === index);
+    let emailGroupOptions = userEmails.map(domain => `<option value="@${domain}">@${domain}</option>`).join('');
+
     let topics = await fetchTopics(env);
     
     const topicsHtml = topics.map(topic => `
@@ -90,7 +93,7 @@ async function renderForumsPage(username, env) {
                     <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
                     <select name="email_group" class="form-control mb-2" required>
                         <option value="">Select Email Group</option>
-                        <!-- Option values should be fetched based on user's email domains -->
+                        ${emailGroupOptions}
                     </select>
                     <textarea name="description" class="form-control mb-2" placeholder="Enter description" required></textarea>
                     <select name="event_type" class="form-control mb-2" required onchange="toggleEventDetails(this.value)">
@@ -146,7 +149,6 @@ async function renderTopicPage(topicId, username, env) {
         </div>
     `).join('');
 
-    // Here's the pinned topic information card
     const topicInfoHtml = `
         <div class="card text-white bg-info mb-3">
             <div class="card-header">Event Details</div>
