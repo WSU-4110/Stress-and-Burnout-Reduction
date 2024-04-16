@@ -16,9 +16,6 @@ export async function onRequest({ request, env }) {
 
 async function toggleLike(request, env) {
     const { sessionId } = getSessionIdFromRequest(request);
-    const cookies = request.headers.get('Cookie') || '';
-    const matches = cookies.match(/^(.*;)?\s*session-id\s*=\s*([^;]+)(;.*)?$/);
-    const sessionId = matches ? matches[2] : null;
 
     if (!sessionId) {
         return new Response(JSON.stringify({ error: 'Session ID missing' }), { status: 401 });
