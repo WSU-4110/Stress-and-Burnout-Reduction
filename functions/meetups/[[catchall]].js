@@ -201,22 +201,10 @@ async function addTopic(title, emailGroup, description, meetingType, locationOrL
     return new Response(null, { status: 303, headers: { 'Location': '/meetups' } });
 }
 
-async function deleteTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? ANDusername = ?");
-    await stmt.bind(topicId, username).run();
-    return new Response(null, { status: 204 });
-}
-
 async function addPost(title, body, topicId, username, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
     await stmt.bind(uuidv4(), title, body, topicId, username).run();
     return new Response(null, { status: 303, headers: { 'Location': `/meetups/topic/${topicId}` } });
-}
-
-async function deletePost(postId, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
-    await stmt.bind(postId, username).run;
-    return new Response(null, { status: 204 });
 }
 
 async function fetchTopics(env) {
@@ -232,6 +220,18 @@ async function fetchTopicById(topicId, env) {
 async function fetchPostsForTopic(topicId, env) {
     const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
     return (await stmt.bind(topicId).all()).results;
+}
+
+async function deleteTopic(topicId, username, env) {
+    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+    await stmt.bind(topicId, username).run();
+    return new Response(null, { status: 204, headers: { 'Location': '/meetups' } });
+}
+
+async function deletePost(postId, username, env) {
+    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
+    await stmt.bind(postId, username).run();
+    return new Response(null, { status: 204, headers: { 'Location': `/meetups/topic/${topicId}` } });
 }
 
 function getSessionCookie(request) {
