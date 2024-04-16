@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 const VideoModal = require('../scripts/videopage');
 
 describe('VideoModal - openModal', () => {
