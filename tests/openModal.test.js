@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const VideoModal = require('../scripts/videopage');
 
 describe('VideoModal - openModal', () => {
@@ -12,7 +11,7 @@ describe('VideoModal - openModal', () => {
             };
             if (id === 'videoFrame') return {
                 src: ''
-            }; // Mock videoFrame element
+            };
             return null;
         });
 
@@ -23,39 +22,41 @@ describe('VideoModal - openModal', () => {
             return [];
         });
 
-        // Mock video card elements more accurately with getAttribute
         document.querySelectorAll = jest.fn(selector => {
-            if (selector === '.video-card') return [{
-                addEventListener: jest.fn(),
-                getAttribute: jest.fn((attr) => {
-                    if (attr === 'data-video-url') return 'https://www.example.com/watch?v=example';
-                    if (attr === 'data-video-id') return '123';
-                    return null;
-                }),
-                querySelector: jest.fn((selector) => {
-                    // Mock elements inside the .video-card
-                    if (selector === '.like-btn') return { 
-                        classList: {
-                            toggle: jest.fn(),
-                        },
-                        innerHTML: '',
-                    };
-                    if (selector === '.like-count') return {
-                        textContent: '',
-                    };
-                    return null;
-                })
-            }];
+            if (selector === '.video-card') {
+                return [{
+                    getAttribute: jest.fn((attr) => {
+                        if (attr === 'data-video-id') return '123';
+                        if (attr === 'data-video-url') return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                    }),
+                    addEventListener: jest.fn(),
+                    querySelector: jest.fn((sel) => {
+                        if (sel === '.like-btn') return {
+                            classList: {
+                                toggle: jest.fn()
+                            },
+                            nextElementSibling: {
+                                textContent: ''
+                            },
+                            innerHTML: ''
+                        };
+                        if (sel === '.like-count') return {
+                            textContent: ''
+                        };
+                        return null;
+                    }),
+                }];
+            }
             return [];
         });
     });
 
     it('sets videoFrame src and displays modal', () => {
         const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        const testUrl = 'https://www.example.com/watch?v=example';
+        const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
         videoModal.openModal(testUrl);
 
-        expect(videoModal.videoFrame.src).toContain('https://www.example.com/embed/example?autoplay=1&rel=0');
+        expect(videoModal.videoFrame.src).toBe('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
         expect(videoModal.modal.style.display).toBe('block');
     });
 });

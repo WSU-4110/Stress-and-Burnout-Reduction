@@ -1,44 +1,52 @@
-const fetch = require('node-fetch');
 const VideoModal = require('../scripts/videopage');
 
-describe('VideoModal - attachCloseButtonEvent', () => {
-    beforeEach(() => {
-        // Mock the DOM elements for modal and videoFrame
-        const modal = { style: {} };
-        const videoFrame = {};
+describe('VideoModal - General Functionality', () => {
+  let videoModal;
+  let mockVideoCards;
 
-        // Mock the DOM element for closeButton
-        const closeButton = {
-            onclick: null
-        };
-
-        // Mocking video cards
-        const videoCards = [
-            {
-                getAttribute: jest.fn(),
-                querySelector: jest.fn(),
-                addEventListener: jest.fn()
-            },
-            {
-                getAttribute: jest.fn(),
-                querySelector: jest.fn(),
-                addEventListener: jest.fn()
-            },
-        ];
-
-        // Mock relevant document methods
-        document.getElementById = jest.fn((id) => {
-            if (id === 'modal') return modal;
-            if (id === 'videoFrame') return videoFrame;
-            return null;
-        });
-        document.getElementsByClassName = jest.fn().mockReturnValue([closeButton]);
-        document.querySelectorAll = jest.fn().mockReturnValue(videoCards);
+  beforeEach(() => {
+    // Mock DOM elements required by VideoModal
+    document.getElementById = jest.fn((id) => {
+      if (id === 'modal') return { style: {} };
+      if (id === 'videoFrame') return { src: '' };
+      return null;
     });
 
+    document.getElementsByClassName = jest.fn(() => [
+      { onclick: null }, // mock for closeButton
+    ]);
+
+    // Enhance videoCard mocks to include necessary functions and attributes
+    mockVideoCards = [
+      {
+        addEventListener: jest.fn(),
+        getAttribute: jest.fn().mockReturnValue('some-video-id'),
+        querySelector: jest.fn().mockReturnValue({
+          textContent: '',
+          classList: { toggle: jest.fn() },
+          innerHTML: ''
+        })
+      },
+      {
+        addEventListener: jest.fn(),
+        getAttribute: jest.fn().mockReturnValue('another-video-id'),
+        querySelector: jest.fn().mockReturnValue({
+          textContent: '',
+          classList: { toggle: jest.fn() },
+          innerHTML: ''
+        })
+      },
+    ];
+    
+    document.querySelectorAll = jest.fn().mockReturnValue(mockVideoCards);
+
+    videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
+  });
+
+  describe('attachCloseButtonEvent', () => {
     it('sets onclick event on closeButton', () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        videoModal.attachCloseButtonEvent();
-        expect(typeof videoModal.closeButton.onclick).toBe('function');
+      videoModal.attachCloseButtonEvent();
+      expect(typeof videoModal.closeButton.onclick).toBe('function');
     });
+  });
 });
