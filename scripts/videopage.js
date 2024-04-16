@@ -7,11 +7,33 @@ class VideoModal {
         this.init();
     }
 
-    init() {
+    async init() {
         this.attachVideoCardsEvents();
         this.attachCloseButtonEvent();
         this.attachWindowClickEvent();
-        this.attachLikeButtonEvents(); // Initialize like button events here
+        this.attachLikeButtonEvents();
+        await this.updateAllLikeStates();
+    }
+
+    async updateAllLikeStates() {
+        this.videoCards.forEach(async(card) => {
+            const videoId = card.getAttribute('data-video-id');
+            try {
+                const response = await fetch(`/api/likes?videoId=${videoId}`);
+                const data = await response.json();
+                if (response.ok) {
+                    const likeButton = card.querySelector('.like-btn');
+                    const likeCountElement = card.querySelector('.like-count');
+                    likeCountElement.textContent = `${data.likes} Likes`;
+                    likeButton.classList.toggle('liked', data.liked);
+                    likeButton.innerHTML = data.liked ?
+                        '<i class="fa-solid fa-heart"></i> Liked' :
+                        '<i class="fa-regular fa-heart"></i> Like';
+                }
+            } catch (error) {
+                console.error('Error fetching like data:', error);
+            }
+        });
     }
 
     attachVideoCardsEvents() {
@@ -82,7 +104,6 @@ class VideoModal {
 
 document.addEventListener('DOMContentLoaded', function() {
     const videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
-    videoModal.attachLikeButtonEvents(); // Initial setup of like button events
 
     const searchInput = document.getElementById('searchInput');
     const videoCards = document.querySelectorAll('.video-card');
