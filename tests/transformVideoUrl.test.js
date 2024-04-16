@@ -1,41 +1,55 @@
-const fetch = require('node-fetch');
 const VideoModal = require('../scripts/videopage');
 
 describe('VideoModal', () => {
-    beforeEach(() => {
-        // Mock functionality for document.getElementById
-        document.getElementById = jest.fn().mockReturnValue({
-            style: {}
-        });
+	let videoModal;
+	let mockVideoCards;
 
-        // Mock functionality for document.getElementsByClassName
-        document.getElementsByClassName = jest.fn().mockReturnValue([{
-            onclick: jest.fn()
-        }]);
+	beforeEach(() => {
+		// Mock for `getElementById`
+		document.getElementById = jest.fn((id) => {
+			return {
+				style: {},
+				src: ''
+			};
+		});
 
-        // Mock functionality for document.querySelectorAll that includes necessary methods like getAttribute
-        document.querySelectorAll = jest.fn().mockReturnValue([{
-            getAttribute: jest.fn().mockImplementation(name => {
-                if (name === 'data-video-id') return '123';
-                if (name === 'data-video-url') return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-            }),
-            querySelector: jest.fn().mockReturnValue({
-                textContent: '',
-                innerHTML: '',
-                classList: {
-                    toggle: jest.fn()
-                }
-            }),
-            addEventListener: jest.fn()
-        }]);
-    });
+		// Mock for `getElementsByClassName`
+		document.getElementsByClassName = jest.fn().mockReturnValue([{
+			onclick: jest.fn(),
+			addEventListener: jest.fn()
+		}]);
 
-    describe('transformVideoUrl', () => {
-        it('transforms YouTube video URLs correctly', () => {
-            const videoModal = new VideoModal('modalId', 'videoFrameId', 'closeBtnClass', '.video-card');
-            const inputUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-            const expectedUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
-            expect(videoModal.transformVideoUrl(inputUrl)).toEqual(expectedUrl);
-        });
-    });
+		// Mock for `querySelectorAll` with behavior for 'addEventListener' and 'getAttribute'
+		mockVideoCards = [{
+			addEventListener: jest.fn(),
+			getAttribute: jest.fn().mockReturnValue('123'), 
+			querySelector: jest.fn().mockReturnValue({textContent: ''})
+		}, {
+			addEventListener: jest.fn(), // Pretend this is another card
+			getAttribute: jest.fn().mockReturnValue('456'),
+			querySelector: jest.fn().mockReturnValue({textContent: ''})
+		}];
+
+		document.querySelectorAll = jest.fn().mockReturnValue(mockVideoCards);
+
+		videoModal = new VideoModal('dummyModalId', 'dummyVideoFrameId', 'dummyCloseButtonClass', 'dummyVideoCardClass');
+	});
+
+	describe('transformVideoUrl', () => {
+		it('transforms URL correctly', () => {
+			const inputUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+			const expectedUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ';
+
+			expect(videoModal.transformVideoUrl(inputUrl)).toBe(expectedUrl);
+		});
+	});
+
+	describe('init', () => {
+		it('should attach events and update likes state', async () => {
+			await videoModal.init();
+
+			expect(mockVideoCards[0].addEventListener.mock.calls.length).toBeGreaterThan(0);
+			expect(mockVideoCards[1].addEventListener.mock.calls.length).toBeGreaterThan(0);
+		});
+	});
 });

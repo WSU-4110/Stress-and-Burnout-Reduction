@@ -1,26 +1,54 @@
-const fetch = require('node-fetch');
 const VideoModal = require('../scripts/videopage');
 
-describe('VideoModal - constructor', () => {
+describe('VideoModal - constructor and methods', () => {
     beforeEach(() => {
-        // Mock DOM elements
-        document.getElementById = jest.fn().mockImplementation((id) => {
-            if (id === 'modal') return {
-                style: {}
-            };
-            if (id === 'videoFrame') return {
-                src: ''
-            };
+        // Mocking DOM elements more comprehensively
+        document.getElementById = jest.fn((id) => {
+            if (id === 'modal') {
+                return {
+                    style: {
+                        display: ''
+                    }
+                };
+            }
+            if (id === 'videoFrame') {
+                return {
+                    src: '',
+                    setAttribute: jest.fn()
+                };
+            }
+            return null;
         });
+
         document.getElementsByClassName = jest.fn().mockReturnValue([{
-            onclick: jest.fn()
+            onclick: jest.fn(),
+            addEventListener: jest.fn()
         }]);
 
-        // Improved mock with getAttribute method and addEventListener
-        document.querySelectorAll = jest.fn().mockReturnValue([{
-            addEventListener: jest.fn(),
-            getAttribute: jest.fn().mockReturnValue('some-video-id') // Mock return value for 'data-video-id'
-        }]);
+        document.querySelectorAll = jest.fn().mockImplementation(selector => {
+            if (selector === '.video-card') {
+                return [{
+                    addEventListener: jest.fn(),
+                    getAttribute: jest.fn((attr) => {
+                        if (attr === 'data-video-id') return 'test-video-id';
+                        if (attr === 'data-video-url') return 'http://example.com/watch?v=1234';
+                    }),
+                    querySelector: jest.fn().mockImplementation((subSelector) => {
+                        if (subSelector === '.like-btn') return { 
+                            classList: { toggle: jest.fn() },
+                            innerHTML: '',
+                            addEventListener: jest.fn(),
+                            nextElementSibling: {
+                                textContent: ''
+                            }
+                        };
+                        if (subSelector === '.like-count') return { textContent: '' };
+                        return null;
+                    })
+                }];
+            }
+            return [];
+        });
     });
 
     it('initializes class properties correctly', () => {
@@ -30,10 +58,19 @@ describe('VideoModal - constructor', () => {
         expect(document.getElementById).toHaveBeenCalledWith('videoFrame');
         expect(document.getElementsByClassName).toHaveBeenCalledWith('close');
         expect(document.querySelectorAll).toHaveBeenCalledWith('.video-card');
+    });
 
-        // Ensure mocked elements behave correctly
-        const mockCard = document.querySelectorAll()[0];
-        expect(mockCard.getAttribute('data-video-id')).toBe('some-video-id');
-        expect(mockCard.addEventListener).toHaveBeenCalled();
+    it('should handle click on video card correctly', () => {
+        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
+        const mockVideoCard = document.querySelectorAll('.video-card')[0];
+        
+        // Simulates clicking the video card
+        mockVideoCard.addEventListener.mock.calls[0][1]({
+           preventDefault: jest.fn() 
+        });
+
+        // Expectations such as if the modal opens correctly, video URL is transformed, etc.
+        expect(videoModal.modal.style.display).toBe('block');
+        expect(videoModal.videoFrame.src).toContain('embed/');
     });
 });
