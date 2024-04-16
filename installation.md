@@ -144,6 +144,7 @@ https://dash.cloudflare.com/<accound-id>/workers/kv/namespaces
 coolfrog.articles
 coolfrog.emails
 coolfrog.leaderboard
+coolfrog.likes
 coolfrog.sessions
 coolfrog.users
 ```
@@ -189,9 +190,10 @@ Variable name		KV namespace
 --------------------------------------------
 COOLFROG_ARTICLES	coolfrog.articles
 COOLFROG_EMAILS		coolfrog.emails
+COOLFROG_LEADERBOARD	coolfrog.leaderboard
+COOLFROG_LIKES		coolfrog.likes
 COOLFROG_SESSIONS	coolfrog.sessions
 COOLFROG_USERS		coolfrog.users
-COOLFROG_LEADERBOARD	coolfrog.leaderboard
 ```
 
 - Set the following **D1 database bindings**:
