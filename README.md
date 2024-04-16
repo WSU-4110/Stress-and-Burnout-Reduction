@@ -33,7 +33,7 @@ At this level, pages are designed for the individual Software Engineer.
 ### Global
 
 - [/forums](https://www.coolfrog.net/forums): This is the regular forums, without a meetup feature. Any Software Engineer in the world can make forum topics and all Software Engineers can respond.
-- [/forums](https://www.coolfrog.net/meetups): This is the meetup forum, where users can make posts for upcoming meetups that they want to organize, and people can respond affirmatively.
+- [/meetup](https://www.coolfrog.net/meetups): This is the meetup forum, where users can make posts for upcoming meetups that they want to organize, and people can respond affirmatively.
 - [/account](https://www.coolfrog.net/account): In addition to other links, this page shows the Weekly and Daily challenge. The Weekly is the most active member challenge, and the Daily is the second most active member challenge ([/challenge](https://www.coolfrog.net/challenge)). As members complete old challenges and new ones arise, they are automatically populated.
 - [/challenge](https://www.coolfrog.net/challenge): Software Engineers can create challenges for other website members to do for reducing stress and burnout. The user can see their progress, as well as the entire community of Software Engineers.
 - [/leaderboard](https://www.coolfrog.net/leaderboard): This presents the user with a login streak of all users on the website, and see who is the top of the leaderboard.
