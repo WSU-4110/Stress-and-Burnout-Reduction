@@ -55,40 +55,26 @@ export async function onRequestPost({ request, env }) {
 }
 
 async function renderForumsPage(username, env) {
+    let topics = await fetchTopics(env);
     let user = await env.COOLFROG_USERS.get(username);
     user = JSON.parse(user);
 
-    // Extracting unique email domains for the dropdown
+    // Extracting unique email domains to filter topics by these groups
     const emailDomains = [...new Set(user.emails.map(email => email.email.split('@')[1]))];
 
-    const topicsByGroup = await Promise.all(emailDomains.map(domain => fetchTopicsByDomain(env, domain)));
+    // Filtering topics by the user's email groups
+    const filteredTopics = topics.filter(topic => emailDomains.includes(topic.email_group.replace('@', '')));
+
     const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
 
-    let topicsHtml = '';
-    topicsByGroup.forEach((topics, index) => {
-        topicsHtml += `
-            <h3>@${emailDomains[index]}</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                ${topics.map(topic => `
-                    <tr>
-                        <td><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
-                        <td>${topic.username}</td>
-                        <td>${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
-                    </tr>
-                `).join('')}
-                </tbody>
-            </table>
-        `;
-    });
-
+    const topicsHtml = filteredTopics.map(topic => `
+        <tr>
+            <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
+            <td style="width: 20%;">${topic.username}</td>
+            <td style="width: 10%;">${username === topic.username ? `<form action="/meetups/delete-topic/${topic.id}" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>` : ''}</td>
+        </tr>
+    `).join('');
+  
     const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -101,7 +87,16 @@ async function renderForumsPage(username, env) {
         <body>
             <div class="container mt-4">
                 <h1>Forum Topics</h1>
-                ${topicsHtml}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>${topicsHtml}</tbody>
+                </table>
                 <form method="post" action="/meetups/add-topic">
                     <input type="text" name="title" placeholder="Enter topic title" class="form-control mb-2" required>
                     <select name="email_group" class="form-control mb-2">${emailGroupOptions}</select>
@@ -116,10 +111,27 @@ async function renderForumsPage(username, env) {
                     <button type="submit" class="btn btn-primary">Add Topic</button>
                 </form>
             </div>
+            <script>
+                function toggleLocationLink(value) {
+                    const locationInput = document.querySelector('input[name="location"]');
+                    const linkInput = document.querySelector('input[name="link"]');
+                    if (value === 'InPerson') {
+                        locationInput.hidden = false;
+                        linkInput.hidden = true;
+                    } else {
+                        locationInput.hidden = true;
+                        linkInput.hidden = false;
+                    }
+                }
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Default to 'In Person' on initial load
+                    toggleLocationLink(document.querySelector('select[name="meeting_type"]').value);
+                });
+            </script>
         </body>
         </html>
     `;
-
+  
     return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
 }
 
@@ -204,9 +216,9 @@ async function addPost(title, body, topicId, username, env) {
     return new Response(null, { status: 303, headers: { 'Location': `/meetups/topic/${topicId}` } });
 }
 
-async function fetchTopicsByDomain(env, domain) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics WHERE email_group = ?");
-    return await stmt.all(domain);
+async function fetchTopics(env) {
+    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics ORDER BY title");
+    return (await stmt.all()).results;
 }
 
 async function fetchTopicById(topicId, env) {
