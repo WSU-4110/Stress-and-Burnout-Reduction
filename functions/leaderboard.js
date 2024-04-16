@@ -1,33 +1,38 @@
-import { v4 as uuidv4 } from 'uuid';
+import {
+	v4 as uuidv4
+} from 'uuid';
 
-export async function onRequestGet({ request, env }) {
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestGet({
+	request,
+	env
+}) {
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    // Fetch all users and their login streaks
-    const leaderboardData = await env.COOLFROG_LEADERBOARD.list();
-    let users = await Promise.all(leaderboardData.keys.map(async (key) => ({
-        username: key.name,
-        streak: parseInt(await env.COOLFROG_LEADERBOARD.get(key.name), 10)
-    })));
+	// Fetch all users and their login streaks
+	const leaderboardData = await env.COOLFROG_LEADERBOARD.list();
+	let users = await Promise.all(leaderboardData.keys.map(async (key) => ({
+		username: key.name,
+		streak: parseInt(await env.COOLFROG_LEADERBOARD.get(key.name), 10)
+	})));
 
-    // Sort users by login streak
-    users.sort((a, b) => b.streak - a.streak);
+	// Sort users by login streak
+	users.sort((a, b) => b.streak - a.streak);
 
-    // Determine the top user
-    const topStreak = Math.max(...users.map(user => user.streak));
-    const topUsers = users.filter(user => user.streak === topStreak);
-    let topUserDisplay = topUsers.length > 1 ? '[Tied: No Winner]' : `${topUsers[0].username} (${topUsers[0].streak} days)`;
+	// Determine the top user
+	const topStreak = Math.max(...users.map(user => user.streak));
+	const topUsers = users.filter(user => user.streak === topStreak);
+	let topUserDisplay = topUsers.length > 1 ? '[Tied: No Winner]' : `${topUsers[0].username} (${topUsers[0].streak} days)`;
 
-    // Current logged in user's info for display
-    const currentUserStreak = users.find(user => user.username === session.username).streak;
+	// Current logged in user's info for display
+	const currentUserStreak = users.find(user => user.username === session.username).streak;
 
-    // HTML for the leaderboard page
-    const pageHtml = `
+	// HTML for the leaderboard page
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -152,16 +157,25 @@ export async function onRequestGet({ request, env }) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    return Object.fromEntries(cookies)['session-id'];
+	const cookieHeader = request.headers.get('Cookie');
+	if (!cookieHeader) return null;
+	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+	return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+	return new Response("Unauthorized - Please log in.", {
+		status: 403,
+		headers: {
+			'Content-Type': 'text/plain'
+		}
+	});
 }

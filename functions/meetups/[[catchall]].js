@@ -1,68 +1,80 @@
-import { v4 as uuidv4 } from 'uuid';
+import {
+	v4 as uuidv4
+} from 'uuid';
 
-export async function onRequestGet({ request, env }) {
-    const url = new URL(request.url);
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestGet({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
-    
-    if (url.pathname === '/meetups') {
-        return renderForumsPage(session.username, env);
-    } else if (url.pathname.startsWith('/meetups/topic/')) {
-        const topicId = url.pathname.split('/')[3];
-        return renderTopicPage(topicId, session.username, env);
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    return new Response("Resource Not Found", { status: 404 });
+	if (url.pathname === '/meetups') {
+		return renderForumsPage(session.username, env);
+	} else if (url.pathname.startsWith('/meetups/topic/')) {
+		const topicId = url.pathname.split('/')[3];
+		return renderTopicPage(topicId, session.username, env);
+	}
+
+	return new Response("Resource Not Found", {
+		status: 404
+	});
 }
 
-export async function onRequestPost({ request, env }) {
-    const url = new URL(request.url);
-    const formData = await request.formData();
-    const sessionCookie = getSessionCookie(request);
-    let session;
+export async function onRequestPost({
+	request,
+	env
+}) {
+	const url = new URL(request.url);
+	const formData = await request.formData();
+	const sessionCookie = getSessionCookie(request);
+	let session;
 
-    if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
-        return unauthorizedResponse();
-    }
+	if (!sessionCookie || !(session = JSON.parse(await env.COOLFROG_SESSIONS.get(sessionCookie)))) {
+		return unauthorizedResponse();
+	}
 
-    if (url.pathname === "/meetups/add-topic") {
-        const title = formData.get('title').trim();
-        const emailGroup = formData.get('email_group').trim();
-        const description = formData.get('description').trim();
-        const meetingType = formData.get('meeting_type').trim();
-        const locationOrLink = meetingType === 'InPerson' ? formData.get('location').trim() : formData.get('link').trim();
-        const datetime = formData.get('datetime').trim();
-        return addTopic(title, emailGroup, description, meetingType, locationOrLink, datetime, session.username, env);
-    } else if (url.pathname.startsWith("/meetups/delete-topic/")) {
-        const topicId = url.pathname.split('/')[3];
-        return deleteTopic(topicId, session.username, env);
-    } else if (url.pathname.startsWith("/meetups/topic/") && url.pathname.endsWith('/add-post')) {
-        const topicId = url.pathname.split('/')[3];
-        const title = formData.get('title');
-        const body = formData.get('body');
-        return addPost(title, body, topicId, session.username, env);
-    } else if (url.pathname.startsWith("/meetups/topic/") && url.pathname.endsWith('/delete-post')) {
-        const postId = formData.get('post_id');
-        const topicId = formData.get('topic_id');
-        return deletePost(postId, topicId, session.username, env);
-    }
+	if (url.pathname === "/meetups/add-topic") {
+		const title = formData.get('title').trim();
+		const emailGroup = formData.get('email_group').trim();
+		const description = formData.get('description').trim();
+		const meetingType = formData.get('meeting_type').trim();
+		const locationOrLink = meetingType === 'InPerson' ? formData.get('location').trim() : formData.get('link').trim();
+		const datetime = formData.get('datetime').trim();
+		return addTopic(title, emailGroup, description, meetingType, locationOrLink, datetime, session.username, env);
+	} else if (url.pathname.startsWith("/meetups/delete-topic/")) {
+		const topicId = url.pathname.split('/')[3];
+		return deleteTopic(topicId, session.username, env);
+	} else if (url.pathname.startsWith("/meetups/topic/") && url.pathname.endsWith('/add-post')) {
+		const topicId = url.pathname.split('/')[3];
+		const title = formData.get('title');
+		const body = formData.get('body');
+		return addPost(title, body, topicId, session.username, env);
+	} else if (url.pathname.startsWith("/meetups/topic/") && url.pathname.endsWith('/delete-post')) {
+		const postId = formData.get('post_id');
+		const topicId = formData.get('topic_id');
+		return deletePost(postId, topicId, session.username, env);
+	}
 
-    return new Response("Bad Request", { status: 400 });
+	return new Response("Bad Request", {
+		status: 400
+	});
 }
 
 async function renderForumsPage(username, env) {
-    let user = await env.COOLFROG_USERS.get(username);
-    user = JSON.parse(user);
+	let user = await env.COOLFROG_USERS.get(username);
+	user = JSON.parse(user);
 
-    // Extracting unique email domains for the dropdown and preparing to fetch topics separately
-    const emailDomains = [...new Set(user.emails.map(email => email.email.split('@')[1]))];
-    const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
-    
-    let pageHtml = `
+	// Extracting unique email domains for the dropdown and preparing to fetch topics separately
+	const emailDomains = [...new Set(user.emails.map(email => email.email.split('@')[1]))];
+	const emailGroupOptions = emailDomains.map(domain => `<option value="${domain}">@${domain}</option>`).join('');
+
+	let pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -138,9 +150,9 @@ async function renderForumsPage(username, env) {
             <div class="container mt-4">
                 <h1>Meetups Topics</h1>`;
 
-    for (let domain of emailDomains) {
-        let topics = await fetchTopicsByEmailGroup(domain, env);
-        const topicsHtml = topics.map(topic => `
+	for (let domain of emailDomains) {
+		let topics = await fetchTopicsByEmailGroup(domain, env);
+		const topicsHtml = topics.map(topic => `
             <tr>
                 <td style="width: 70%;"><a href="/meetups/topic/${topic.id}">${topic.title}</a></td>
                 <td style="width: 20%;">${topic.username}</td>
@@ -149,7 +161,7 @@ async function renderForumsPage(username, env) {
             </tr>
         `).join('');
 
-        pageHtml += `
+		pageHtml += `
                 <div class="email-group-section">
                     <h2>@${domain} Meetups</h2>
                     <table class="table table-striped">
@@ -163,9 +175,9 @@ async function renderForumsPage(username, env) {
                         <tbody>${topicsHtml}</tbody>
                     </table>
                 </div>`;
-    }
+	}
 
-    pageHtml += `
+	pageHtml += `
                 <form method="post" action="/meetups/add-topic">
                     <input type="text" name="title" placeholder="Enter meetup title" class="form-control mb-2" required>
                     <select name="email_group" class="form-control mb-2">${emailGroupOptions}</select>
@@ -227,15 +239,19 @@ async function renderForumsPage(username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 async function renderTopicPage(topicId, username, env) {
-    let topic = (await fetchTopicById(topicId, env))[0];
-    let posts = await fetchPostsForTopic(topicId, env);
+	let topic = (await fetchTopicById(topicId, env))[0];
+	let posts = await fetchPostsForTopic(topicId, env);
 
-    // Pinned topic information card
-    const topicInformationHtml = `
+	// Pinned topic information card
+	const topicInformationHtml = `
         <div class="card mb-3">
             <div class="card-body">
                 <h5 class="card-title">${topic.title}</h5>
@@ -250,7 +266,7 @@ async function renderTopicPage(topicId, username, env) {
         </div>
     `;
 
-    const postsHtml = posts.map(post => `
+	const postsHtml = posts.map(post => `
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span>@${post.username}</span>
@@ -270,7 +286,7 @@ async function renderTopicPage(topicId, username, env) {
         </div>
     `).join('');
 
-    const pageHtml = `
+	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -384,56 +400,85 @@ async function renderTopicPage(topicId, username, env) {
         </html>
     `;
 
-    return new Response(pageHtml, { headers: {'Content-Type': 'text/html'} });
+	return new Response(pageHtml, {
+		headers: {
+			'Content-Type': 'text/html'
+		}
+	});
 }
 
 
 async function addTopic(title, emailGroup, description, meetingType, locationOrLink, datetime, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO topics (id, title, email_group, description, meeting_type, location_or_link, datetime, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    await stmt.bind(uuidv4(), title, emailGroup, description, meetingType, locationOrLink, datetime, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': '/meetups' } });
+	const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO topics (id, title, email_group, description, meeting_type, location_or_link, datetime, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+	await stmt.bind(uuidv4(), title, emailGroup, description, meetingType, locationOrLink, datetime, username).run();
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': '/meetups'
+		}
+	});
 }
 
 async function addPost(title, body, topicId, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
-    await stmt.bind(uuidv4(), title, body, topicId, username).run();
-    return new Response(null, { status: 303, headers: { 'Location': `/meetups/topic/${topicId}` } });
+	const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
+	await stmt.bind(uuidv4(), title, body, topicId, username).run();
+	return new Response(null, {
+		status: 303,
+		headers: {
+			'Location': `/meetups/topic/${topicId}`
+		}
+	});
 }
 
 async function fetchTopicsByEmailGroup(emailDomain, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics WHERE email_group = ?");
-    return (await stmt.bind(emailDomain).all()).results;
+	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics WHERE email_group = ?");
+	return (await stmt.bind(emailDomain).all()).results;
 }
 
 async function fetchTopicById(topicId, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, email_group, description, meeting_type, location_or_link, datetime, username FROM topics WHERE id = ?");
-    return (await stmt.bind(topicId).all()).results;
+	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, email_group, description, meeting_type, location_or_link, datetime, username FROM topics WHERE id = ?");
+	return (await stmt.bind(topicId).all()).results;
 }
 
 async function fetchPostsForTopic(topicId, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
-    return (await stmt.bind(topicId).all()).results;
+	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
+	return (await stmt.bind(topicId).all()).results;
 }
 
 async function deleteTopic(topicId, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
-    await stmt.bind(topicId, username).run();
-    return new Response(null, { status: 204, headers: { 'Location': '/meetups' } });
+	const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
+	await stmt.bind(topicId, username).run();
+	return new Response(null, {
+		status: 204,
+		headers: {
+			'Location': '/meetups'
+		}
+	});
 }
 
 async function deletePost(postId, topicId, username, env) {
-    const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
-    await stmt.bind(postId, username).run();
-    return new Response(null, { status: 204, headers: { 'Location': `/meetups/topic/${topicId}` } });
+	const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
+	await stmt.bind(postId, username).run();
+	return new Response(null, {
+		status: 204,
+		headers: {
+			'Location': `/meetups/topic/${topicId}`
+		}
+	});
 }
 
 function getSessionCookie(request) {
-    const cookieHeader = request.headers.get('Cookie');
-    if (!cookieHeader) return null;
-    const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
-    return Object.fromEntries(cookies)['session-id'];
+	const cookieHeader = request.headers.get('Cookie');
+	if (!cookieHeader) return null;
+	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
+	return Object.fromEntries(cookies)['session-id'];
 }
 
 function unauthorizedResponse() {
-    return new Response("Unauthorized - Please log in.", {status: 403, headers: {'Content-Type': 'text/plain'}});
+	return new Response("Unauthorized - Please log in.", {
+		status: 403,
+		headers: {
+			'Content-Type': 'text/plain'
+		}
+	});
 }
