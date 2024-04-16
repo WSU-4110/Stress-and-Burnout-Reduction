@@ -1,47 +1,53 @@
 const VideoModal = require('../scripts/videopage');
 
-// Mock fetch
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({ likes: 10, liked: true })
-  })
-);
+// Setting up a full mock for fetch within Jest
+beforeAll(() => {
+  global.fetch = jest.fn();
+});
 
-describe('VideoModal', () => {
-    let mockModal, mockVideoFrame, mockCards;
+afterAll(() => {
+  global.fetch.mockRestore();
+});
 
+describe('VideoModal - openModal', () => {
+    let mockModal, mockVideoFrame;
+    
     beforeEach(() => {
-        fetch.mockClear();
+        // Clear mocks before each test
+        fetch.mockClear().mockResolvedValue({
+          ok: true,
+          json: () => Promise.resolve({ likes: 10, liked: true })
+        });
 
+        // Mock modal and videoFrame elements
         mockModal = { style: { display: 'none' } };
         mockVideoFrame = { src: '' };
-        mockCards = [{
-            getAttribute: jest.fn().mockReturnValue('123'),
-            querySelector: jest.fn().mockReturnValue({
-                textContent: '',
-                classList: {
-                    toggle: jest.fn()
-                },
-                innerHTML: ''
-            })
-        }];
-        
-        document.getElementById = jest.fn((id) => ({
-            'modal': mockModal,
-            'videoFrame': mockVideoFrame
-        })[id]);
 
-        document.getElementsByClassName = jest.fn().mockReturnValue([{ onclick: null }]);
-        document.querySelectorAll = jest.fn().mockReturnValue(mockCards);
+        // Using jest.spyOn to mock document API calls
+        jest.spyOn(document, 'getElementById').mockImplementation((id) => {
+            if (id === 'modal') return mockModal;
+            if (id === 'videoFrame') return mockVideoFrame;
+            return null;
+        });
+
+        // Mocking classes and query selectors
+        jest.spyOn(document, 'getElementsByClassName').mockReturnValue([{ onclick: jest.fn() }]);
+        jest.spyOn(document, 'querySelectorAll').mockReturnValue([{
+            addEventListener: jest.fn(),
+            getAttribute: jest.fn().mockReturnValue('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+        }]);
     });
 
-    it('updates all like states when initialized', async () => {
-        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        await videoModal.updateAllLikeStates();
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
 
-        expect(fetch).toHaveBeenCalledTimes(mockCards.length);
-        expect(mockCards[0].querySelector).toHaveBeenCalledWith('.like-btn');
-        expect(mockCards[0].querySelector).toHaveBeenCalledWith('.like-count');
+    it('sets videoFrame src and displays modal', () => {
+        const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
+        const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+        videoModal.openModal(testUrl);
+
+        expect(mockVideoFrame.src).toContain('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
+        expect(mockModal.style.display).toBe('block');
     });
 });
