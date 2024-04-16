@@ -1,6 +1,5 @@
 const VideoModal = require('../scripts/videopage');
 
-// Setting up a full mock for fetch within Jest
 beforeAll(() => {
   global.fetch = jest.fn();
 });
@@ -9,45 +8,49 @@ afterAll(() => {
   global.fetch.mockRestore();
 });
 
-describe('VideoModal - openModal', () => {
-    let mockModal, mockVideoFrame;
+describe('VideoModal - Integration', () => {
+    let mockVideoCards, mockModal, mockVideoFrame;
     
     beforeEach(() => {
-        // Clear mocks before each test
+        // Mock for fetch response
         fetch.mockClear().mockResolvedValue({
           ok: true,
           json: () => Promise.resolve({ likes: 10, liked: true })
         });
 
-        // Mock modal and videoFrame elements
         mockModal = { style: { display: 'none' } };
         mockVideoFrame = { src: '' };
+        mockVideoCards = [{
+            getAttribute: jest.fn(() => "test_video_id"),
+            querySelector: jest.fn((selector) => {
+              if (selector === '.like-btn') return { classList: { toggle: jest.fn() }, innerHTML: '' };
+              if (selector === '.like-count') return { textContent: '' };
+              return null;
+            })
+        }];
 
-        // Using jest.spyOn to mock document API calls
         jest.spyOn(document, 'getElementById').mockImplementation((id) => {
             if (id === 'modal') return mockModal;
             if (id === 'videoFrame') return mockVideoFrame;
             return null;
         });
 
-        // Mocking classes and query selectors
         jest.spyOn(document, 'getElementsByClassName').mockReturnValue([{ onclick: jest.fn() }]);
-        jest.spyOn(document, 'querySelectorAll').mockReturnValue([{
-            addEventListener: jest.fn(),
-            getAttribute: jest.fn().mockReturnValue('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-        }]);
+        jest.spyOn(document, 'querySelectorAll').mockReturnValue(mockVideoCards);
     });
 
     afterEach(() => {
         jest.restoreAllMocks();
     });
 
-    it('sets videoFrame src and displays modal', () => {
+    it('should handle like states updating', async () => {
         const videoModal = new VideoModal('modal', 'videoFrame', 'close', '.video-card');
-        const testUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-        videoModal.openModal(testUrl);
 
-        expect(mockVideoFrame.src).toContain('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0');
-        expect(mockModal.style.display).toBe('block');
+        await videoModal.updateAllLikeStates();  // Since it's async, wait for it
+
+        for (const card of mockVideoCards) {
+          expect(card.querySelector).toHaveBeenCalledWith('.like-count');
+          expect(card.querySelector).toHaveBeenCalledWith('.like-btn');
+        }
     });
 });

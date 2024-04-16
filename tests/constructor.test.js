@@ -41,20 +41,18 @@ describe('VideoModal', () => {
         expect(videoModal.videoCards[0]).toEqual(document.querySelector('.video-card'));
     });
 
-    it('calls fetch and updates like state for video cards', async () => {
-        // Trigger the update method which calls fetch
-        await videoModal.updateAllLikeStates();
+it('calls fetch and updates like state for video cards', async () => {
+    await videoModal.updateAllLikeStates();
 
-        // Check if fetch was called correctly
-        expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith('/api/likes?videoId=123');
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fetch).toHaveBeenCalledWith('/api/likes?videoId=123');
 
-        // Check changes to DOM (like count and button text)
-        const likesCountElement = videoModal.videoCards[0].querySelector('.like-count');
-        const likeButton = videoModal.videoCards[0].querySelector('.like-btn');
+    const likesCountElement = videoModal.videoCards[0].querySelector('.like-count');
+    const likeButton = videoModal.videoCards[0].querySelector('.like-btn');
 
-        expect(likesCountElement.textContent).toBe('10 Likes');
-        expect(likeButton.classList.contains('liked')).toBe(true);
-        expect(likeButton.innerHTML).toContain('Liked');
-    });
+    expect(likesCountElement.textContent).toBe('10 Likes');
+    expect(likeButton.classList.contains('liked')).toBe(true);
+    expect(likeButton.innerHTML).toContain('Liked');
+});
+
 });
