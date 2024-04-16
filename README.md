@@ -28,14 +28,14 @@ At this level, pages are designed for the individual Software Engineer.
 
 ### Organizational
 
-- [/meetups](https://www.coolfrog.net/meetups): 
+- [/meetups](https://www.coolfrog.net/meetups): The meetups forums is a place for Software Engineers within the same organization. Organizations are determined by the email of your account (which means if you set multiple emails in the [/config](https://www.coolfrog.net/config) then you can see multiple organizations). For example, all @intel.com engineers can talk to another on the fourms and create meetups (either in person with a location, or online with a meeting link) which has a title, description and date and time. This makes it easy for Software Engineers to connect with their coworkers in the goal of reducing stress and burnout.
 
 ### Global
 
-- [/forums](https://www.coolfrog.net/forums): 
-- [/account](https://www.coolfrog.net/account): 
-- [/challenge](https://www.coolfrog.net/challenge): 
-- [/leaderboard](https://www.coolfrog.net/leaderboard): 
+- [/forums](https://www.coolfrog.net/forums): This is the regular forums, without a meetup feature. Any Software Engineer in the world can make forum topics and all Software Engineers can respond.
+- [/account](https://www.coolfrog.net/account): In addition to other links, this page shows the Weekly and Daily challenge. The Weekly is the most active member challenge, and the Daily is the second most active member challenge ([/challenge](https://www.coolfrog.net/challenge)). As members complete old challenges and new ones arise, they are automatically populated.
+- [/challenge](https://www.coolfrog.net/challenge): Software Engineers can create challenges for other website members to do for reducing stress and burnout. The user can see their progress, as well as the entire community of Software Engineers.
+- [/leaderboard](https://www.coolfrog.net/leaderboard): This presents the user with a login streak of all users on the website, and see who is the top of the leaderboard.
 
 ### Technical
 
