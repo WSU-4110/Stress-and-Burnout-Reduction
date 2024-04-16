@@ -7,7 +7,6 @@ describe("VideoModal Class Tests", () => {
   let videoModal;
 
   beforeEach(() => {
-    // Set up our document body
     document.body.innerHTML = `
       <div id="modal">
         <iframe id="videoFrame"></iframe>
@@ -18,6 +17,15 @@ describe("VideoModal Class Tests", () => {
         <span class="like-count">0 Likes</span>
       </div>
     `;
+
+    // Reset fetch mocks
+    fetch.mockClear();
+
+    // Set up mocks for all fetch calls with default values. Ensure every call to fetch is reckoned.
+    fetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({likes: 15, liked: true})
+    });
 
     videoModal = new VideoModal("modal", "videoFrame", "close", ".video-card");
   });
@@ -33,19 +41,7 @@ describe("VideoModal Class Tests", () => {
   });
 
   test("correctly updates the states of like buttons and counts", async () => {
-    // Mocking fetch's resolved value
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({likes: 15, liked: true})
-    });
-
-    // We have to mock or otherwise ensure init doesn't lead to uncontrolled fetch calls.
-    videoModal.init = jest.fn();
-    videoModal.updateAllLikeStates = jest.fn();
-
-    document.querySelector('.like-btn').dispatchEvent(new MouseEvent('click', {bubbles: true}));
-
-    await videoModal.updateAllLikeStates(); // Manually calling the mocked function to simulate fetching process
+    await videoModal.updateAllLikeStates();
 
     const likeCountElement = document.querySelector('.like-count');
     const likeButton = document.querySelector('.like-btn');
