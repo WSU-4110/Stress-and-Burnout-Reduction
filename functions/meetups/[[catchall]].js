@@ -66,7 +66,7 @@ export async function onRequestPost({
 	});
 }
 
-async function renderForumsPage(username, env) {
+export async function renderForumsPage(username, env) {
 	let user = await env.COOLFROG_USERS.get(username);
 	user = JSON.parse(user);
 
@@ -246,7 +246,7 @@ async function renderForumsPage(username, env) {
 	});
 }
 
-async function renderTopicPage(topicId, username, env) {
+export async function renderTopicPage(topicId, username, env) {
 	let topic = (await fetchTopicById(topicId, env))[0];
 	let posts = await fetchPostsForTopic(topicId, env);
 
@@ -408,7 +408,7 @@ async function renderTopicPage(topicId, username, env) {
 }
 
 
-async function addTopic(title, emailGroup, description, meetingType, locationOrLink, datetime, username, env) {
+export async function addTopic(title, emailGroup, description, meetingType, locationOrLink, datetime, username, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO topics (id, title, email_group, description, meeting_type, location_or_link, datetime, username) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 	await stmt.bind(uuidv4(), title, emailGroup, description, meetingType, locationOrLink, datetime, username).run();
 	return new Response(null, {
@@ -419,7 +419,7 @@ async function addTopic(title, emailGroup, description, meetingType, locationOrL
 	});
 }
 
-async function addPost(title, body, topicId, username, env) {
+export async function addPost(title, body, topicId, username, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
 	await stmt.bind(uuidv4(), title, body, topicId, username).run();
 	return new Response(null, {
@@ -430,22 +430,22 @@ async function addPost(title, body, topicId, username, env) {
 	});
 }
 
-async function fetchTopicsByEmailGroup(emailDomain, env) {
+export async function fetchTopicsByEmailGroup(emailDomain, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, username FROM topics WHERE email_group = ?");
 	return (await stmt.bind(emailDomain).all()).results;
 }
 
-async function fetchTopicById(topicId, env) {
+export async function fetchTopicById(topicId, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, email_group, description, meeting_type, location_or_link, datetime, username FROM topics WHERE id = ?");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-async function fetchPostsForTopic(topicId, env) {
+export async function fetchPostsForTopic(topicId, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-async function deleteTopic(topicId, username, env) {
+export async function deleteTopic(topicId, username, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
 	await stmt.bind(topicId, username).run();
 	return new Response(null, {
@@ -456,7 +456,7 @@ async function deleteTopic(topicId, username, env) {
 	});
 }
 
-async function deletePost(postId, topicId, username, env) {
+export async function deletePost(postId, topicId, username, env) {
 	const stmt = env.COOLFROG_MEETUPS.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
 	await stmt.bind(postId, username).run();
 	return new Response(null, {
@@ -467,14 +467,14 @@ async function deletePost(postId, topicId, username, env) {
 	});
 }
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {
