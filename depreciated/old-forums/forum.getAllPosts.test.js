@@ -1,6 +1,10 @@
 import {
 	getAllPosts
-} from '../functions/forum.js';
+} from './getForumPosts.js';
+
+import {
+	jest
+} from "@jest/globals";
 
 const mockEnv = {
 	COOLFROG_FORUM: {

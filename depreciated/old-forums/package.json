@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "set NODE_OPTIONS=--experimental-vm-modules && jest"
+  },
+  "jest": {
+    "transform": {},
+    "verbose": true,
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    }
+  },
+  "devDependencies": {
+    "jest": "^29.4.3",
+    "uuid": "^9.0.1"
+  }
+}
