@@ -60,7 +60,7 @@ export async function onRequestPost({
 	});
 }
 
-async function renderForumsPage(username, env) {
+export async function renderForumsPage(username, env) {
 	let topics = await fetchTopics(env);
 
 	const topicsHtml = topics.map(topic => `
@@ -194,7 +194,7 @@ async function renderForumsPage(username, env) {
 	});
 }
 
-async function renderTopicPage(topicId, username, env) {
+export async function renderTopicPage(topicId, username, env) {
 	let topic = (await fetchTopicById(topicId, env))[0];
 	let posts = await fetchPostsForTopic(topicId, env);
 
@@ -334,7 +334,7 @@ async function renderTopicPage(topicId, username, env) {
 }
 
 
-async function addTopic(title, username, env) {
+export async function addTopic(title, username, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO topics (id, title, username) VALUES (?, ?, ?)");
 	await stmt.bind(uuidv4(), title, username).run();
 	return new Response(null, {
@@ -345,7 +345,7 @@ async function addTopic(title, username, env) {
 	});
 }
 
-async function deleteTopic(topicId, username, env) {
+export async function deleteTopic(topicId, username, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
 	await stmt.bind(topicId, username).run();
 	return new Response(null, {
@@ -353,7 +353,7 @@ async function deleteTopic(topicId, username, env) {
 	});
 }
 
-async function addPost(title, body, topicId, username, env) {
+export async function addPost(title, body, topicId, username, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("INSERT INTO posts (id, title, body, topic_id, username) VALUES (?, ?, ?, ?, ?)");
 	await stmt.bind(uuidv4(), title, body, topicId, username).run();
 	return new Response(null, {
@@ -364,7 +364,7 @@ async function addPost(title, body, topicId, username, env) {
 	});
 }
 
-async function deletePost(postId, username, env) {
+export async function deletePost(postId, username, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("DELETE FROM posts WHERE id = ? AND username = ?");
 	await stmt.bind(postId, username).run();
 	return new Response(null, {
@@ -372,29 +372,29 @@ async function deletePost(postId, username, env) {
 	});
 }
 
-async function fetchTopics(env) {
+export async function fetchTopics(env) {
 	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics ORDER BY title");
 	return (await stmt.all()).results;
 }
 
-async function fetchTopicById(topicId, env) {
+export async function fetchTopicById(topicId, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, username FROM topics WHERE id = ?");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-async function fetchPostsForTopic(topicId, env) {
+export async function fetchPostsForTopic(topicId, env) {
 	const stmt = env.COOLFROG_FORUM.prepare("SELECT id, title, body, username, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {
