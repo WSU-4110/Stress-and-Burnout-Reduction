@@ -100,7 +100,7 @@ export async function onRequestDelete({
 	}
 }
 
-async function renderPage(view, categoryId, selectedDate, env, username) {
+export async function renderPage(view, categoryId, selectedDate, env, username) {
 	const tasks = await getTasks(view, categoryId, selectedDate, env, username);
 	const categories = await getAllCategories(env, username);
 
@@ -378,7 +378,7 @@ async function renderPage(view, categoryId, selectedDate, env, username) {
 </html>`;
 }
 
-async function getTasks(view, categoryId, selectedDate, env, username) {
+export async function getTasks(view, categoryId, selectedDate, env, username) {
 	let stmt;
 	const today = new Date().toISOString().split('T')[0];
 
@@ -400,12 +400,12 @@ async function getTasks(view, categoryId, selectedDate, env, username) {
 	return (await stmt.bind(username).all()).results;
 }
 
-async function getAllCategories(env, username) {
+export async function getAllCategories(env, username) {
 	const stmt = env.COOLFROG_GOALS.prepare('SELECT * FROM categories WHERE username = ? ORDER BY name');
 	return (await stmt.bind(username).all()).results;
 }
 
-async function addTask(formData, env, username) {
+export async function addTask(formData, env, username) {
 	const description = formData.get('description');
 	const due_date = formData.get('due_date');
 	const category_id = formData.get('category_id') || null;
@@ -415,18 +415,18 @@ async function addTask(formData, env, username) {
 	await stmt.bind(description, due_date, category_id, priority_level, status, username).run();
 }
 
-async function addCategory(formData, env, username) {
+export async function addCategory(formData, env, username) {
 	const name = formData.get('name');
 	const stmt = env.COOLFROG_GOALS.prepare('INSERT INTO categories (name, username) VALUES (?, ?)');
 	await stmt.bind(name, username).run();
 }
 
-async function deleteTask(id, env, username) {
+export async function deleteTask(id, env, username) {
 	const stmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE id = ? AND username = ?`);
 	await stmt.bind(id, username).run();
 }
 
-async function updateTask(id, formData, env, username) {
+export async function updateTask(id, formData, env, username) {
 	const description = formData.get('description');
 	const due_date = formData.get('due_date');
 	const category_id = formData.get('category_id') || null;
@@ -436,19 +436,19 @@ async function updateTask(id, formData, env, username) {
 	await stmt.bind(description, due_date, category_id, priority_level, status, id, username).run();
 }
 
-async function updateCategory(id, formData, env, username) {
+export async function updateCategory(id, formData, env, username) {
 	const name = formData.get('name');
 	const stmt = env.COOLFROG_GOALS.prepare(`UPDATE categories SET name = ? WHERE id = ? AND username = ?`);
 	await stmt.bind(name, id, username).run();
 }
 
-async function resetCategory(id, env, username) {
+export async function resetCategory(id, env, username) {
 	// This function nullifies the category_id in tasks, impacting only those associated with a particular category for the signed-in user
 	const stmt = env.COOLFROG_GOALS.prepare('UPDATE tasks SET category_id = NULL WHERE category_id = ? AND username = ?');
 	await stmt.bind(id, username).run();
 }
 
-async function deleteCategory(id, env, username) {
+export async function deleteCategory(id, env, username) {
 	// Before deleting the category, optionally (if needed for application logic) delete or reset associated tasks
 	const deleteTasksStmt = env.COOLFROG_GOALS.prepare(`DELETE FROM tasks WHERE category_id = ? AND username = ?`);
 	await deleteTasksStmt.bind(id, username).run();
@@ -458,14 +458,14 @@ async function deleteCategory(id, env, username) {
 	await deleteCategoryStmt.bind(id, username).run();
 }
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {

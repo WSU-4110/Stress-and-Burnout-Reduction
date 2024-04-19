@@ -113,30 +113,23 @@ export async function returnTime() {
 
 // Function to parse meetingDate string into a date format
 export async function parseDate(date) {
-	// Given date string in the format "month day year"
-	const givenDateString = date;
+	const parts = date.split('-');
+	const month = parseInt(parts[0], 10);
+	const day = parseInt(parts[1], 10);
+	const year = parseInt(parts[2], 10);
 
-	// Split the string into components
-	const parts = givenDateString.split('-');
+	const givenDate = new Date(year, month - 1, day);
+	givenDate.setHours(0, 0, 0, 0);
 
-	// Extract month, day, and year from the components
-	const month = parseInt(parts[0]);
-	const day = parseInt(parts[1]);
-	const year = parseInt(parts[2]);
-
-	// Construct a Date object out of extracted components
-	const givenDate = new Date(year + 2000, month - 1, day);
-
-	// Get the current date
 	const currentDate = new Date();
+	currentDate.setHours(0, 0, 0, 0);
 
-	// Compare the given date with the current date
 	if (givenDate < currentDate) {
-		return 0; // Meeting date has already past
+		return 0;
 	} else if (givenDate > currentDate) {
-		return 1; // Meeting date is in future
+		return 1;
 	} else {
-		return 2; // Meeting date is today
+		return 2;
 	}
 }
 
