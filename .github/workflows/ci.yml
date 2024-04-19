@@ -26,6 +26,10 @@ jobs:
         run: npm install
         working-directory: ./functions
 
+      - name: Install legacy dependencies
+        run: npm install
+        working-directory: ./depreciated/old-forums
+
       - name: Run JavaScript tests
         run: npm test
         working-directory: .
@@ -33,3 +37,7 @@ jobs:
       - name: Run Cloudflare Workers tests
         run: npm test
         working-directory: ./functions
+
+      - name: Run Legacy tests
+        run: npm test
+        working-directory: ./depreciated/old-forums

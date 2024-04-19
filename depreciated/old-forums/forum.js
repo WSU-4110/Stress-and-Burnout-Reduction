@@ -41,7 +41,7 @@ export async function onRequestPost({
 			return new Response('Forum post created successfully!', {
 				status: 302,
 				headers: {
-					location: '/forum'
+					'Location': '/forum'
 				},
 			});
 
@@ -69,7 +69,7 @@ export async function onRequestPost({
 			return new Response('Meetup post created successfully!', {
 				status: 302,
 				headers: {
-					location: '/meetup'
+					'Location': '/meetup'
 				},
 			});
 		}
