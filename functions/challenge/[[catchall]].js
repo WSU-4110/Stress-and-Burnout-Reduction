@@ -59,7 +59,7 @@ export async function onRequestPost({
 	});
 }
 
-async function renderChallengesPage(username, env) {
+export async function renderChallengesPage(username, env) {
 	let topics = await fetchTopics(env);
 	let userPosts = await fetchPostsForUser(username, env);
 
@@ -240,7 +240,7 @@ async function renderChallengesPage(username, env) {
 	});
 }
 
-async function renderChallengeTopicPage(topicId, username, env) {
+export async function renderChallengeTopicPage(topicId, username, env) {
 	let topic = (await fetchTopicById(topicId, env))[0];
 	let posts = await fetchPostsForTopic(topicId, env);
 	let userPost = posts.find(p => p.username === username);
@@ -381,7 +381,7 @@ async function renderChallengeTopicPage(topicId, username, env) {
 	});
 }
 
-async function addTopic(title, username, env) {
+export async function addTopic(title, username, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO topics (id, title, username) VALUES (?, ?, ?)");
 	await stmt.bind(uuidv4(), title, username).run();
 	return new Response(null, {
@@ -392,7 +392,7 @@ async function addTopic(title, username, env) {
 	});
 }
 
-async function deleteTopic(topicId, username, env) {
+export async function deleteTopic(topicId, username, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("DELETE FROM topics WHERE id = ? AND username = ?");
 	await stmt.bind(topicId, username).run();
 	return new Response(null, {
@@ -400,7 +400,7 @@ async function deleteTopic(topicId, username, env) {
 	});
 }
 
-async function acceptChallenge(topicId, username, env) {
+export async function acceptChallenge(topicId, username, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("INSERT INTO posts (id, topic_id, username, title, status, post_date) VALUES (?, ?, ?, ?, ?, ?)");
 	const now = new Date().toISOString();
 	const title = `${username} has accepted the challenge`;
@@ -413,7 +413,7 @@ async function acceptChallenge(topicId, username, env) {
 	});
 }
 
-async function updateChallengeStatus(postId, newStatus, username, env) {
+export async function updateChallengeStatus(postId, newStatus, username, env) {
 	const updateStmt = env.COOLFROG_CHALLENGES.prepare("UPDATE posts SET title = ?, status = ?, post_date = ? WHERE id = ? AND username = ?");
 	const now = new Date().toISOString();
 	const title = `${username} has ${newStatus} the challenge`;
@@ -423,22 +423,22 @@ async function updateChallengeStatus(postId, newStatus, username, env) {
 	});
 }
 
-async function fetchTopics(env) {
+export async function fetchTopics(env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, username FROM topics ORDER BY title");
 	return (await stmt.all()).results;
 }
 
-async function fetchTopicById(topicId, env) {
+export async function fetchTopicById(topicId, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, title, username FROM topics WHERE id = ?");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-async function fetchPostsForTopic(topicId, env) {
+export async function fetchPostsForTopic(topicId, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare("SELECT id, topic_id, username, title, status, post_date FROM posts WHERE topic_id = ? ORDER BY post_date DESC");
 	return (await stmt.bind(topicId).all()).results;
 }
 
-async function fetchPostsForUser(username, env) {
+export async function fetchPostsForUser(username, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare(`
         SELECT p.id, p.topic_id, p.title as post_title, t.title as topic_title, p.status 
         FROM posts p 
@@ -450,14 +450,14 @@ async function fetchPostsForUser(username, env) {
 }
 
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {

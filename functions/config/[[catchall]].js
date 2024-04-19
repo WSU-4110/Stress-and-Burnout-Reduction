@@ -77,7 +77,7 @@ export async function onRequestPost({
 	});
 }
 
-async function renderConfigPage(username, env) {
+export async function renderConfigPage(username, env) {
 	const pageHtml = `
         <!DOCTYPE html>
         <html lang="en">
@@ -192,7 +192,7 @@ async function renderConfigPage(username, env) {
 	});
 }
 
-async function renderProfilePage(username, env) {
+export async function renderProfilePage(username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
 	const pageHtml = `
@@ -319,7 +319,7 @@ async function renderProfilePage(username, env) {
 	});
 }
 
-async function renderEmailsPage(username, env) {
+export async function renderEmailsPage(username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
 	const emailsHtml = user.emails.map(email => `
@@ -460,7 +460,7 @@ async function renderEmailsPage(username, env) {
 	});
 }
 
-async function renderSessionsPage(username, env) {
+export async function renderSessionsPage(username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 
 	const sessionsHtml = user.sessions.map(session => `
@@ -598,7 +598,7 @@ async function renderSessionsPage(username, env) {
 	});
 }
 
-async function updateProfile(pronouns, givenNames, lastName, username, env) {
+export async function updateProfile(pronouns, givenNames, lastName, username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 	user.pronouns = pronouns;
 	user.given_names = givenNames;
@@ -612,7 +612,7 @@ async function updateProfile(pronouns, givenNames, lastName, username, env) {
 	});
 }
 
-async function addEmail(email, username, env) {
+export async function addEmail(email, username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 	user.emails.push({
 		email: email,
@@ -628,7 +628,7 @@ async function addEmail(email, username, env) {
 	});
 }
 
-async function removeEmail(email, username, env) {
+export async function removeEmail(email, username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 	if (user.emails.length <= 1) {
 		return new Response("Cannot remove the last email. At least one email must be associated with the account.", {
@@ -646,7 +646,7 @@ async function removeEmail(email, username, env) {
 	});
 }
 
-async function removeSession(sessionId, username, env) {
+export async function removeSession(sessionId, username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 	user.sessions = user.sessions.filter(s => s.sessionId !== sessionId);
 	await env.COOLFROG_USERS.put(username, JSON.stringify(user));
@@ -659,7 +659,7 @@ async function removeSession(sessionId, username, env) {
 	});
 }
 
-async function removeAllSessions(username, env) {
+export async function removeAllSessions(username, env) {
 	let user = JSON.parse(await env.COOLFROG_USERS.get(username));
 	for (let session of user.sessions) {
 		await env.COOLFROG_SESSIONS.delete(session.sessionId);
@@ -674,14 +674,14 @@ async function removeAllSessions(username, env) {
 	});
 }
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {

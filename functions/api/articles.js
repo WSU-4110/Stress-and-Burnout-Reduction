@@ -20,7 +20,7 @@ export async function onRequest({
 	});
 }
 
-async function setArticleRating(request, env) {
+export async function setArticleRating(request, env) {
 	const {
 		sessionId
 	} = getSessionIdFromRequest(request);
@@ -59,7 +59,7 @@ async function setArticleRating(request, env) {
 	}); // No content to send back
 }
 
-async function getArticleRating(request, env) {
+export async function getArticleRating(request, env) {
 	const {
 		sessionId
 	} = getSessionIdFromRequest(request);
@@ -96,7 +96,7 @@ async function getArticleRating(request, env) {
 	});
 }
 
-function getSessionIdFromRequest(request) {
+export function getSessionIdFromRequest(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return {};
 
