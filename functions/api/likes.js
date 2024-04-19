@@ -22,7 +22,7 @@ export async function onRequest(context) {
 	});
 }
 
-async function toggleLike(request, env) {
+export async function toggleLike(request, env) {
 	const {
 		sessionId
 	} = getSessionIdFromRequest(request);
@@ -77,7 +77,7 @@ async function toggleLike(request, env) {
 	});
 }
 
-async function getLikes(request, env) {
+export async function getLikes(request, env) {
 	const {
 		sessionId
 	} = getSessionIdFromRequest(request);
@@ -118,7 +118,7 @@ async function getLikes(request, env) {
 	});
 }
 
-function getSessionIdFromRequest(request) {
+export function getSessionIdFromRequest(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return {};
 

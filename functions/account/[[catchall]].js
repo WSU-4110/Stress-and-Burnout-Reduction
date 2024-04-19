@@ -23,7 +23,7 @@ export async function onRequestGet({
 	});
 }
 
-async function renderAccountPage(username, env) {
+export async function renderAccountPage(username, env) {
 	let challenges = await getChallengesWithMostActiveMembers(env);
 	let weeklyChallenge, dailyChallenge;
 
@@ -174,7 +174,7 @@ async function renderAccountPage(username, env) {
 	});
 }
 
-async function generateChallengeHtml(challenge, username, env) {
+export async function generateChallengeHtml(challenge, username, env) {
 	const userPosts = await fetchPostsForUserInTopic(username, challenge.id, env);
 	let actionHtml;
 
@@ -206,7 +206,7 @@ async function generateChallengeHtml(challenge, username, env) {
 	return `<td><a href="/challenge/topic/${challenge.id}">${challenge.title}</a></td><td>${actionHtml}</td>`;
 }
 
-async function getChallengesWithMostActiveMembers(env) {
+export async function getChallengesWithMostActiveMembers(env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare(`
         SELECT topics.id, topics.title, COUNT(posts.id) AS activeCount
         FROM topics
@@ -218,7 +218,7 @@ async function getChallengesWithMostActiveMembers(env) {
 	return (await stmt.all()).results;
 }
 
-async function fetchPostsForUserInTopic(username, topicId, env) {
+export async function fetchPostsForUserInTopic(username, topicId, env) {
 	const stmt = env.COOLFROG_CHALLENGES.prepare(`
         SELECT id, topic_id, username, title, status
         FROM posts
@@ -228,14 +228,14 @@ async function fetchPostsForUserInTopic(username, topicId, env) {
 	return (await stmt.bind(username, topicId).all()).results;
 }
 
-function getSessionCookie(request) {
+export function getSessionCookie(request) {
 	const cookieHeader = request.headers.get('Cookie');
 	if (!cookieHeader) return null;
 	const cookies = cookieHeader.split(';').map(cookie => cookie.trim().split('='));
 	return Object.fromEntries(cookies)['session-id'];
 }
 
-function unauthorizedResponse() {
+export function unauthorizedResponse() {
 	return new Response("Unauthorized - Please log in.", {
 		status: 403,
 		headers: {
